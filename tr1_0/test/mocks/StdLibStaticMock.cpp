@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-namespace mocks {
+namespace mw { namespace mocks {
 
 namespace {
     constexpr int FAILURE = -1;
@@ -28,4 +28,4 @@ StdLibStaticMock::StdLibStaticMock() {
     ON_CALL(*this, shmdt(_)).WillByDefault(Return(FAILURE));
 }
 
-} // mocks
+} } // mw::mocks

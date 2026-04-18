@@ -9,7 +9,7 @@
 
 #include <mocks/StdLibStaticMock.h>
 
-using namespace mocks;
+using namespace mw::mocks;
 
 extern "C" {
 

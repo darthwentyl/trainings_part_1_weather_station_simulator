@@ -4,9 +4,9 @@
 
 #include <ipc/IIpc.h>
 
-namespace mocks {
+namespace mw { namespace mocks {
 
-class IpcMock : public mw::ipc::IIpc {
+class IpcMock : public ipc::IIpc {
 public:
     ~IpcMock() = default;
 
@@ -16,4 +16,4 @@ public:
     MOCK_METHOD(bool, write, (const std::string& msg), (override));
 };
 
-} // mocks
+} } // mw::mocks

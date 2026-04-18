@@ -8,7 +8,7 @@
 namespace {
 
 using namespace testing;
-using namespace mocks;
+using namespace mw::mocks;
 using namespace mw::proc_managers::workers;
 
 constexpr const std::size_t bufferSize = 2;

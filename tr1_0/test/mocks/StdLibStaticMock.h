@@ -3,7 +3,7 @@
 #include <gmock/gmock.h>
 #include <semaphore.h>
 
-namespace mocks {
+namespace mw { namespace mocks {
 
 class StdLibStaticMock {
 public:
@@ -30,4 +30,4 @@ private:
     StdLibStaticMock();
 };
 
-} // mocks
+} } // mw::mocks

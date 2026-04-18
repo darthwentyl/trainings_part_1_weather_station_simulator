@@ -7,7 +7,7 @@
 namespace {
 
 using namespace testing;
-using namespace mocks;
+using namespace mw::mocks;
 using namespace mw::proc_managers::workers;
 
 class WeatherWorker_tests : public Test {

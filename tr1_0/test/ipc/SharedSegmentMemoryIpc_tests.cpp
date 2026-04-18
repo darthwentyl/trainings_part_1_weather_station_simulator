@@ -17,7 +17,7 @@
 namespace {
 
 using namespace testing;
-using namespace mocks;
+using namespace mw::mocks;
 using namespace mw::ipc;
 using namespace mw::exceptions;
 

@@ -1,4 +1,4 @@
-#include <proc_managers/workers/TemperatureWorker.h>
+#include <proc_managers/workers/PressureWorker.h>
 #include <proc_managers/workers/WeatherData.h>
 
 #include <logger/Log.h>
@@ -6,17 +6,17 @@
 
 namespace mw { namespace proc_managers { namespace workers {
 
-constexpr const char* TEMPERATURE_FILE = "temperature.dat";
+constexpr const char* PRESSURE_FILE = "pressure.dat";
 
 using namespace mw::ipc;
 
-TemperatureWorker::TemperatureWorker(IIpc& ipcData, const std::size_t bufferSize) :
+PressureWorker::PressureWorker(IIpc& ipcData, const std::size_t bufferSize) :
     Worker{false},
     ipcData{ipcData},
-    writer{TEMPERATURE_FILE, bufferSize}
+    writer{PRESSURE_FILE, bufferSize}
 {}
 
-void TemperatureWorker::startWorking() {
+void PressureWorker::startWorking() {
     if (isWorking()) {
         INFO("Worker has already started");
         return;
@@ -26,7 +26,7 @@ void TemperatureWorker::startWorking() {
     setWorkingState(true);
 }
 
-void TemperatureWorker::processData() {
+void PressureWorker::processData() {
     if (!isWorking()) {
         INFO("Worker has not started yet");
         return;
@@ -34,16 +34,15 @@ void TemperatureWorker::processData() {
 
     WeatherData data;
     data.deserialize(ipcData.read());
-    DEBUG("Received temperature: " << data.getTemperature() << " [C]");
-    writer.write<double>(data.getTemperature());
+    DEBUG("Received pressure: " << data.getPressure() << " [hPa]");
+    writer.write<double>(data.getPressure());
 }
 
-void TemperatureWorker::stopWorking() {
+void PressureWorker::stopWorking() {
     if (!isWorking()) {
         INFO("Worker has already stopped");
         return;
     }
-
     ipcData.close();
     setWorkingState(false);
 }

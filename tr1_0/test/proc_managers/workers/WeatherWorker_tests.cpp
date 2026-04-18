@@ -92,4 +92,14 @@ TEST_F(WeatherWorker_tests, stopWorking_double_times) {
     EXPECT_FALSE(worker->isWorking());
 }
 
+TEST_F(WeatherWorker_tests, stopWorking_not_started_yet) {
+    WeatherWorker weatherWorker{ipcMock};
+    worker = &weatherWorker;
+
+    EXPECT_CALL(ipcMock, close()).Times(0);
+
+    worker->stopWorking();
+    EXPECT_FALSE(worker->isWorking());
+}
+
 } // anonymous

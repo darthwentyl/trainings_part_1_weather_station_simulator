@@ -57,12 +57,56 @@ TEST_F(TemperatureWorker_tests, processData_success) {
     data.setTemperature(17.3);
     data.setPressure(1008.1);
 
-
     EXPECT_CALL(ipcMock, open()).Times(1);
     EXPECT_CALL(ipcMock, read()).WillOnce(Return(data.serialize()));
 
     worker->startWorking();
     worker->processData();
+}
+
+TEST_F(TemperatureWorker_tests, processData_not_started_yet) {
+    TemperatureWorker temperatureWorker{ipcMock, bufferSize};
+    worker = &temperatureWorker;
+
+    EXPECT_CALL(ipcMock, read()).Times(0);
+
+    worker->processData();
+}
+
+TEST_F(TemperatureWorker_tests, stopWorking_success) {
+    TemperatureWorker temperatureWorker{ipcMock, bufferSize};
+    worker = &temperatureWorker;
+
+    EXPECT_CALL(ipcMock, open()).Times(1);
+    EXPECT_CALL(ipcMock, close()).Times(1);
+
+    worker->startWorking();
+    EXPECT_TRUE(worker->isWorking());
+    worker->stopWorking();
+    EXPECT_FALSE(worker->isWorking());
+}
+
+TEST_F(TemperatureWorker_tests, stopWorking_double_times) {
+    TemperatureWorker temperatureWorker{ipcMock, bufferSize};
+    worker = &temperatureWorker;
+
+    EXPECT_CALL(ipcMock, open()).Times(1);
+    EXPECT_CALL(ipcMock, close()).Times(1);
+
+    worker->startWorking();
+    EXPECT_TRUE(worker->isWorking());
+    worker->stopWorking();
+    worker->stopWorking();
+    EXPECT_FALSE(worker->isWorking());
+}
+
+TEST_F(TemperatureWorker_tests, stopWorking_not_started_yet) {
+    TemperatureWorker temperatureWorker{ipcMock, bufferSize};
+    worker = &temperatureWorker;
+
+    EXPECT_CALL(ipcMock, close()).Times(0);
+
+    worker->stopWorking();
 }
 
 } // anonymous

@@ -6,10 +6,12 @@
 
 namespace mw { namespace proc_managers { namespace workers {
 
+constexpr const char* TEMPERATURE_FILE = "temperature.dat";
+
 TemperatureWorker::TemperatureWorker(ipc::IIpc& ipcData, const std::size_t bufferSize) :
     Worker{false},
     ipcData{ipcData},
-    bufferSize{bufferSize}
+    writer{TEMPERATURE_FILE, bufferSize}
 {}
 
 void TemperatureWorker::startWorking() {
@@ -31,10 +33,17 @@ void TemperatureWorker::processData() {
     WeatherData data;
     data.deserialize(ipcData.read());
     DEBUG("Received temperature: " << data.getTemperature() << " [C]");
+    writer.write<double>(data.getTemperature());
 }
 
 void TemperatureWorker::stopWorking() {
+    if (!isWorking()) {
+        INFO("Worker has already stopped");
+        return;
+    }
 
+    ipcData.close();
+    setWorkingState(false);
 }
 
 } } } // mw::proc_managers::workers

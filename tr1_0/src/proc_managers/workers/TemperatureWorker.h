@@ -1,6 +1,7 @@
 #pragma once
 
 #include <proc_managers/workers/Worker.h>
+#include <helpers/FixedLinesFileWriter.h>
 
 namespace mw { namespace ipc {
 
@@ -26,7 +27,7 @@ public:
 
 private:
     ipc::IIpc& ipcData;
-    const std::size_t bufferSize;
+    helpers::FixedLinesFileWriter writer;
 };
 
 } } } // mw::proc_managers::workers

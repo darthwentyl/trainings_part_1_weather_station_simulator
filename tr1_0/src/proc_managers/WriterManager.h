@@ -21,10 +21,10 @@ namespace mw { namespace proc_managers {
 
 class WriterManager : public IProcManager {
 public:
-    WriterManager(const size_t readersNum,
-        ipc::ISemaphoreIpc* dataLocker,
-        ipc::ISemaphoreIpc* readerLocker,
-        workers::IWorker* worker
+    WriterManager(const std::size_t readersNum,
+        ipc::ISemaphoreIpc& dataLocker,
+        ipc::ISemaphoreIpc& readerLocker,
+        workers::IWorker& worker
     );
     ~WriterManager() = default;
 
@@ -37,9 +37,9 @@ public:
 
 private:
     const size_t readersNum;
-    ipc::ISemaphoreIpc* dataLocker;
-    ipc::ISemaphoreIpc* readerLocker;
-    workers::IWorker* worker;
+    ipc::ISemaphoreIpc& dataLocker;
+    ipc::ISemaphoreIpc& readerLocker;
+    workers::IWorker& worker;
 };
 
 } } // mw::proc_managers

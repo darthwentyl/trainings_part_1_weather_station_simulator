@@ -19,9 +19,9 @@ namespace mw { namespace proc_managers {
 
 class ReaderManager : public IProcManager {
 public:
-    ReaderManager(ipc::ISemaphoreIpc* dataLocker,
-        ipc::ISemaphoreIpc* readerLocker,
-        workers::IWorker* worker
+    ReaderManager(ipc::ISemaphoreIpc& dataLocker,
+        ipc::ISemaphoreIpc& readerLocker,
+        workers::IWorker& worker
     );
     ~ReaderManager() = default;
 
@@ -33,9 +33,9 @@ public:
     void loop() override;
 
 private:
-    ipc::ISemaphoreIpc* dataLocker;
-    ipc::ISemaphoreIpc* readerLocker;
-    workers::IWorker* worker;
+    ipc::ISemaphoreIpc& dataLocker;
+    ipc::ISemaphoreIpc& readerLocker;
+    workers::IWorker& worker;
 };
 
 } } // mw::proc_managers

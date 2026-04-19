@@ -1,21 +1,19 @@
 #include <gtest/gtest.h>
 
-#include <proc_managers/WriterManager.h>
+#include <proc_managers/ReaderManager.h>
 
 #include <mocks/ipc/SemaphoreIpcMock.h>
 #include <mocks/proc_managers/workers/WorkerMock.h>
 
 namespace {
 
-constexpr const std::size_t readersNum = 2;
-
 using namespace testing;
 using namespace mw::mocks;
 using namespace mw::proc_managers;
 
-class WriterManager_tests : public Test {
+class ReaderManager_tests : public Test {
 public:
-    ~WriterManager_tests() = default;
+    ~ReaderManager_tests() = default;
 
 protected:
     SemaphoreIpcMock dataLocker;
@@ -23,8 +21,8 @@ protected:
     WorkerMock worker;
 };
 
-TEST_F(WriterManager_tests, worker_not_started) {
-    WriterManager manager{readersNum, dataLocker, readerLocker, worker};
+TEST_F(ReaderManager_tests, worker_not_started) {
+    ReaderManager manager{dataLocker, readerLocker, worker};
 
     EXPECT_CALL(worker, startWorking()).Times(1);
     EXPECT_CALL(worker, isWorking()).WillOnce(Return(false));
@@ -32,35 +30,36 @@ TEST_F(WriterManager_tests, worker_not_started) {
     manager.loop();
 }
 
-TEST_F(WriterManager_tests, worker_started_no_exceptions) {
-    WriterManager manager{readersNum, dataLocker, readerLocker, worker};
+TEST_F(ReaderManager_tests, worker_started_no_exceptions) {
+    ReaderManager manager{dataLocker, readerLocker, worker};
 
     EXPECT_CALL(worker, startWorking()).Times(1);
     EXPECT_CALL(worker, isWorking())
         .WillOnce(Return(true))
         .WillOnce(Return(false));
+    EXPECT_CALL(readerLocker, wait()).Times(1);
     EXPECT_CALL(dataLocker, wait()).Times(1);
     EXPECT_CALL(worker, processData()).Times(1);
     EXPECT_CALL(dataLocker, post()).Times(1);
-    EXPECT_CALL(readerLocker, post()).Times(readersNum);
 
     manager.loop();
 }
 
-TEST_F(WriterManager_tests, worker_throws_exception_during_starting) {
-    WriterManager manager{readersNum, dataLocker, readerLocker, worker};
+TEST_F(ReaderManager_tests, worker_throws_exception_during_starting) {
+    ReaderManager manager{dataLocker, readerLocker, worker};
 
-    EXPECT_CALL(worker, startWorking()).WillOnce(Throw(std::runtime_error("test exception")));
+    EXPECT_CALL(worker, startWorking()).WillOnce(Throw(std::runtime_error("test_exception")));
     EXPECT_CALL(worker, stopWorking()).Times(1);
 
     manager.loop();
 }
 
-TEST_F(WriterManager_tests, worker_throws_exception_inside_while_loop) {
-    WriterManager  manager{readersNum, dataLocker, readerLocker, worker};
+TEST_F(ReaderManager_tests, worker_throws_exception_inside_while_loop) {
+    ReaderManager manager{dataLocker, readerLocker, worker};
 
     EXPECT_CALL(worker, startWorking()).Times(1);
     EXPECT_CALL(worker, isWorking()).WillOnce(Return(true));
+    EXPECT_CALL(readerLocker, wait()).Times(1);
     EXPECT_CALL(dataLocker, wait()).Times(1);
     EXPECT_CALL(worker, processData()).WillOnce(Throw(std::runtime_error("test exception")));
     EXPECT_CALL(worker, stopWorking()).Times(1);

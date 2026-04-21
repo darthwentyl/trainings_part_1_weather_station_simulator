@@ -14,7 +14,7 @@ public:
     StdLibStaticMock& operator = (const StdLibStaticMock&) = delete;
     StdLibStaticMock& operator = (StdLibStaticMock&&) = delete;
 
-    static StdLibStaticMock& get();
+    static testing::StrictMock<StdLibStaticMock>& get();
 
     MOCK_METHOD(key_t, ftok, (const char* pathname, int proj_id), ());
     MOCK_METHOD(int, semget, (key_t key, int nsems, int semflg), ());
@@ -27,6 +27,7 @@ public:
     MOCK_METHOD(int, shmdt, (const void* shmaddr), ());
 
 private:
+    friend class testing::StrictMock<StdLibStaticMock>;
     StdLibStaticMock();
 };
 

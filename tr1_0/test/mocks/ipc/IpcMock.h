@@ -8,6 +8,7 @@ namespace mw { namespace mocks {
 
 class IpcMock : public ipc::IIpc {
 public:
+    IpcMock();
     ~IpcMock() = default;
 
     MOCK_METHOD(void, open, (), (override));

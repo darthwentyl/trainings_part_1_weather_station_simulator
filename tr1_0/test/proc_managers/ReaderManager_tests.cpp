@@ -16,9 +16,9 @@ public:
     ~ReaderManager_tests() = default;
 
 protected:
-    SemaphoreIpcMock dataLocker;
-    SemaphoreIpcMock readerLocker;
-    WorkerMock worker;
+    StrictMock<SemaphoreIpcMock> dataLocker;
+    StrictMock<SemaphoreIpcMock> readerLocker;
+    StrictMock<WorkerMock> worker;
 };
 
 TEST_F(ReaderManager_tests, worker_not_started) {

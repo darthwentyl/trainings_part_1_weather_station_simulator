@@ -19,7 +19,7 @@ protected:
         worker = nullptr;
     }
 
-    IpcMock ipcMock;
+    StrictMock<IpcMock> ipcMock;
     IWorker* worker;
 };
 

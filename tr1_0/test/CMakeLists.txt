@@ -5,6 +5,8 @@ file(GLOB SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/proc_managers/*.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/proc_managers/workers/*.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/mocks/*.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/mocks/ipc/*.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/mocks/proc_managers/workers/*.cpp"
 )
 
 add_executable(weather_tests ${SOURCES})

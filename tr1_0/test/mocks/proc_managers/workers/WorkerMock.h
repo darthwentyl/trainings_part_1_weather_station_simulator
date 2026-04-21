@@ -6,6 +6,7 @@ namespace mw { namespace mocks {
 
 class WorkerMock : public proc_managers::workers::IWorker {
 public:
+    WorkerMock();
     ~WorkerMock() = default;
 
     MOCK_METHOD(void, startWorking, (), (override));

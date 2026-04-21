@@ -1,8 +1,6 @@
 #include <mocks/StdLibStaticMock.h>
 #include <gtest/gtest.h>
 
-#include <iostream>
-
 namespace mw { namespace mocks {
 
 namespace {
@@ -11,8 +9,8 @@ namespace {
 
 using namespace testing;
 
-StdLibStaticMock& StdLibStaticMock::get() {
-    static StdLibStaticMock instance;
+StrictMock<StdLibStaticMock>& StdLibStaticMock::get() {
+    static StrictMock<StdLibStaticMock> instance;
     return instance;
 }
 

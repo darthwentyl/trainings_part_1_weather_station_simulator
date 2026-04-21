@@ -27,6 +27,11 @@ void PressureWorker::startWorking() {
 }
 
 void PressureWorker::processData() {
+    // TODO: only for test without close procedure
+    static std::size_t loop = 0;
+    // TODO:
+
+
     if (!isWorking()) {
         INFO("Worker has not started yet");
         return;
@@ -36,6 +41,14 @@ void PressureWorker::processData() {
     data.deserialize(ipcData.read());
     DEBUG("Received pressure: " << data.getPressure() << " [hPa]");
     writer.write<double>(data.getPressure());
+
+    // TODO: only for test without close procedure
+    loop++;
+    if (loop == 20) {
+        stopWorking();
+        loop = 0;
+    }
+    // TODO:
 }
 
 void PressureWorker::stopWorking() {

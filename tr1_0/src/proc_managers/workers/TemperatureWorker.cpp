@@ -27,6 +27,10 @@ void TemperatureWorker::startWorking() {
 }
 
 void TemperatureWorker::processData() {
+    // TODO: only for test without close procedure
+    static std::size_t loop = 0;
+    // TODO:
+
     if (!isWorking()) {
         INFO("Worker has not started yet");
         return;
@@ -36,6 +40,14 @@ void TemperatureWorker::processData() {
     data.deserialize(ipcData.read());
     DEBUG("Received temperature: " << data.getTemperature() << " [C]");
     writer.write<double>(data.getTemperature());
+
+    // TODO: only for test without close procedure
+    loop++;
+    if (loop == 20) {
+        stopWorking();
+        loop = 0;
+    }
+    // TODO:
 }
 
 void TemperatureWorker::stopWorking() {

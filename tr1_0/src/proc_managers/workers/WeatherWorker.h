@@ -1,5 +1,6 @@
 #pragma once
 
+#include <proc_managers/workers/WeatherData.h>
 #include <proc_managers/workers/Worker.h>
 
 namespace mw { namespace ipc {
@@ -26,6 +27,7 @@ public:
 
 private:
     ipc::IIpc& ipcData;
+    WeatherData data;
 };
 
 } } } // mw::proc_managers::workers

@@ -22,8 +22,7 @@ ReaderManager::ReaderManager(ISemaphoreIpc& dataLocker,
 
 void ReaderManager::loop() {
     try {
-        worker.startWorking();
-
+        start();
         while (worker.isWorking()) {
             readerLocker.wait();
             dataLocker.wait();
@@ -32,8 +31,20 @@ void ReaderManager::loop() {
         }
     } catch (const std::exception& e) {
         ERROR(e.what());
-        worker.stopWorking();
+        error_stop();
     }
+}
+
+void ReaderManager::start() {
+    readerLocker.open();
+    dataLocker.open();
+    worker.startWorking();
+}
+
+void ReaderManager::error_stop() {
+    worker.stopWorking();
+    readerLocker.close();
+    dataLocker.close();
 }
 
 } } // mw::proc_managers

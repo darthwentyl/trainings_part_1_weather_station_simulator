@@ -33,6 +33,9 @@ public:
     void loop() override;
 
 private:
+    void start();
+    void error_stop();
+
     ipc::ISemaphoreIpc& dataLocker;
     ipc::ISemaphoreIpc& readerLocker;
     workers::IWorker& worker;

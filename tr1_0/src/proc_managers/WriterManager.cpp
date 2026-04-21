@@ -25,8 +25,7 @@ WriterManager::WriterManager(
 
 void WriterManager::loop() {
     try{
-        worker.startWorking();
-
+        start();
         while (worker.isWorking()) {
             dataLocker.wait();
             worker.processData();
@@ -37,8 +36,20 @@ void WriterManager::loop() {
         }
     } catch (const std::exception& e) {
         ERROR(e.what());
-        worker.stopWorking();
+        error_stop();
     }
+}
+
+void WriterManager::start() {
+    dataLocker.open();
+    readerLocker.open();
+    worker.startWorking();
+}
+
+void WriterManager::error_stop() {
+    worker.stopWorking();
+    dataLocker.close();
+    readerLocker.close();
 }
 
 } } // mw::proc_managers

@@ -26,6 +26,8 @@ protected:
 TEST_F(WriterManager_tests, worker_not_started) {
     WriterManager manager{readersNum, dataLocker, readerLocker, worker};
 
+    EXPECT_CALL(dataLocker, open(_)).Times(1);
+    EXPECT_CALL(readerLocker, open(_)).Times(1);
     EXPECT_CALL(worker, startWorking()).Times(1);
     EXPECT_CALL(worker, isWorking()).WillOnce(Return(false));
 
@@ -35,6 +37,8 @@ TEST_F(WriterManager_tests, worker_not_started) {
 TEST_F(WriterManager_tests, worker_started_no_exceptions) {
     WriterManager manager{readersNum, dataLocker, readerLocker, worker};
 
+    EXPECT_CALL(dataLocker, open(_)).Times(1);
+    EXPECT_CALL(readerLocker, open(_)).Times(1);
     EXPECT_CALL(worker, startWorking()).Times(1);
     EXPECT_CALL(worker, isWorking())
         .WillOnce(Return(true))
@@ -50,8 +54,12 @@ TEST_F(WriterManager_tests, worker_started_no_exceptions) {
 TEST_F(WriterManager_tests, worker_throws_exception_during_starting) {
     WriterManager manager{readersNum, dataLocker, readerLocker, worker};
 
+    EXPECT_CALL(dataLocker, open(_)).Times(1);
+    EXPECT_CALL(readerLocker, open(_)).Times(1);
     EXPECT_CALL(worker, startWorking()).WillOnce(Throw(std::runtime_error("test exception")));
     EXPECT_CALL(worker, stopWorking()).Times(1);
+    EXPECT_CALL(dataLocker, close()).Times(1);
+    EXPECT_CALL(readerLocker, close()).Times(1);
 
     manager.loop();
 }
@@ -59,11 +67,15 @@ TEST_F(WriterManager_tests, worker_throws_exception_during_starting) {
 TEST_F(WriterManager_tests, worker_throws_exception_inside_while_loop) {
     WriterManager  manager{readersNum, dataLocker, readerLocker, worker};
 
+    EXPECT_CALL(dataLocker, open(_)).Times(1);
+    EXPECT_CALL(readerLocker, open(_)).Times(1);
     EXPECT_CALL(worker, startWorking()).Times(1);
     EXPECT_CALL(worker, isWorking()).WillOnce(Return(true));
     EXPECT_CALL(dataLocker, wait()).Times(1);
     EXPECT_CALL(worker, processData()).WillOnce(Throw(std::runtime_error("test exception")));
     EXPECT_CALL(worker, stopWorking()).Times(1);
+    EXPECT_CALL(dataLocker, close()).Times(1);
+    EXPECT_CALL(readerLocker, close()).Times(1);
 
     manager.loop();
 }

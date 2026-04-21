@@ -36,6 +36,9 @@ public:
     void loop() override;
 
 private:
+    void start();
+    void error_stop();
+
     const size_t readersNum;
     ipc::ISemaphoreIpc& dataLocker;
     ipc::ISemaphoreIpc& readerLocker;

@@ -50,6 +50,7 @@ TEST_F(WeatherWorker_tests, processData_success) {
     WeatherWorker weatherWorker{ipcMock};
     worker = &weatherWorker;
 
+    EXPECT_CALL(ipcMock, read()).WillOnce(Return(""));
     EXPECT_CALL(ipcMock, open()).Times(1);
     EXPECT_CALL(ipcMock, write(_)).Times(1);
 
@@ -61,6 +62,7 @@ TEST_F(WeatherWorker_tests, processData_not_started) {
     WeatherWorker weatherWorker{ipcMock};
     worker = &weatherWorker;
 
+    EXPECT_CALL(ipcMock, read()).WillOnce(Return(""));
     EXPECT_CALL(ipcMock, write(_)).Times(0);
     worker->processData();
 }
@@ -99,6 +101,20 @@ TEST_F(WeatherWorker_tests, stopWorking_not_started_yet) {
     EXPECT_CALL(ipcMock, close()).Times(0);
 
     worker->stopWorking();
+    EXPECT_FALSE(worker->isWorking());
+}
+
+TEST_F(WeatherWorker_tests, stopWorking_when_exit_received) {
+    WeatherWorker weatherWorker{ipcMock};
+    worker = &weatherWorker;
+
+    EXPECT_CALL(ipcMock, open()).Times(1);
+    EXPECT_CALL(ipcMock, read()).WillOnce(Return("exit"));
+    EXPECT_CALL(ipcMock, close()).Times(1);
+
+    worker->startWorking();
+    EXPECT_TRUE(worker->isWorking());
+    worker->processData();
     EXPECT_FALSE(worker->isWorking());
 }
 

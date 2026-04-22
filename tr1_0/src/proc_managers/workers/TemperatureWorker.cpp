@@ -27,27 +27,22 @@ void TemperatureWorker::startWorking() {
 }
 
 void TemperatureWorker::processData() {
-    // TODO: only for test without close procedure
-    static std::size_t loop = 0;
-    // TODO:
-
     if (!isWorking()) {
         INFO("Worker has not started yet");
         return;
     }
 
-    WeatherData data;
-    data.deserialize(ipcData.read());
-    DEBUG("Received temperature: " << data.getTemperature() << " [C]");
-    writer.write<double>(data.getTemperature());
+    const std::string msg = ipcData.read();
+    DEBUG("read: " << msg);
 
-    // TODO: only for test without close procedure
-    loop++;
-    if (loop == 20) {
+    if (msg == "exit") {
         stopWorking();
-        loop = 0;
+    } else {
+        WeatherData data;
+        data.deserialize(msg);
+        DEBUG("Received temperature: " << data.getTemperature() << " [C]");
+        writer.write<double>(data.getTemperature());
     }
-    // TODO:
 }
 
 void TemperatureWorker::stopWorking() {

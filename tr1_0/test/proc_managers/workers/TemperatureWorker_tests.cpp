@@ -110,4 +110,18 @@ TEST_F(TemperatureWorker_tests, stopWorking_not_started_yet) {
     EXPECT_FALSE(worker->isWorking());
 }
 
+TEST_F(TemperatureWorker_tests, stopWorking_when_exit_received) {
+    TemperatureWorker temperatureWorker{ipcMock, bufferSize};
+    worker = &temperatureWorker;
+
+    EXPECT_CALL(ipcMock, open()).Times(1);
+    EXPECT_CALL(ipcMock, read()).WillOnce(Return("exit"));
+    EXPECT_CALL(ipcMock, close()).Times(1);
+
+    worker->startWorking();
+    EXPECT_TRUE(worker->isWorking());
+    worker->processData();
+    EXPECT_FALSE(worker->isWorking());
+}
+
 } // anonymous

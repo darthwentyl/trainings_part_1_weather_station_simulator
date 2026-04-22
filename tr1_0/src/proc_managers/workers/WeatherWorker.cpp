@@ -18,7 +18,6 @@ WeatherWorker::WeatherWorker(IIpc& ipcData) :
 {}
 
 void WeatherWorker::startWorking() {
-    DEBUG("BEGIN");
     if (isWorking()) {
         INFO("Worker has already started");
         return;
@@ -26,13 +25,12 @@ void WeatherWorker::startWorking() {
 
     ipcData.open();
     setWorkingState(true);
-    DEBUG("END");
 }
 
 void WeatherWorker::processData() {
-    // TODO: only for test without close procedure
-    static std::size_t loop = 0;
-    // TODO:
+    if (ipcData.read() == "exit") {
+        stopWorking();
+    }
 
     if (!isWorking()) {
         INFO("Worker has not started yet");
@@ -53,17 +51,13 @@ void WeatherWorker::processData() {
     DEBUG(msg);
     ipcData.write(data.serialize());
 
-    // TODO: only for test without close procedure
-    loop++;
-    if (loop == 20) {
-        stopWorking();
-        loop = 0;
-    }
+    // // TODO: simulate waiting for sensors data...
     std::this_thread::sleep_for(std::chrono::milliseconds(delta(mt)));
     // TODO:
 }
 
 void WeatherWorker::stopWorking() {
+    DEBUG("");
     if (!isWorking()) {
         INFO("Worker has already stopped");
         return;

@@ -29,7 +29,7 @@ void WeatherWorker::startWorking() {
 
 void WeatherWorker::processData() {
     if (ipcData.read() == "exit") {
-        stopWorking();
+        return stopWorking();
     }
 
     if (!isWorking()) {
@@ -42,6 +42,7 @@ void WeatherWorker::processData() {
     std::uniform_real_distribution<double> temperature{-50.0, 90.0};
     std::uniform_real_distribution<double> pressure{940.0, 1060.0};
     std::uniform_int_distribution<unsigned> delta{500, 1000};
+    std::this_thread::sleep_for(std::chrono::milliseconds(delta(mt)));
     // end simulation
 
     data.setTemperature(temperature(mt));
@@ -50,10 +51,6 @@ void WeatherWorker::processData() {
     const std::string msg = data.serialize();
     DEBUG(msg);
     ipcData.write(data.serialize());
-
-    // // TODO: simulate waiting for sensors data...
-    std::this_thread::sleep_for(std::chrono::milliseconds(delta(mt)));
-    // TODO:
 }
 
 void WeatherWorker::stopWorking() {

@@ -28,7 +28,7 @@ SharedSegmentSemaphoreIpc::SharedSegmentSemaphoreIpc(const std::string& name, co
     , semName{name}
     , semId{NOT_INITIALIZED}
 {
-    // DEBUG("semName: " << semName << " usage: " << static_cast<int>(usage));
+    DEBUG("semName: " << semName << " usage: " << static_cast<int>(usage));
 }
 
 SharedSegmentSemaphoreIpc::~SharedSegmentSemaphoreIpc() {
@@ -90,7 +90,7 @@ void SharedSegmentSemaphoreIpc::wait() {
     sb.sem_flg = 0;
 
     if (semop(semId, &sb, 1) == FAILURE) {
-        ERROR("semop(semId: " << semId << ") failed: " << strerror(errno));
+        ERROR("pid: " << getpid() << " semop(semId: " << semId << ") failed: " << strerror(errno));
         throw sem_error{__FUNCTION__, __LINE__, "semop", errno};
     }
     DEBUG("exit pid: " << getpid());
@@ -108,14 +108,14 @@ void SharedSegmentSemaphoreIpc::post() {
     sb.sem_flg = 0;
 
     if (semop(semId, &sb, 1) == FAILURE) {
-        ERROR("semop(semId: " << semId << ") failed: " << strerror(errno));
+        ERROR("pid: " << getpid() << " semop(semId: " << semId << ") failed: " << strerror(errno));
         throw sem_error{__FUNCTION__, __LINE__, "semop", errno};
     }
     DEBUG("enter pid: " << getpid());
 }
 
 void SharedSegmentSemaphoreIpc::close() {
-    DEBUG("usage: " << static_cast<int>(usage) << " semId: " << semId);
+    DEBUG("pid: " << getpid() << " usage: " << static_cast<int>(usage) << " semId: " << semId);
     if (usage == EUsageShmSegment::UNKNOWN || semId == NOT_INITIALIZED) {
         INFO("Semaphore has already closed");
     }

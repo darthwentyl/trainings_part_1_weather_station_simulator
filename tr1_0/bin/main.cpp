@@ -15,6 +15,7 @@
 #include <proc_managers/workers/WeatherWorker.h>
 #include <proc_managers/workers/TemperatureWorker.h>
 #include <proc_managers/workers/PressureWorker.h>
+#include <proc_managers/workers/ExitWorker.h>
 
 using namespace mw::ipc;
 using namespace mw::proc_managers;
@@ -28,7 +29,6 @@ namespace {
     constexpr const std::size_t reader_nums = 2;
     constexpr const std::size_t file_max_line_numbers = 10;
 } // anonymous
-
 
 int main() {
     SharedSegmentSemaphoreIpc data_main_sem{std::string{data_sem_name}, EUsageShmSegment::CREATOR};
@@ -95,42 +95,26 @@ int main() {
         exit(0);
     }
 
-    pid_t exit_pid = fork();
-    if (exit_pid == 0) {
-        try {
-            DEBUG("exit_pid: " << exit_pid);
-            SharedSegmentSemaphoreIpc data_sem{std::string{data_sem_name}, EUsageShmSegment::CLIENT};
-            SharedSegmentSemaphoreIpc reader_sem{std::string{reader_sem_name}, EUsageShmSegment::CLIENT};
-            SharedSegmentMemoryIpc mem{std::string{mem_name}, mem_size, EUsageShmSegment::CLIENT};
+    std::cout << "Press any key for exit..." << std::endl;
+    std::cin.get();
+    try {
 
-            data_sem.open();
-            reader_sem.open();
-            mem.open();
+        SharedSegmentSemaphoreIpc data_sem{std::string{data_sem_name}, EUsageShmSegment::CLIENT};
+        SharedSegmentSemaphoreIpc reader_sem{std::string{reader_sem_name}, EUsageShmSegment::CLIENT};
+        SharedSegmentMemoryIpc mem{std::string{mem_name}, mem_size, EUsageShmSegment::CLIENT};
 
-            for (std::size_t i = 0; i < 2; ++i) {
-                std::this_thread::sleep_for(std::chrono::seconds(1));
-                INFO("");
-            }
-            data_sem.wait();
-            mem.write("exit");
-            data_sem.post();
-            reader_sem.post();
-            reader_sem.post();
+        ExitWorker exit_worker{mem};
+        WriterManager manager{reader_nums, data_sem, reader_sem, exit_worker};
 
-            // data_sem.close();
-            // reader_sem.close();
-            // mem.close();
-        } catch (const std::exception& e) {
-            ERROR(e.what());
-        }
-        exit(0);
+        manager.loop();
+
+    } catch (const std::exception& e) {
+        ERROR(e.what());
     }
 
-    INFO("I am waiting for finish all child processes");
     for (size_t n = 0; n < 4; ++n) {
         wait(NULL);
     }
-    INFO("I am finished");
 
     return 0;
 }

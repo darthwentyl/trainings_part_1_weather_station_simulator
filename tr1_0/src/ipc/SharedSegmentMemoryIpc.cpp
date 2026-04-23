@@ -120,7 +120,7 @@ std::string SharedSegmentMemoryIpc::read() const {
         throw shm_error{__FUNCTION__, __LINE__, "shmMem is nullptr"};
     }
 
-    INFO("shmMem: " << shmMem);
+    DEBUG("shmMem: " << shmMem);
     return std::string{shmMem};
 }
 

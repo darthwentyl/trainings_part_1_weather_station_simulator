@@ -480,4 +480,18 @@ TEST_F(SharedSegmentMemoryIpc_tests, client_read_shmMem_nullptr) {
     }
 }
 
+TEST_F(SharedSegmentMemoryIpc_tests, client_already_closed_based_on_usage) {
+    auto& stdLib = StdLibStaticMock::get();
+    auto instance = SharedSegmentMemoryIpc{MEMORY_FILE, MEMORY_SIZE, EUsageShmSegment::UNKNOWN};
+    EXPECT_CALL(stdLib, shmdt(_)).Times(0);
+    instance.close();
+}
+
+TEST_F(SharedSegmentMemoryIpc_tests, client_already_closed_based_on_shmId) {
+    auto& stdLib = StdLibStaticMock::get();
+    auto instance = SharedSegmentMemoryIpc{MEMORY_FILE, MEMORY_SIZE, EUsageShmSegment::CLIENT};
+    EXPECT_CALL(stdLib, shmdt(_)).Times(0);
+    instance.close();
+}
+
 } // anonymous

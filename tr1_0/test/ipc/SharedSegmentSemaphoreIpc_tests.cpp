@@ -412,4 +412,18 @@ TEST_F(SharedSegmentSemaphoreIpc_tests, open_empty_file) {
     }
 }
 
+TEST_F(SharedSegmentSemaphoreIpc_tests, creator_already_closed_based_on_usage) {
+    auto& stdLib = StdLibStaticMock::get();
+    auto instance = SharedSegmentSemaphoreIpc{std::string{""}, EUsageShmSegment::UNKNOWN};
+    EXPECT_CALL(stdLib, semctl(_, _, _)).Times(0);
+    instance.close();
+}
+
+TEST_F(SharedSegmentSemaphoreIpc_tests, creator_already_closed_based_on_semId) {
+    auto& stdLib = StdLibStaticMock::get();
+    auto instance = SharedSegmentSemaphoreIpc{std::string{""}, EUsageShmSegment::CREATOR};
+    EXPECT_CALL(stdLib, semctl(_, _, _)).Times(0);
+    instance.close();
+}
+
 } // anonymous

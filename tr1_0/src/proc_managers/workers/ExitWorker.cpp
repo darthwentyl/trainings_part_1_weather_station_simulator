@@ -8,20 +8,8 @@ namespace mw { namespace proc_managers { namespace workers {
 using namespace mw::ipc;
 
 ExitWorker::ExitWorker(IIpc& ipcData) :
-    Worker{false},
-    ipcData{ipcData}
+    Worker{false, ipcData}
 {}
-
-void ExitWorker::startWorking() {
-    if (isWorking()) {
-        INFO("Worker has already started");
-        return;
-    }
-
-    ipcData.open();
-
-    setWorkingState(true);
-}
 
 void ExitWorker::processData() {
     if (!isWorking()) {
@@ -29,21 +17,11 @@ void ExitWorker::processData() {
         return;
     }
 
-    if (ipcData.read() == "exit") {
+    if (ipc().read() == "exit") {
         return stopWorking();
     }
 
-    ipcData.write("exit");
-}
-
-void ExitWorker::stopWorking() {
-    if (!isWorking()) {
-        INFO("Worker has already stopped");
-        return;
-    }
-
-    ipcData.close();
-    setWorkingState(false);
+    ipc().write("exit");
 }
 
 } } } // mw::proc_managers::workers

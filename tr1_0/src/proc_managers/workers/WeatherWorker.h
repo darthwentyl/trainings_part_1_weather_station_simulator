@@ -21,12 +21,9 @@ public:
     WeatherWorker(WeatherWorker&&) = delete;
     WeatherWorker& operator = (WeatherWorker&&) = delete;
 
-    void startWorking() override;
     void processData() override;
-    void stopWorking() override;
 
 private:
-    ipc::IIpc& ipcData;
     WeatherData data;
 };
 

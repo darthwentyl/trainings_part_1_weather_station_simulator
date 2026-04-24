@@ -21,12 +21,9 @@ public:
     TemperatureWorker(TemperatureWorker&&) = delete;
     TemperatureWorker& operator = (TemperatureWorker&&) = delete;
 
-    void startWorking() override;
     void processData() override;
-    void stopWorking() override;
 
 private:
-    ipc::IIpc& ipcData;
     helpers::FixedLinesFileWriter writer;
 };
 

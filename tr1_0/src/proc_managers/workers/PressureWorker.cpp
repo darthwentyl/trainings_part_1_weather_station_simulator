@@ -11,20 +11,9 @@ constexpr const char* PRESSURE_FILE = "pressure.dat";
 using namespace mw::ipc;
 
 PressureWorker::PressureWorker(IIpc& ipcData, const std::size_t bufferSize) :
-    Worker{false},
-    ipcData{ipcData},
+    Worker{false, ipcData},
     writer{PRESSURE_FILE, bufferSize}
 {}
-
-void PressureWorker::startWorking() {
-    if (isWorking()) {
-        INFO("Worker has already started");
-        return;
-    }
-
-    ipcData.open();
-    setWorkingState(true);
-}
 
 void PressureWorker::processData() {
     if (!isWorking()) {
@@ -32,7 +21,7 @@ void PressureWorker::processData() {
         return;
     }
 
-    const std::string msg = ipcData.read();
+    const std::string msg = ipc().read();
     DEBUG("read: " << msg);
 
     if (msg == "exit") {
@@ -43,15 +32,6 @@ void PressureWorker::processData() {
         DEBUG("Received pressure: " << data.getPressure() << " [hPa]");
         writer.write<double>(data.getPressure());
     }
-}
-
-void PressureWorker::stopWorking() {
-    if (!isWorking()) {
-        INFO("Worker has already stopped");
-        return;
-    }
-    ipcData.close();
-    setWorkingState(false);
 }
 
 } } } // mw::proc_managers::workers

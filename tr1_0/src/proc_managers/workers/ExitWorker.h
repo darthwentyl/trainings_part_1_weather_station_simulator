@@ -20,12 +20,7 @@ public:
     ExitWorker(ExitWorker&&) = delete;
     ExitWorker& operator = (ExitWorker&&) = delete;
 
-    void startWorking() override;
     void processData() override;
-    void stopWorking() override;
-
-private:
-    ipc::IIpc& ipcData;
 };
 
 } } } // mw::proc_managers::workers

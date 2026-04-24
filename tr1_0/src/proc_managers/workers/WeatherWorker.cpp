@@ -13,22 +13,12 @@ namespace mw { namespace proc_managers { namespace workers {
 using namespace mw::ipc;
 
 WeatherWorker::WeatherWorker(IIpc& ipcData) :
-    Worker{false},
-    ipcData{ipcData}
+    Worker{false, ipcData}
 {}
 
-void WeatherWorker::startWorking() {
-    if (isWorking()) {
-        INFO("Worker has already started");
-        return;
-    }
-
-    ipcData.open();
-    setWorkingState(true);
-}
 
 void WeatherWorker::processData() {
-    if (ipcData.read() == "exit") {
+    if (ipc().read() == "exit") {
         return stopWorking();
     }
 
@@ -50,18 +40,7 @@ void WeatherWorker::processData() {
 
     const std::string msg = data.serialize();
     DEBUG(msg);
-    ipcData.write(data.serialize());
-}
-
-void WeatherWorker::stopWorking() {
-    DEBUG("");
-    if (!isWorking()) {
-        INFO("Worker has already stopped");
-        return;
-    }
-
-    ipcData.close();
-    setWorkingState(false);
+    ipc().write(data.serialize());
 }
 
 } } } // mw::proc_managers::workers

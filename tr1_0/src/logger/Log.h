@@ -23,6 +23,7 @@
 
 #include <sstream>
 #include <semaphore.h>
+#include <unistd.h>
 
 #if defined(RELEASE)
 
@@ -33,7 +34,7 @@
 #define DEBUG(msg) \
     do { \
         std::ostringstream oss; \
-        oss << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << msg; \
+        oss << getpid() << ":" << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << msg; \
         mw::Log::log().debug(oss); \
     } while(false)
 
@@ -42,14 +43,14 @@
 #define INFO(msg) \
     do { \
         std::ostringstream oss; \
-        oss << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << msg; \
+        oss << getpid() << ":" << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << msg; \
         mw::Log::log().info(oss); \
     } while(false)
 
 #define ERROR(msg) \
     do { \
         std::ostringstream oss; \
-        oss << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << msg; \
+        oss << getpid() << ":" << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << msg; \
         mw::Log::log().error(oss); \
     } while(false)
 

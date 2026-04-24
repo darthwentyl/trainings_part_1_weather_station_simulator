@@ -31,6 +31,7 @@ namespace {
 } // anonymous
 
 int main() {
+    DEBUG("Start parent...");
     SharedSegmentSemaphoreIpc data_main_sem{std::string{data_sem_name}, EUsageShmSegment::CREATOR};
     SharedSegmentSemaphoreIpc reader_main_sem{std::string{reader_sem_name}, EUsageShmSegment::CREATOR};
     SharedSegmentMemoryIpc main_mem{std::string{mem_name}, mem_size, EUsageShmSegment::CREATOR};
@@ -47,6 +48,7 @@ int main() {
     pid_t writer_weather_pid = fork();
     if (writer_weather_pid == 0) {
         try {
+            DEBUG("Start weather writer...");
             SharedSegmentSemaphoreIpc data_sem{std::string{data_sem_name}, EUsageShmSegment::CLIENT};
             SharedSegmentSemaphoreIpc reader_sem{std::string{reader_sem_name}, EUsageShmSegment::CLIENT};
             SharedSegmentMemoryIpc mem{std::string{mem_name}, mem_size, EUsageShmSegment::CLIENT};
@@ -64,6 +66,7 @@ int main() {
     pid_t reader_temperature_pid = fork();
     if (reader_temperature_pid == 0) {
         try {
+            DEBUG("Start temperature reader...");
             SharedSegmentSemaphoreIpc data_sem{std::string{data_sem_name}, EUsageShmSegment::CLIENT};
             SharedSegmentSemaphoreIpc reader_sem{std::string{reader_sem_name}, EUsageShmSegment::CLIENT};
             SharedSegmentMemoryIpc mem{std::string{mem_name}, mem_size, EUsageShmSegment::CLIENT};
@@ -81,6 +84,7 @@ int main() {
     pid_t reader_pressure_pid = fork();
     if (reader_pressure_pid == 0) {
         try {
+            DEBUG("Start pressure reader...");
             SharedSegmentSemaphoreIpc data_sem{std::string{data_sem_name}, EUsageShmSegment::CLIENT};
             SharedSegmentSemaphoreIpc reader_sem{std::string{reader_sem_name}, EUsageShmSegment::CLIENT};
             SharedSegmentMemoryIpc mem{std::string{mem_name}, mem_size, EUsageShmSegment::CLIENT};
@@ -95,10 +99,9 @@ int main() {
         exit(0);
     }
 
-    std::cout << "Press any key for exit..." << std::endl;
+    INFO("Press enter for exit...");
     std::cin.get();
     try {
-
         SharedSegmentSemaphoreIpc data_sem{std::string{data_sem_name}, EUsageShmSegment::CLIENT};
         SharedSegmentSemaphoreIpc reader_sem{std::string{reader_sem_name}, EUsageShmSegment::CLIENT};
         SharedSegmentMemoryIpc mem{std::string{mem_name}, mem_size, EUsageShmSegment::CLIENT};

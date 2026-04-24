@@ -39,6 +39,9 @@ SharedSegmentMemoryIpc::SharedSegmentMemoryIpc(const std::string& name, const st
 
 SharedSegmentMemoryIpc::~SharedSegmentMemoryIpc() {
     try {
+        if (usage == EUsageShmSegment::UNKNOWN || shmId == NOT_INITIALIZED) {
+            return;
+        }
         close();
     } catch(const std::exception& e) {
         ERROR(e.what());
@@ -98,7 +101,7 @@ void SharedSegmentMemoryIpc::close() {
             throw shm_error{__FUNCTION__, __LINE__, "shmctl", errno};
         }
         if (fs::exists(name)) {
-            INFO("fs::remove(" << name << "): " << std::boolalpha << fs::remove(name));
+            DEBUG("fs::remove(" << name << "): " << std::boolalpha << fs::remove(name));
         }
     } else {
         if (shmdt(shmMem) == FAILURE) {
@@ -110,8 +113,6 @@ void SharedSegmentMemoryIpc::close() {
 }
 
 std::string SharedSegmentMemoryIpc::read() const {
-    DEBUG("pid: " << getpid());
-
     if (usage == EUsageShmSegment::CREATOR) {
         throw shm_error{__FUNCTION__, __LINE__, "cannot read data if you are CREATOR"};
     }
@@ -125,8 +126,6 @@ std::string SharedSegmentMemoryIpc::read() const {
 }
 
 bool SharedSegmentMemoryIpc::write(const std::string& msg) {
-    DEBUG("pid: " << getpid() << " msg: " << msg);
-
     if (usage == EUsageShmSegment::CREATOR) {
         throw shm_error{__FUNCTION__, __LINE__, "cannot write data if you are CREATOR"};
     }
@@ -140,6 +139,7 @@ bool SharedSegmentMemoryIpc::write(const std::string& msg) {
         throw shm_error{__FUNCTION__, __LINE__, "message is too big or equal 0"};
     }
 
+    DEBUG("msg: " << msg);
     std::fill(shmMem, shmMem + size, 0);
     std::copy(msg.cbegin(), msg.cend(), shmMem);
 

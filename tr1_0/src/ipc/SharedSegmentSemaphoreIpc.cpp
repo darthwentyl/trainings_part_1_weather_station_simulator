@@ -33,6 +33,9 @@ SharedSegmentSemaphoreIpc::SharedSegmentSemaphoreIpc(const std::string& name, co
 
 SharedSegmentSemaphoreIpc::~SharedSegmentSemaphoreIpc() {
     try {
+        if (usage == EUsageShmSegment::UNKNOWN || semId == NOT_INITIALIZED) {
+            return;
+        }
         close();
     } catch(const std::exception& e) {
         ERROR(e.what());
@@ -75,11 +78,11 @@ void SharedSegmentSemaphoreIpc::open(const std::size_t initial_val) {
             throw sem_error{__FUNCTION__, __LINE__, "semget", errno};
         }
     }
-    DEBUG("semId: " << semId << " opened");
+    DEBUG("semName: " << semName << " semId: " << semId << " opened");
 }
 
 void SharedSegmentSemaphoreIpc::wait() {
-    DEBUG("enter pid: " << getpid());
+    DEBUG("semName: " << semName << " enter");
     if (usage == EUsageShmSegment::CREATOR) {
         throw sem_error{__FUNCTION__, __LINE__, "cannot do operation on semaphore if you CREATOR"};
     }
@@ -90,14 +93,14 @@ void SharedSegmentSemaphoreIpc::wait() {
     sb.sem_flg = 0;
 
     if (semop(semId, &sb, 1) == FAILURE) {
-        ERROR("pid: " << getpid() << " semop(semId: " << semId << ") failed: " << strerror(errno));
+        ERROR(" semop(semId: " << semId << ") failed: " << strerror(errno));
         throw sem_error{__FUNCTION__, __LINE__, "semop", errno};
     }
-    DEBUG("exit pid: " << getpid());
+    DEBUG("semName: " << semName << " exit");
 }
 
 void SharedSegmentSemaphoreIpc::post() {
-    DEBUG("enter pid: " << getpid());
+    DEBUG("semName: " << semName << " enter");
     if (usage == EUsageShmSegment::CREATOR) {
         throw sem_error{__FUNCTION__, __LINE__, "cannot do operation on semaphore if you CREATOR"};
     }
@@ -108,14 +111,14 @@ void SharedSegmentSemaphoreIpc::post() {
     sb.sem_flg = 0;
 
     if (semop(semId, &sb, 1) == FAILURE) {
-        ERROR("pid: " << getpid() << " semop(semId: " << semId << ") failed: " << strerror(errno));
+        ERROR(" semop(semId: " << semId << ") failed: " << strerror(errno));
         throw sem_error{__FUNCTION__, __LINE__, "semop", errno};
     }
-    DEBUG("enter pid: " << getpid());
+    DEBUG("semName: " << semName << " exit");
 }
 
 void SharedSegmentSemaphoreIpc::close() {
-    DEBUG("pid: " << getpid() << " usage: " << static_cast<int>(usage) << " semId: " << semId);
+    DEBUG("usage: " << static_cast<int>(usage) << " semName: " << semName << ", semId: " << semId);
     if (usage == EUsageShmSegment::UNKNOWN || semId == NOT_INITIALIZED) {
         INFO("Semaphore has already closed");
     }
@@ -125,7 +128,7 @@ void SharedSegmentSemaphoreIpc::close() {
             throw sem_error{__FUNCTION__, __LINE__, "semctl", errno};
         }
         if (fs::exists(semName)) {
-            INFO("fs::remove(" << semName << "): " << std::boolalpha << fs::remove(semName));
+            DEBUG("fs::remove(" << semName << "): " << std::boolalpha << fs::remove(semName));
         }
     }
     setDefault();

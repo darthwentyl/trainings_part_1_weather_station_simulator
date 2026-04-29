@@ -49,4 +49,8 @@ int shmdt(const void* shmaddr) {
     return StdLibStaticMock::get().shmdt(shmaddr);
 }
 
+FILE* popen(const char* command, const char* type) {
+    return StdLibStaticMock::get().popen(command, type);
+}
+
 } // extern "C"

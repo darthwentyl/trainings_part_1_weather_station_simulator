@@ -24,6 +24,7 @@ StdLibStaticMock::StdLibStaticMock() {
     ON_CALL(*this, shmat(_, _, _)).WillByDefault(Return(nullptr));
     ON_CALL(*this, shmctl(_, _, _)).WillByDefault(Return(FAILURE));
     ON_CALL(*this, shmdt(_)).WillByDefault(Return(FAILURE));
+    ON_CALL(*this, popen(_, _)).WillByDefault(Return(nullptr));
 }
 
 } } // mw::mocks

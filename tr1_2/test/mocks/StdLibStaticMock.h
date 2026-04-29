@@ -25,6 +25,7 @@ public:
     MOCK_METHOD(void*, shmat, (int shmid, const void* shmaddr, int shmflg), ());
     MOCK_METHOD(int, shmctl, (int shmid, int op, struct shmid_ds *buf), ());
     MOCK_METHOD(int, shmdt, (const void* shmaddr), ());
+    MOCK_METHOD(FILE*, popen, (const char* command, const char* type), ());
 
 private:
     friend class testing::StrictMock<StdLibStaticMock>;

@@ -3,11 +3,11 @@ Please implement an weather station simulator. The application simulate read, wr
 
 ## Implementation
 The application should support next feature
-* Multiprocess logging system
+* Multi-process logging system
 * Write message in format: temperature: 24.57[C], pressure: 996.57[hPa]
 * MEasurement precision to two digits
-* Save in to file last 10 measurements into file. Temperature and pressure in separates files.
-* Own xceptions implementation
+* Save in to file last 10 measurements into file. Temperature and pressure in separate files.
+* Own exceptions implementation
 
 ## Requirements
 * Modern C++

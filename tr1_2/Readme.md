@@ -1,13 +1,15 @@
 # Exercise
-Please implement an weather station simulator. The application simulate read, write and collect data from temperature and pressure simulated sensors.
+Please add a new process to the implementation from exercise **tr1_1**. The process will read temperature and add measurement next points to chart in real time. X-axis will show time and Y-axis temperature in Fahrenheit. For drawing a graph, please use the gnuplot application. The communication between gnuplot and your process please use pipe stream solution.
 
 ## Implementation
 The application should support next feature
-* Multiprocess logging system
+* Multi-process logging system
 * Write message in format: temperature: 24.57[C], pressure: 996.57[hPa]
 * MEasurement precision to two digits
-* Save in to file last 10 measurements into file. Temperature and pressure in separates files.
-* Own xceptions implementation
+* Save in to file last 10 measurements into file. Temperature and pressure in separate files.
+* Own exceptions implementation
+* Support for pipe stream communication
+* Visualization by gnuplot
 
 ## Requirements
 * Modern C++
@@ -63,6 +65,8 @@ Prepare a bash script which prepares the test coverage report. Let’s launch th
 * https://valgrind.org/docs/manual/index.html
 * https://gcc.gnu.org/onlinedocs/gcc/Gcov.html
 * https://en.wikipedia.org/wiki/UNIX_System_V
+* http://www.gnuplot.info
+* https://www.man7.org/linux//man-pages/man2/pipe.2.html
 
 # Notes
 Valgrind error still reachable https://github.com/google/googletest/pull/4919

@@ -53,4 +53,8 @@ FILE* popen(const char* command, const char* type) {
     return StdLibStaticMock::get().popen(command, type);
 }
 
+int pclose(FILE* stream) {
+    return StdLibStaticMock::get().pclose(stream);
+}
+
 } // extern "C"

@@ -7,6 +7,8 @@ namespace mw { namespace ipc {
 
 using namespace mw::exceptions;
 
+constexpr const int FAILURE = -1;
+
 PipeStreamIpc::PipeStreamIpc(const std::string& command, const EPipeMode mode)
     : command{command}
     , mode{mode}
@@ -14,7 +16,13 @@ PipeStreamIpc::PipeStreamIpc(const std::string& command, const EPipeMode mode)
 {}
 
 PipeStreamIpc::~PipeStreamIpc() {
-
+    try {
+        if (stream != nullptr) {
+            close();
+        }
+    } catch (const std::exception& e) {
+        ERROR(e.what());
+    }
 }
 
 void PipeStreamIpc::open() {
@@ -32,10 +40,19 @@ void PipeStreamIpc::open() {
     if (stream == nullptr) {
         throw pipe_error{__FUNCTION__, __LINE__, "Cannot open pipe stream for command: " + command};
     }
+    DEBUG("Command " << command << " has already opened");
 }
 
 void PipeStreamIpc::close() {
+    if (stream == nullptr) {
+        INFO("Pipe stream for command " << command << " has already cloed");
+        return;
+    }
 
+    if (pclose(stream) == FAILURE) {
+        throw pipe_error{__FUNCTION__, __LINE__, "Cannot close pipe stream for command: " + command};
+    }
+    stream = nullptr;
 }
 
 std::string PipeStreamIpc::read() const {

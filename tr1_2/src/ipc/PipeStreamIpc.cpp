@@ -30,7 +30,7 @@ void PipeStreamIpc::open() {
     stream = popen(command.c_str(), getMode().c_str());
 
     if (stream == nullptr) {
-        throw pipe_error{__FUNCTION__, __LINE__, "Cannot open pipe stream to command " + command};
+        throw pipe_error{__FUNCTION__, __LINE__, "Cannot open pipe stream for command: " + command};
     }
 }
 

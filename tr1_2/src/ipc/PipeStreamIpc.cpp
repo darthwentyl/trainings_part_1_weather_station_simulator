@@ -79,7 +79,23 @@ std::string PipeStreamIpc::read() const {
 }
 
 bool PipeStreamIpc::write(const std::string& msg) {
-    return false;
+    if (stream == nullptr) {
+        throw pipe_error{__FUNCTION__, __LINE__, "Stream has not started, yet"};
+    }
+
+    if (mode == EPipeMode::READ) {
+        throw pipe_error{__FUNCTION__, __LINE__, "Cannot write data when you are in read mode"};
+    }
+
+    if (fputs(msg.c_str(), stream) == EOF) {
+        throw pipe_error{__FUNCTION__, __LINE__, "Write msg to " + command + " failed"};
+    }
+
+    if (fflush(stream) == EOF) {
+        throw pipe_error{__FUNCTION__, __LINE__, "fflush " + command + " failed: " + strerror(errno)};
+    }
+
+    return true;
 }
 
 std::string PipeStreamIpc::getMode() const {

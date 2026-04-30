@@ -57,4 +57,8 @@ int pclose(FILE* stream) {
     return StdLibStaticMock::get().pclose(stream);
 }
 
+char* fgets(char s[], int size, FILE* stream) {
+    return StdLibStaticMock::get().fgets(s, size, stream);
+}
+
 } // extern "C"

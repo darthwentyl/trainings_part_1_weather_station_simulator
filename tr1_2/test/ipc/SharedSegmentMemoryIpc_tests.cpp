@@ -61,7 +61,8 @@ TEST_F(SharedSegmentMemoryIpc_tests, creator_open_success) {
         auto instance = SharedSegmentMemoryIpc{MEMORY_FILE, MEMORY_SIZE, EUsageShmSegment::CREATOR};
         instance.open();
         EXPECT_TRUE(fs::exists(MEMORY_FILE));
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
     EXPECT_FALSE(fs::exists(MEMORY_FILE));
@@ -79,7 +80,8 @@ TEST_F(SharedSegmentMemoryIpc_tests, creator_open_ftok_failed) {
     } catch (const ftok_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -98,7 +100,8 @@ TEST_F(SharedSegmentMemoryIpc_tests, creator_open_semget_failed) {
     } catch (const shm_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -118,7 +121,8 @@ TEST_F(SharedSegmentMemoryIpc_tests, client_open_success) {
         auto instance = SharedSegmentMemoryIpc{MEMORY_FILE, MEMORY_SIZE, EUsageShmSegment::CLIENT};
         instance.open();
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -135,7 +139,8 @@ TEST_F(SharedSegmentMemoryIpc_tests, client_open_ftok_failure) {
     } catch (const ftok_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -154,7 +159,8 @@ TEST_F(SharedSegmentMemoryIpc_tests, client_open_shmget_failed) {
     } catch (const shm_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -176,7 +182,8 @@ TEST_F(SharedSegmentMemoryIpc_tests, client_open_shmat_failure) {
     } catch (const shm_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -190,7 +197,8 @@ TEST_F(SharedSegmentMemoryIpc_tests, unknown_open) {
     } catch (const shm_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -204,7 +212,8 @@ TEST_F(SharedSegmentMemoryIpc_tests, size_0_open) {
     } catch (const shm_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -218,7 +227,8 @@ TEST_F(SharedSegmentMemoryIpc_tests, open_empty_file) {
     } catch (const std::runtime_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -238,7 +248,8 @@ TEST_F(SharedSegmentMemoryIpc_tests, creator_close_success) {
     try {
         instance.close();
         EXPECT_FALSE(fs::exists(MEMORY_FILE));
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -261,7 +272,8 @@ TEST_F(SharedSegmentMemoryIpc_tests, creator_close_shmctl_failure) {
     } catch (const shm_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -283,7 +295,8 @@ TEST_F(SharedSegmentMemoryIpc_tests, client_close_success) {
     try {
         instance.close();
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -308,7 +321,8 @@ TEST_F(SharedSegmentMemoryIpc_tests, client_close_shmdt_failure) {
     } catch (const shm_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -332,7 +346,8 @@ TEST_F(SharedSegmentMemoryIpc_tests, creator_write) {
     } catch (const shm_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -355,7 +370,8 @@ TEST_F(SharedSegmentMemoryIpc_tests, client_write_success) {
     try {
         EXPECT_TRUE(instance.write(msg));
         EXPECT_STREQ(msg.data(), shmMem.data());
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -379,7 +395,8 @@ TEST_F(SharedSegmentMemoryIpc_tests, client_write_shmMem_nullptr) {
     } catch (const shm_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -405,7 +422,8 @@ TEST_F(SharedSegmentMemoryIpc_tests, client_write_message_too_big) {
     } catch (const shm_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -430,7 +448,8 @@ TEST_F(SharedSegmentMemoryIpc_tests, client_write_message_equal_zero) {
     } catch (const shm_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -451,7 +470,8 @@ TEST_F(SharedSegmentMemoryIpc_tests, client_read_success) {
 
     try {
         EXPECT_STREQ(instance.read().c_str(), msg.c_str());
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -475,7 +495,8 @@ TEST_F(SharedSegmentMemoryIpc_tests, client_read_shmMem_nullptr) {
     } catch (const shm_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }

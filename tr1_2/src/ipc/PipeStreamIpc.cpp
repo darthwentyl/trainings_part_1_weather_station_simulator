@@ -8,6 +8,7 @@ namespace mw { namespace ipc {
 using namespace mw::exceptions;
 
 constexpr const int FAILURE = -1;
+constexpr const std::size_t READ_BUFF_SIZE = 1024;
 
 PipeStreamIpc::PipeStreamIpc(const std::string& command, const EPipeMode mode)
     : command{command}
@@ -50,13 +51,31 @@ void PipeStreamIpc::close() {
     }
 
     if (pclose(stream) == FAILURE) {
+        stream = nullptr;
         throw pipe_error{__FUNCTION__, __LINE__, "Cannot close pipe stream for command: " + command};
     }
     stream = nullptr;
 }
 
 std::string PipeStreamIpc::read() const {
-    return std::string{};
+    if (stream == nullptr) {
+        throw pipe_error{__FUNCTION__, __LINE__, "Stream has not started, yet"};
+    }
+
+    if (mode == EPipeMode::WRITE) {
+        throw pipe_error{__FUNCTION__, __LINE__, "Cannot read data when you are in write mode"};
+    }
+
+    char buff[READ_BUFF_SIZE];
+    std::string data;
+    data.reserve(READ_BUFF_SIZE);
+
+    while(fgets(buff, READ_BUFF_SIZE, stream) != nullptr) {
+        data.append(buff);
+    }
+
+    DEBUG("Received data: " << data);
+    return data;
 }
 
 bool PipeStreamIpc::write(const std::string& msg) {

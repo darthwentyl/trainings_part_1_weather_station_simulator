@@ -61,4 +61,14 @@ char* fgets(char s[], int size, FILE* stream) {
     return StdLibStaticMock::get().fgets(s, size, stream);
 }
 
+int fputs(const char* s, FILE* stream) {
+    return StdLibStaticMock::get().fputs(s, stream);
+}
+
+int fflush([[maybe_unused]] FILE* stream) {
+    // TODO: I tried to mock but to many places are called this function
+    // so I decided always say 0 - success
+    return 0;
+}
+
 } // extern "C"

@@ -27,6 +27,7 @@ StdLibStaticMock::StdLibStaticMock() {
     ON_CALL(*this, popen(_, _)).WillByDefault(Return(nullptr));
     ON_CALL(*this, pclose(_)).WillByDefault(Return(FAILURE));
     ON_CALL(*this, fgets(_, _, _)).WillByDefault(Return(nullptr));
+    ON_CALL(*this, fputs(_, _)).WillByDefault(Return(EOF));
 }
 
 } } // mw::mocks

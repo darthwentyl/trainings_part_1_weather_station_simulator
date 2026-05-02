@@ -28,6 +28,7 @@ public:
     MOCK_METHOD(FILE*, popen, (const char* command, const char* type), ());
     MOCK_METHOD(int, pclose, (FILE* stream), ());
     MOCK_METHOD(char*, fgets, (char s[], int size, FILE* stream), ());
+    MOCK_METHOD(int, fputs, (const char* s, FILE* stream), ());
 
 private:
     friend class testing::StrictMock<StdLibStaticMock>;

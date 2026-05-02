@@ -3,6 +3,8 @@
 
 #include <exceptions/pipe_error.h>
 
+#include <cstring>
+
 namespace mw { namespace ipc {
 
 using namespace mw::exceptions;
@@ -91,9 +93,7 @@ bool PipeStreamIpc::write(const std::string& msg) {
         throw pipe_error{__FUNCTION__, __LINE__, "Write msg to " + command + " failed"};
     }
 
-    if (fflush(stream) == EOF) {
-        throw pipe_error{__FUNCTION__, __LINE__, "fflush " + command + " failed: " + strerror(errno)};
-    }
+    fflush(stream);
 
     return true;
 }

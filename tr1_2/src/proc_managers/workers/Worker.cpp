@@ -6,8 +6,8 @@ namespace mw { namespace proc_managers { namespace workers {
 
 using namespace mw::ipc;
 
-Worker::Worker(const bool working, IIpc& ipcData) :
-    working{working},
+Worker::Worker(IIpc& ipcData) :
+    working{false},
     ipcData{ipcData}
 {}
 

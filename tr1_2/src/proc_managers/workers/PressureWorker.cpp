@@ -11,7 +11,7 @@ constexpr const char* PRESSURE_FILE = "pressure.dat";
 using namespace mw::ipc;
 
 PressureWorker::PressureWorker(IIpc& ipcData, const std::size_t bufferSize) :
-    Worker{false, ipcData},
+    Worker{ipcData},
     writer{PRESSURE_FILE, bufferSize}
 {}
 

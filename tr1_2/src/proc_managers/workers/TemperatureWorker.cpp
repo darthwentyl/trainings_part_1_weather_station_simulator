@@ -11,7 +11,7 @@ constexpr const char* TEMPERATURE_FILE = "temperature.dat";
 using namespace mw::ipc;
 
 TemperatureWorker::TemperatureWorker(IIpc& ipcData, const std::size_t bufferSize) :
-    Worker{false, ipcData},
+    Worker{ipcData},
     writer{TEMPERATURE_FILE, bufferSize}
 {}
 

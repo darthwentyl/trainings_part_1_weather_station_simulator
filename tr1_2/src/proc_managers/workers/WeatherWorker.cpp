@@ -13,7 +13,7 @@ namespace mw { namespace proc_managers { namespace workers {
 using namespace mw::ipc;
 
 WeatherWorker::WeatherWorker(IIpc& ipcData) :
-    Worker{false, ipcData}
+    Worker{ipcData}
 {}
 
 

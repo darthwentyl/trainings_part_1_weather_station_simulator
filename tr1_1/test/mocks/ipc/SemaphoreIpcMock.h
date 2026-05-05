@@ -9,8 +9,8 @@ public:
     ~SemaphoreIpcMock() = default;
 
     MOCK_METHOD(void, open, (const std::size_t initial_val), (override));
-    MOCK_METHOD(void, wait, (), (override));
-    MOCK_METHOD(void, post, (), (override));
+    MOCK_METHOD(void, wait, (), (const, override));
+    MOCK_METHOD(void, post, (), (const, override));
     MOCK_METHOD(void, close, (), (override));
 };
 

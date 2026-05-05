@@ -80,7 +80,7 @@ std::string PipeStreamIpc::read() const {
     return data;
 }
 
-bool PipeStreamIpc::write(const std::string& msg) {
+bool PipeStreamIpc::write(const std::string& msg) const {
     if (stream == nullptr) {
         throw pipe_error{__FUNCTION__, __LINE__, "Stream has not started, yet"};
     }

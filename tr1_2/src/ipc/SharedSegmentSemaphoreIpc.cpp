@@ -81,7 +81,7 @@ void SharedSegmentSemaphoreIpc::open(const std::size_t initial_val) {
     DEBUG("semName: " << semName << " semId: " << semId << " opened");
 }
 
-void SharedSegmentSemaphoreIpc::wait() {
+void SharedSegmentSemaphoreIpc::wait() const {
     DEBUG("semName: " << semName << " enter");
     if (usage == EUsageShmSegment::CREATOR) {
         throw sem_error{__FUNCTION__, __LINE__, "cannot do operation on semaphore if you CREATOR"};
@@ -99,7 +99,7 @@ void SharedSegmentSemaphoreIpc::wait() {
     DEBUG("semName: " << semName << " exit");
 }
 
-void SharedSegmentSemaphoreIpc::post() {
+void SharedSegmentSemaphoreIpc::post() const {
     DEBUG("semName: " << semName << " enter");
     if (usage == EUsageShmSegment::CREATOR) {
         throw sem_error{__FUNCTION__, __LINE__, "cannot do operation on semaphore if you CREATOR"};

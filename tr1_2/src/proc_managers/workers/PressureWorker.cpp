@@ -10,8 +10,8 @@ constexpr const char* PRESSURE_FILE = "pressure.dat";
 
 using namespace mw::ipc;
 
-PressureWorker::PressureWorker(IIpc& ipcData, const std::size_t bufferSize) :
-    Worker{ipcData},
+PressureWorker::PressureWorker(IIpc& ipcMemory, const std::size_t bufferSize) :
+    Worker{ipcMemory},
     writer{PRESSURE_FILE, bufferSize}
 {}
 
@@ -21,7 +21,7 @@ void PressureWorker::processData() {
         return;
     }
 
-    const std::string msg = ipc().read();
+    const std::string msg = ipcMem().read();
     DEBUG("read: " << msg);
 
     if (msg == "exit") {

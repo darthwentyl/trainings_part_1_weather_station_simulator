@@ -13,7 +13,7 @@ namespace mw { namespace proc_managers { namespace workers {
 
 class TemperatureWorker : public Worker {
 public:
-    TemperatureWorker(ipc::IIpc& ipcData, const std::size_t bufferSize);
+    TemperatureWorker(ipc::IIpc& ipcMemory, const std::size_t bufferSize);
     ~TemperatureWorker() = default;
 
     TemperatureWorker(const TemperatureWorker&) = delete;

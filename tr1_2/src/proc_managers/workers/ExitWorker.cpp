@@ -7,8 +7,8 @@ namespace mw { namespace proc_managers { namespace workers {
 
 using namespace mw::ipc;
 
-ExitWorker::ExitWorker(IIpc& ipcData) :
-    Worker{ipcData}
+ExitWorker::ExitWorker(IIpc& ipcMemory) :
+    Worker{ipcMemory}
 {}
 
 void ExitWorker::processData() {
@@ -17,11 +17,11 @@ void ExitWorker::processData() {
         return;
     }
 
-    if (ipc().read() == "exit") {
+    if (ipcMem().read() == "exit") {
         return stopWorking();
     }
 
-    ipc().write("exit");
+    ipcMem().write("exit");
 }
 
 } } } // mw::proc_managers::workers

@@ -11,7 +11,7 @@ public:
     virtual void open() = 0;
     virtual void close() = 0;
     virtual std::string read() const = 0;
-    virtual bool write(const std::string& msg) = 0;
+    virtual bool write(const std::string& msg) const = 0;
 };
 
 } } // mw::ipc

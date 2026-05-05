@@ -14,7 +14,7 @@ public:
     MOCK_METHOD(void, open, (), (override));
     MOCK_METHOD(void, close, (), (override));
     MOCK_METHOD(std::string, read, (), (const, override));
-    MOCK_METHOD(bool, write, (const std::string& msg), (override));
+    MOCK_METHOD(bool, write, (const std::string& msg), (const, override));
 };
 
 } } // mw::mocks

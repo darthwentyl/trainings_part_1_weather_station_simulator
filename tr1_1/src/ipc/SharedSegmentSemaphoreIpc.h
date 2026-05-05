@@ -18,8 +18,8 @@ public:
     SharedSegmentSemaphoreIpc& operator = (SharedSegmentSemaphoreIpc&&) = delete;
 
     void open(const std::size_t initial_val = std::numeric_limits<std::size_t>::max()) override;
-    void wait() override;
-    void post() override;
+    void wait() const override;
+    void post() const override;
     void close() override;
 
 private:

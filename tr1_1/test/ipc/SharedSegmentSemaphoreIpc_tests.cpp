@@ -61,7 +61,8 @@ TEST_F(SharedSegmentSemaphoreIpc_tests, creator_open_success) {
         auto instance = SharedSegmentSemaphoreIpc{std::string{SEMAPHORE_FILE}, EUsageShmSegment::CREATOR};
         instance.open(0);
         EXPECT_TRUE(fs::exists(semName));
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(false);
     }
     EXPECT_FALSE(fs::exists(semName));
@@ -84,7 +85,8 @@ TEST_F(SharedSegmentSemaphoreIpc_tests, creator_open_file_exists_before_create) 
         auto instance = SharedSegmentSemaphoreIpc{std::string{SEMAPHORE_FILE}, EUsageShmSegment::CREATOR};
         instance.open(0);
         EXPECT_TRUE(fs::exists(semName));
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(false);
     }
     EXPECT_FALSE(fs::exists(semName));
@@ -102,7 +104,8 @@ TEST_F(SharedSegmentSemaphoreIpc_tests, creator_open_ftok_failure) {
     } catch (const ftok_error& e) {
         std::cout << __PRETTY_FUNCTION__<< ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -121,7 +124,8 @@ TEST_F(SharedSegmentSemaphoreIpc_tests, creator_open_semget_ipc_creat_0666_failu
     } catch (const sem_error& e) {
         std::cout << __PRETTY_FUNCTION__<< ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -143,7 +147,8 @@ TEST_F(SharedSegmentSemaphoreIpc_tests, creator_open_semctl_setval_failure) {
     } catch (const sem_error& e) {
         std::cout << __PRETTY_FUNCTION__<< ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -160,7 +165,8 @@ TEST_F(SharedSegmentSemaphoreIpc_tests, creator_open_initial_val_not_set) {
     } catch (const sem_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -173,7 +179,8 @@ TEST_F(SharedSegmentSemaphoreIpc_tests, creator_wait) {
     } catch (const sem_error& e) {
         std::cout << __PRETTY_FUNCTION__<< ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -186,7 +193,8 @@ TEST_F(SharedSegmentSemaphoreIpc_tests, creator_post) {
     } catch (const sem_error& e) {
         std::cout << __PRETTY_FUNCTION__<< ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -208,7 +216,8 @@ TEST_F(SharedSegmentSemaphoreIpc_tests, creator_close_success) {
     try {
         instance.close();
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
     EXPECT_FALSE(fs::exists(semName));
@@ -234,7 +243,8 @@ TEST_F(SharedSegmentSemaphoreIpc_tests, creator_close_ipc_rmid_failure) {
     } catch (const sem_error& e) {
         std::cout << __PRETTY_FUNCTION__<< ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -270,7 +280,8 @@ TEST_F(SharedSegmentSemaphoreIpc_tests, client_open_success) {
     try {
         auto instance = SharedSegmentSemaphoreIpc{std::string{SEMAPHORE_FILE}, EUsageShmSegment::CLIENT};
         instance.open();
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(false);
     }
 }
@@ -287,7 +298,8 @@ TEST_F(SharedSegmentSemaphoreIpc_tests, client_open_ftok_failure) {
     } catch (const ftok_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -306,7 +318,8 @@ TEST_F(SharedSegmentSemaphoreIpc_tests, client_open_semget_failure) {
     } catch (const sem_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -325,7 +338,8 @@ TEST_F(SharedSegmentSemaphoreIpc_tests, client_wait_success) {
 
     try {
         instance.wait();
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(false);
     }
 }
@@ -343,7 +357,8 @@ TEST_F(SharedSegmentSemaphoreIpc_tests, client_wait_failure) {
     } catch (const sem_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -362,7 +377,8 @@ TEST_F(SharedSegmentSemaphoreIpc_tests, client_post_success) {
 
     try {
         instance.post();
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(false);
     }
 }
@@ -380,7 +396,8 @@ TEST_F(SharedSegmentSemaphoreIpc_tests, client_post_failure) {
     } catch (const sem_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -394,7 +411,8 @@ TEST_F(SharedSegmentSemaphoreIpc_tests, unknown_open) {
     } catch (const sem_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -407,7 +425,8 @@ TEST_F(SharedSegmentSemaphoreIpc_tests, open_empty_file) {
     } catch (const std::runtime_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }

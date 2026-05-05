@@ -45,7 +45,8 @@ TEST_F(FixedLinesFileWriter_tests, empty_file_name) {
     } catch (const fixed_lines_file_writer_error& e) {
         std::cout << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -59,7 +60,8 @@ TEST_F(FixedLinesFileWriter_tests, numbers_of_lines_zero) {
     } catch (const fixed_lines_file_writer_error& e) {
         std::cout << e.what() << std::endl;
         EXPECT_TRUE(true);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -76,7 +78,8 @@ TEST_F(FixedLinesFileWriter_tests, write_elem) {
         unsigned readElem = 0;
         ifs >> readElem;
         EXPECT_EQ(readElem, elem);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -96,7 +99,8 @@ TEST_F(FixedLinesFileWriter_tests, write_more_than_lines) {
             ++lines;
         }
         EXPECT_EQ(lines, MAX_NUMBER_OF_LINES);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -116,7 +120,8 @@ TEST_F(FixedLinesFileWriter_tests, write_more_than_lines_and_valid_data) {
         ifs >> elem2;
         EXPECT_EQ(elem1, datas[NUMBER_OF_SAMPLES - MAX_NUMBER_OF_LINES]);
         EXPECT_EQ(elem2, datas[NUMBER_OF_SAMPLES - MAX_NUMBER_OF_LINES + 1]);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -139,7 +144,8 @@ TEST_F(FixedLinesFileWriter_tests, write_to_the_exist_measurement_file_less_than
         ifs >> elem2;
         EXPECT_EQ(elem1, datas[NUMBER_OF_SAMPLES - MAX_NUMBER_OF_LINES]);
         EXPECT_EQ(elem2, datas[NUMBER_OF_SAMPLES - MAX_NUMBER_OF_LINES + 1]);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }
@@ -164,7 +170,8 @@ TEST_F(FixedLinesFileWriter_tests, write_to_the_exist_measurement_file_greatest_
         ifs >> elem2;
         EXPECT_EQ(elem1, datas[NUMBER_OF_SAMPLES - MAX_NUMBER_OF_LINES]);
         EXPECT_EQ(elem2, datas[NUMBER_OF_SAMPLES - MAX_NUMBER_OF_LINES + 1]);
-    } catch (...) {
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
 }

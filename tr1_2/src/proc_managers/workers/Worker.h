@@ -12,7 +12,7 @@ namespace mw { namespace proc_managers { namespace workers {
 
 class Worker : public  IWorker {
 public:
-    Worker(ipc::IIpc& ipcData);
+    Worker(ipc::IIpc& ipcMemory);
     ~Worker() = default;
 
     Worker(const Worker&) = delete;
@@ -22,15 +22,15 @@ public:
 
     void startWorking() override;
     void stopWorking() override;
-    bool isWorking() override;
+    bool isWorking() const override;
 
 protected:
     void setWorkingState(const bool working);
-    ipc::IIpc& ipc();
+    ipc::IIpc& ipcMem();
 
 private:
     bool working;
-    ipc::IIpc& ipcData;
+    ipc::IIpc& ipcMemory;
 };
 
 } } }  // mw::proc_managers::workes

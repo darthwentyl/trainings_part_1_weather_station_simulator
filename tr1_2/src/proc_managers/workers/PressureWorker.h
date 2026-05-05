@@ -13,7 +13,7 @@ namespace mw { namespace proc_managers { namespace workers {
 
 class PressureWorker : public Worker {
 public:
-    PressureWorker(ipc::IIpc& ipcData, const std::size_t bufferSize);
+    PressureWorker(ipc::IIpc& ipcMemory, const std::size_t bufferSize);
     ~PressureWorker() = default;
 
     PressureWorker(const PressureWorker&) = delete;

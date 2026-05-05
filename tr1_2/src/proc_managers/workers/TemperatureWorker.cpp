@@ -10,8 +10,8 @@ constexpr const char* TEMPERATURE_FILE = "temperature.dat";
 
 using namespace mw::ipc;
 
-TemperatureWorker::TemperatureWorker(IIpc& ipcData, const std::size_t bufferSize) :
-    Worker{ipcData},
+TemperatureWorker::TemperatureWorker(IIpc& ipcMemory, const std::size_t bufferSize) :
+    Worker{ipcMemory},
     writer{TEMPERATURE_FILE, bufferSize}
 {}
 
@@ -21,7 +21,7 @@ void TemperatureWorker::processData() {
         return;
     }
 
-    const std::string msg = ipc().read();
+    const std::string msg = ipcMem().read();
     DEBUG("read: " << msg);
 
     if (msg == "exit") {

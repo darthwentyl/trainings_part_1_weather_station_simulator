@@ -11,7 +11,7 @@ public:
     virtual void startWorking() = 0;
     virtual void processData() = 0;
     virtual void stopWorking() = 0;
-    virtual bool isWorking() = 0;
+    virtual bool isWorking() const = 0;
 };
 
 } } } // mw::proc_managers::workers

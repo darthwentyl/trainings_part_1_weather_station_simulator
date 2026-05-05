@@ -12,7 +12,7 @@ public:
     MOCK_METHOD(void, startWorking, (), (override));
     MOCK_METHOD(void, processData, (), (override));
     MOCK_METHOD(void, stopWorking, (), (override));
-    MOCK_METHOD(bool, isWorking, (), (override));
+    MOCK_METHOD(bool, isWorking, (), (const, override));
 };
 
 } } // mw::mocks

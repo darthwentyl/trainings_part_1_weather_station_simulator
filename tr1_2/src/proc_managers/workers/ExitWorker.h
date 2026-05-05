@@ -12,7 +12,7 @@ namespace mw { namespace proc_managers { namespace workers {
 
 class ExitWorker : public Worker {
 public:
-    ExitWorker(ipc::IIpc& ipcData);
+    ExitWorker(ipc::IIpc& ipcMemory);
     ~ExitWorker() = default;
 
     ExitWorker(const ExitWorker&) = delete;

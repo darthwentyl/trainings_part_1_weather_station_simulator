@@ -13,7 +13,7 @@ namespace mw { namespace proc_managers { namespace workers {
 
 class WeatherWorker : public Worker {
 public:
-    WeatherWorker(ipc::IIpc& ipcData);
+    WeatherWorker(ipc::IIpc& ipcMemory);
     ~WeatherWorker() = default;
 
     WeatherWorker(const WeatherWorker&) = delete;

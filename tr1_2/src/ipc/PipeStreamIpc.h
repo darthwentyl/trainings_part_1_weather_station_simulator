@@ -18,7 +18,7 @@ public:
     void open() override;
     void close() override;
     std::string read() const override;
-    bool write(const std::string& msg) override;
+    bool write(const std::string& msg) const override;
 
 private:
     std::string getMode() const;

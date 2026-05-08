@@ -2,12 +2,9 @@
 
 #include <string>
 
-namespace mw { namespace helpers {
+#include <helpers/EGnuplotAxis.h>
 
-enum class EGnuplotAxis {
-    OX = 0,
-    OY = 1
-};
+namespace mw { namespace helpers {
 
 class GnuplotCommander {
 public:

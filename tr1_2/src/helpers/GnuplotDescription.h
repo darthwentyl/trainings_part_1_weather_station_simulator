@@ -12,7 +12,8 @@ public:
         const std::size_t height,
         const std::string& title,
         const std::string& xLabel,
-        const std::string& yLabel);
+        const std::string& yLabel,
+        const std::string& legend);
     GnuplotDescription(const GnuplotDescription& copy);
     GnuplotDescription& operator = (const GnuplotDescription& copy);
 
@@ -20,6 +21,7 @@ public:
     const std::size_t& getHeight() const;
     const std::string& getTitle() const;
     const std::string& getAxisLabel(const EGnuplotAxis axis) const;
+    const std::string& getLegend() const;
 
 private:
     std::size_t width;
@@ -27,6 +29,7 @@ private:
     std::string title;
     std::string xLabel;
     std::string yLabel;
+    std::string legend;
 };
 
 } } // mw::helpers

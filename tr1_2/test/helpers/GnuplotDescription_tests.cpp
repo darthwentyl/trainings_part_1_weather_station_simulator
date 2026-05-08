@@ -12,6 +12,7 @@ constexpr const std::size_t HEIGHT = 600;
 constexpr const char* TITLE = "test_title";
 constexpr const char* X_LABEL = "test xlabel";
 constexpr const char* Y_LABEL = "test ylabel";
+constexpr const char* LEGEND = "test legend";
 
 class GnuplotDescription_tests : public Test {
 public:
@@ -24,7 +25,8 @@ protected:
             HEIGHT,
             TITLE,
             X_LABEL,
-            Y_LABEL
+            Y_LABEL,
+            LEGEND
         }
     {}
 
@@ -51,6 +53,10 @@ TEST_F(GnuplotDescription_tests, getAxisLabel_y_label) {
     EXPECT_STREQ(gnuplotDescription.getAxisLabel(EGnuplotAxis::OY).c_str(), Y_LABEL);
 }
 
+TEST_F(GnuplotDescription_tests, getLegend) {
+    EXPECT_STREQ(gnuplotDescription.getLegend().c_str(), LEGEND);
+}
+
 TEST_F(GnuplotDescription_tests, copy_constructor) {
     GnuplotDescription newGnuplotDescription{gnuplotDescription};
     EXPECT_EQ(newGnuplotDescription.getWidth(), gnuplotDescription.getWidth());
@@ -63,10 +69,13 @@ TEST_F(GnuplotDescription_tests, copy_constructor) {
     EXPECT_STREQ(
         newGnuplotDescription.getAxisLabel(EGnuplotAxis::OY).c_str(),
         gnuplotDescription.getAxisLabel(EGnuplotAxis::OY).c_str());
+    EXPECT_STREQ(
+        newGnuplotDescription.getLegend().c_str(),
+        gnuplotDescription.getLegend().c_str());
 }
 
 TEST_F(GnuplotDescription_tests, operator_assignment) {
-    GnuplotDescription newGnuplotDescription{1, 2, "title", "xlabel", "ylabel"};
+    GnuplotDescription newGnuplotDescription{1, 2, "title", "xlabel", "ylabel", "legend"};
     newGnuplotDescription = gnuplotDescription;
     EXPECT_EQ(newGnuplotDescription.getWidth(), gnuplotDescription.getWidth());
     EXPECT_EQ(newGnuplotDescription.getHeight(), gnuplotDescription.getHeight());
@@ -79,6 +88,9 @@ TEST_F(GnuplotDescription_tests, operator_assignment) {
     EXPECT_STREQ(
         newGnuplotDescription.getAxisLabel(EGnuplotAxis::OY).c_str(),
         gnuplotDescription.getAxisLabel(EGnuplotAxis::OY).c_str());
+    EXPECT_STREQ(
+        newGnuplotDescription.getLegend().c_str(),
+        gnuplotDescription.getLegend().c_str());
 }
 
 } // anonymous

@@ -6,12 +6,14 @@ GnuplotDescription::GnuplotDescription(const std::size_t width,
     const std::size_t height,
     const std::string& title,
     const std::string& xLabel,
-    const std::string& yLabel) :
+    const std::string& yLabel,
+    const std::string& legend) :
     width(width),
     height(height),
     title(title),
     xLabel(xLabel),
-    yLabel(yLabel)
+    yLabel(yLabel),
+    legend(legend)
 {}
 
 GnuplotDescription::GnuplotDescription(const GnuplotDescription& copy) :
@@ -19,7 +21,8 @@ GnuplotDescription::GnuplotDescription(const GnuplotDescription& copy) :
     height{copy.height},
     title{copy.title},
     xLabel{copy.xLabel},
-    yLabel{copy.yLabel}
+    yLabel{copy.yLabel},
+    legend{copy.legend}
 {}
 
 GnuplotDescription& GnuplotDescription::operator = (const GnuplotDescription& copy) {
@@ -28,6 +31,7 @@ GnuplotDescription& GnuplotDescription::operator = (const GnuplotDescription& co
     this->title = copy.title;
     this->xLabel = copy.xLabel;
     this->yLabel = copy.yLabel;
+    this->legend = copy.legend;
     return *this;
 }
 
@@ -50,6 +54,10 @@ const std::string& GnuplotDescription::getAxisLabel(const EGnuplotAxis axis) con
         default:
             return xLabel;
     }
+}
+
+const std::string& GnuplotDescription::getLegend() const {
+    return legend;
 }
 
 } } // mw::helpers

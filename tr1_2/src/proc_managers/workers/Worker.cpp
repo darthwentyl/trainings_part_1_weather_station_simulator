@@ -21,7 +21,6 @@ void Worker::startWorking() {
 }
 
 void Worker::stopWorking() {
-    DEBUG("");
     if (!isWorking()) {
         INFO("Worker has already stopped");
         return;

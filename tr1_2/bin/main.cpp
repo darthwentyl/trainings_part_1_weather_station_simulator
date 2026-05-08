@@ -8,6 +8,7 @@
 #include <signal.h>
 
 #include <logger/Log.h>
+#include <ipc/PipeStreamIpc.h>
 #include <ipc/SharedSegmentMemoryIpc.h>
 #include <ipc/SharedSegmentSemaphoreIpc.h>
 #include <proc_managers/ReaderManager.h>
@@ -16,6 +17,7 @@
 #include <proc_managers/workers/TemperatureWorker.h>
 #include <proc_managers/workers/PressureWorker.h>
 #include <proc_managers/workers/ExitWorker.h>
+#include <proc_managers/workers/GnuplotWorker.h>
 
 using namespace mw::ipc;
 using namespace mw::proc_managers;
@@ -26,8 +28,10 @@ namespace {
     constexpr const char* reader_sem_name = "reader.sem";
     constexpr const char* mem_name = "weather_data_memory";
     constexpr const std::size_t mem_size = 128;
-    constexpr const std::size_t reader_nums = 2;
+    constexpr const std::size_t reader_nums = 3;
     constexpr const std::size_t file_max_line_numbers = 10;
+    constexpr const char* temperature_dat = "temperature.dat";
+    constexpr const char* gnuplot_cmd = "gnuplot";
 } // anonymous
 
 int main() {
@@ -93,6 +97,25 @@ int main() {
 
             manager.loop();
 
+        } catch(const std::exception& e) {
+            ERROR(e.what());
+        }
+        exit(0);
+    }
+
+    pid_t temperature_gnuplot_pid = fork();
+    if (temperature_gnuplot_pid == 0) {
+        try {
+            DEBUG("Start temperature gnuplot...");
+            SharedSegmentSemaphoreIpc data_sem{std::string{data_sem_name}, EUsageShmSegment::CLIENT};
+            SharedSegmentSemaphoreIpc reader_sem{std::string{reader_sem_name}, EUsageShmSegment::CLIENT};
+            SharedSegmentMemoryIpc mem{std::string{mem_name}, mem_size, EUsageShmSegment::CLIENT};
+            PipeStreamIpc gnuplot_pipe{gnuplot_cmd, EPipeMode::WRITE};
+
+            GnuplotWorker temperature_gnuplot_worker{mem, gnuplot_pipe, temperature_dat};
+            ReaderManager manager{data_sem, reader_sem, temperature_gnuplot_worker};
+
+            manager.loop();
         } catch(const std::exception& e) {
             ERROR(e.what());
         }

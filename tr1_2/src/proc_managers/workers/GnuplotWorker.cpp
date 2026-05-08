@@ -9,10 +9,11 @@ namespace mw { namespace proc_managers { namespace workers {
 using namespace mw::ipc;
 using namespace mw::helpers;
 
-GnuplotWorker::GnuplotWorker(IIpc& ipcMemory, IIpc& ipcPipe) :
+GnuplotWorker::GnuplotWorker(IIpc& ipcMemory, IIpc& ipcPipe, const std::string& dataFileName) :
     Worker{ipcMemory},
     ipcPipe{ipcPipe},
-    pipeWorking{false}
+    pipeWorking{false},
+    dataFileName{dataFileName}
 {}
 
 void GnuplotWorker::startWorking() {
@@ -38,11 +39,18 @@ void GnuplotWorker::processData() {
         return stopWorking();
     }
 
-
+    ipcPipe.write(GnuplotCommander::plotPoints(dataFileName));
 }
 
 void GnuplotWorker::stopWorking() {
+    Worker::stopWorking();
 
+    if (!pipeWorking) {
+        INFO("Pipe has already stopped");
+        return;
+    }
+    ipcPipe.close();
+    pipeWorking = false;
 }
 
 bool GnuplotWorker::isWorking() const {

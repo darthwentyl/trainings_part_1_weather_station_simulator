@@ -12,7 +12,7 @@ namespace mw { namespace proc_managers { namespace workers {
 
 class GnuplotWorker : public Worker {
 public:
-    GnuplotWorker(ipc::IIpc& ipcMemory, ipc::IIpc& ipcPipe);
+    GnuplotWorker(ipc::IIpc& ipcMemory, ipc::IIpc& ipcPipe, const std::string& dataFileName);
     ~GnuplotWorker() = default;
 
     GnuplotWorker(const GnuplotWorker&) = delete;
@@ -30,6 +30,7 @@ private:
 
     ipc::IIpc& ipcPipe;
     bool pipeWorking;
+    const std::string dataFileName;
 };
 
 } } } // mw::proc_managers::workers

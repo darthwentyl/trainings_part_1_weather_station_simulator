@@ -360,4 +360,25 @@ TEST_F(PipeStreamIpc_tests, write_fputs_EOF) {
     }
 }
 
+TEST_F(PipeStreamIpc_tests, write_empty_msg) {
+    auto& stdLib = StdLibStaticMock::get();
+    FILE file;
+
+    EXPECT_CALL(stdLib, popen(_, _)).WillOnce(Return(&file));
+    EXPECT_CALL(stdLib, fputs(_, _)).Times(0);
+    EXPECT_CALL(stdLib, pclose(_)).WillOnce(Return(SUCCESS));
+
+    try {
+        auto instance = PipeStreamIpc{TEST_COMMAND, EPipeMode::WRITE};
+        instance.open();
+        EXPECT_FALSE(instance.write(std::string{}));
+    } catch (const pipe_error& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
+        EXPECT_TRUE(true);
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
+        EXPECT_FALSE(true);
+    }
+}
+
 } // anonymous

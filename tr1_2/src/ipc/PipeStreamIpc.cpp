@@ -89,6 +89,10 @@ bool PipeStreamIpc::write(const std::string& msg) const {
         throw pipe_error{__FUNCTION__, __LINE__, "Cannot write data when you are in read mode"};
     }
 
+    if (msg.empty()) {
+        throw pipe_error{__FUNCTION__, __LINE__, "Msg is empty"};
+    }
+
     if (fputs(msg.c_str(), stream) == EOF) {
         throw pipe_error{__FUNCTION__, __LINE__, "Write msg to " + command + " failed"};
     }

@@ -2,37 +2,43 @@
 
 namespace mw { namespace helpers {
 
-GnuplotDescription::GnuplotDescription(const std::size_t width,
-    const std::size_t height,
-    const std::string& title,
-    const std::string& xLabel,
-    const std::string& yLabel,
-    const std::string& legend) :
-    width(width),
-    height(height),
-    title(title),
-    xLabel(xLabel),
-    yLabel(yLabel),
-    legend(legend)
+GnuplotDescription::GnuplotDescription() :
+    width{0},
+    height{0},
+    title{},
+    xLabel{},
+    yLabel{},
+    legend{}
 {}
 
-GnuplotDescription::GnuplotDescription(const GnuplotDescription& copy) :
-    width{copy.width},
-    height{copy.height},
-    title{copy.title},
-    xLabel{copy.xLabel},
-    yLabel{copy.yLabel},
-    legend{copy.legend}
-{}
+void GnuplotDescription::setWidth(const std::size_t width) {
+    this->width = width;
+}
 
-GnuplotDescription& GnuplotDescription::operator = (const GnuplotDescription& copy) {
-    this->width = copy.width;
-    this->height = copy.height;
-    this->title = copy.title;
-    this->xLabel = copy.xLabel;
-    this->yLabel = copy.yLabel;
-    this->legend = copy.legend;
-    return *this;
+void GnuplotDescription::setHeight(const std::size_t height) {
+    this->height = height;
+}
+
+void GnuplotDescription::setTitle(const std::string& title) {
+    this->title = title;
+}
+
+void GnuplotDescription::setAxisLabel(const EGnuplotAxis axis, const std::string& label) {
+    switch (axis) {
+        case EGnuplotAxis::OY:
+            this->yLabel = label;
+            break;
+        case EGnuplotAxis::OX:
+        default:
+            this->xLabel = label;
+    }
+}
+void GnuplotDescription::setLegend(const std::string& legend) {
+    this->legend = legend;
+}
+
+void GnuplotDescription::setDataFile(const std::string& dataFile) {
+    this->dataFile = dataFile;
 }
 
 const std::size_t& GnuplotDescription::getWidth() const {
@@ -58,6 +64,10 @@ const std::string& GnuplotDescription::getAxisLabel(const EGnuplotAxis axis) con
 
 const std::string& GnuplotDescription::getLegend() const {
     return legend;
+}
+
+const std::string& GnuplotDescription::getDataFile() const {
+    return  dataFile;
 }
 
 } } // mw::helpers

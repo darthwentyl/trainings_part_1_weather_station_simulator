@@ -13,84 +13,49 @@ constexpr const char* TITLE = "test_title";
 constexpr const char* X_LABEL = "test xlabel";
 constexpr const char* Y_LABEL = "test ylabel";
 constexpr const char* LEGEND = "test legend";
+constexpr const char* DATA_FILE = "test data file";
 
 class GnuplotDescription_tests : public Test {
 public:
     ~GnuplotDescription_tests() = default;
 
 protected:
-    GnuplotDescription_tests() :
-        gnuplotDescription {
-            WIDTH,
-            HEIGHT,
-            TITLE,
-            X_LABEL,
-            Y_LABEL,
-            LEGEND
-        }
-    {}
-
     GnuplotDescription gnuplotDescription;
 };
 
-TEST_F(GnuplotDescription_tests, getWidth) {
+TEST_F(GnuplotDescription_tests, set_getWidth) {
+    gnuplotDescription.setWidth(WIDTH);
     EXPECT_EQ(gnuplotDescription.getWidth(), WIDTH);
 }
 
-TEST_F(GnuplotDescription_tests, getHeight) {
+TEST_F(GnuplotDescription_tests, set_getHeight) {
+    gnuplotDescription.setHeight(HEIGHT);
     EXPECT_EQ(gnuplotDescription.getHeight(), HEIGHT);
 }
 
-TEST_F(GnuplotDescription_tests, getTitle) {
+TEST_F(GnuplotDescription_tests, set_getTitle) {
+    gnuplotDescription.setTitle(TITLE);
     EXPECT_STREQ(gnuplotDescription.getTitle().c_str(), TITLE);
 }
 
-TEST_F(GnuplotDescription_tests, getAxisLabel_x_label) {
+TEST_F(GnuplotDescription_tests, set_getAxisLabel_x_label) {
+    gnuplotDescription.setAxisLabel(EGnuplotAxis::OX, X_LABEL);
     EXPECT_STREQ(gnuplotDescription.getAxisLabel(EGnuplotAxis::OX).c_str(), X_LABEL);
 }
 
-TEST_F(GnuplotDescription_tests, getAxisLabel_y_label) {
+TEST_F(GnuplotDescription_tests, set_getAxisLabel_y_label) {
+    gnuplotDescription.setAxisLabel(EGnuplotAxis::OY, Y_LABEL);
     EXPECT_STREQ(gnuplotDescription.getAxisLabel(EGnuplotAxis::OY).c_str(), Y_LABEL);
 }
 
-TEST_F(GnuplotDescription_tests, getLegend) {
+TEST_F(GnuplotDescription_tests, set_getLegend) {
+    gnuplotDescription.setLegend(LEGEND);
     EXPECT_STREQ(gnuplotDescription.getLegend().c_str(), LEGEND);
 }
 
-TEST_F(GnuplotDescription_tests, copy_constructor) {
-    GnuplotDescription newGnuplotDescription{gnuplotDescription};
-    EXPECT_EQ(newGnuplotDescription.getWidth(), gnuplotDescription.getWidth());
-    EXPECT_EQ(newGnuplotDescription.getHeight(), gnuplotDescription.getHeight());
-    EXPECT_STREQ(
-        newGnuplotDescription.getTitle().c_str(),
-        gnuplotDescription.getTitle().c_str());
-    EXPECT_STREQ(
-        newGnuplotDescription.getAxisLabel(EGnuplotAxis::OX).c_str(), gnuplotDescription.getAxisLabel(EGnuplotAxis::OX).c_str());
-    EXPECT_STREQ(
-        newGnuplotDescription.getAxisLabel(EGnuplotAxis::OY).c_str(),
-        gnuplotDescription.getAxisLabel(EGnuplotAxis::OY).c_str());
-    EXPECT_STREQ(
-        newGnuplotDescription.getLegend().c_str(),
-        gnuplotDescription.getLegend().c_str());
-}
-
-TEST_F(GnuplotDescription_tests, operator_assignment) {
-    GnuplotDescription newGnuplotDescription{1, 2, "title", "xlabel", "ylabel", "legend"};
-    newGnuplotDescription = gnuplotDescription;
-    EXPECT_EQ(newGnuplotDescription.getWidth(), gnuplotDescription.getWidth());
-    EXPECT_EQ(newGnuplotDescription.getHeight(), gnuplotDescription.getHeight());
-    EXPECT_STREQ(
-        newGnuplotDescription.getTitle().c_str(),
-        gnuplotDescription.getTitle().c_str());
-    EXPECT_STREQ(
-        newGnuplotDescription.getAxisLabel(EGnuplotAxis::OX).c_str(),
-        gnuplotDescription.getAxisLabel(EGnuplotAxis::OX).c_str());
-    EXPECT_STREQ(
-        newGnuplotDescription.getAxisLabel(EGnuplotAxis::OY).c_str(),
-        gnuplotDescription.getAxisLabel(EGnuplotAxis::OY).c_str());
-    EXPECT_STREQ(
-        newGnuplotDescription.getLegend().c_str(),
-        gnuplotDescription.getLegend().c_str());
+TEST_F(GnuplotDescription_tests, set_getDataFile) {
+    gnuplotDescription.setDataFile(DATA_FILE);
+    EXPECT_STREQ(gnuplotDescription.getDataFile().c_str(), DATA_FILE);
 }
 
 } // anonymous

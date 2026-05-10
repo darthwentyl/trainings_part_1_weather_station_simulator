@@ -9,7 +9,12 @@ using namespace mw::helpers;
 
 // copy from GnuplotDescription.cpp
 constexpr const std::size_t MAX_WIDTH = 1000;
+constexpr const std::size_t DEFAULT_WIDTH = 400;
+constexpr const std::size_t MIN_WIDTH = 100;
+
 constexpr const std::size_t MAX_HEIGHT = 1000;
+constexpr const std::size_t DEFAULT_HEIGHT = 600;
+constexpr const std::size_t MIN_HEIGHT = 100;
 
 class GnuplotDescriptionBuilder_tests : public Test {
 public:
@@ -20,7 +25,19 @@ protected:
 };
 
 TEST_F(GnuplotDescriptionBuilder_tests, width_correct) {
+    const std::size_t testWidth = (MAX_WIDTH + MIN_WIDTH) / 2;
+    auto description = builder.width(testWidth).build();
+    EXPECT_EQ(description.getWidth(), testWidth);
+}
+
+TEST_F(GnuplotDescriptionBuilder_tests, width_max) {
     const std::size_t testWidth = MAX_WIDTH;
+    auto description = builder.width(testWidth).build();
+    EXPECT_EQ(description.getWidth(), testWidth);
+}
+
+TEST_F(GnuplotDescriptionBuilder_tests, width_min) {
+    const std::size_t testWidth = MIN_WIDTH;
     auto description = builder.width(testWidth).build();
     EXPECT_EQ(description.getWidth(), testWidth);
 }
@@ -28,11 +45,29 @@ TEST_F(GnuplotDescriptionBuilder_tests, width_correct) {
 TEST_F(GnuplotDescriptionBuilder_tests, width_too_large) {
     const std::size_t testWidth = MAX_WIDTH + 1;
     auto description = builder.width(testWidth).build();
-    EXPECT_EQ(description.getWidth(), 0);
+    EXPECT_EQ(description.getWidth(), DEFAULT_WIDTH);
+}
+
+TEST_F(GnuplotDescriptionBuilder_tests, width_too_small) {
+    const std::size_t testWidth = MIN_WIDTH - 1;
+    auto description = builder.width(testWidth).build();
+    EXPECT_EQ(description.getWidth(), DEFAULT_WIDTH);
 }
 
 TEST_F(GnuplotDescriptionBuilder_tests, height_correct) {
+    const std::size_t testHeight = (MAX_HEIGHT + MIN_HEIGHT) / 2;
+    auto description = builder.height(testHeight).build();
+    EXPECT_EQ(description.getHeight(), testHeight);
+}
+
+TEST_F(GnuplotDescriptionBuilder_tests, height_max) {
     const std::size_t testHeight = MAX_HEIGHT;
+    auto description = builder.height(testHeight).build();
+    EXPECT_EQ(description.getHeight(), testHeight);
+}
+
+TEST_F(GnuplotDescriptionBuilder_tests, height_min) {
+    const std::size_t testHeight = MIN_HEIGHT;
     auto description = builder.height(testHeight).build();
     EXPECT_EQ(description.getHeight(), testHeight);
 }
@@ -40,7 +75,13 @@ TEST_F(GnuplotDescriptionBuilder_tests, height_correct) {
 TEST_F(GnuplotDescriptionBuilder_tests, height_too_large) {
     const std::size_t testHeight = MAX_HEIGHT + 1;
     auto description = builder.height(testHeight).build();
-    EXPECT_EQ(description.getHeight(), 0);
+    EXPECT_EQ(description.getHeight(), DEFAULT_HEIGHT);
+}
+
+TEST_F(GnuplotDescriptionBuilder_tests, height_too_small) {
+    const std::size_t testHeight = MIN_HEIGHT - 1;
+    auto description = builder.height(testHeight).build();
+    EXPECT_EQ(description.getHeight(), DEFAULT_HEIGHT);
 }
 
 TEST_F(GnuplotDescriptionBuilder_tests, title) {

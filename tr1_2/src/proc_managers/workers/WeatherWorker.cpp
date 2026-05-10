@@ -31,7 +31,7 @@ void WeatherWorker::processData() {
     std::mt19937_64 mt{std::random_device{}()};
     std::uniform_real_distribution<double> temperature{-50.0, 90.0};
     std::uniform_real_distribution<double> pressure{940.0, 1060.0};
-    std::uniform_int_distribution<unsigned> delta{500, 1000};
+    std::uniform_int_distribution<unsigned> delta{100, 200};
     std::this_thread::sleep_for(std::chrono::milliseconds(delta(mt)));
     // end simulation
 

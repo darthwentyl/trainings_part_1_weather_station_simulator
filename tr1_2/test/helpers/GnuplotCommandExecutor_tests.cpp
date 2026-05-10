@@ -22,6 +22,8 @@ public:
 protected:
     void SetUp() override {
         description = GnuplotDescriptionBuilder()
+            .width(600)
+            .height(400)
             .title(TITLE)
             .build();
     }
@@ -30,7 +32,16 @@ protected:
     GnuplotDescription description;
 };
 
-TEST_F(GnuplotCommandExecutor_tests, execut_title) {
+TEST_F(GnuplotCommandExecutor_tests, execute_terminal) {
+    auto executor = GnuplotCommandExecutor{ipcMock, description};
+    const std::string cmd  = GnuplotCommander::terminal(description.getWidth(), description.getHeight());
+
+    EXPECT_CALL(ipcMock, write(cmd)).WillOnce(Return(true));
+
+    executor.execute(ECommand::TERMINAL);
+}
+
+TEST_F(GnuplotCommandExecutor_tests, execute_title) {
     auto executor = GnuplotCommandExecutor{ipcMock, description};
     const std::string cmd = GnuplotCommander::title(description.getTitle());
 
@@ -39,7 +50,7 @@ TEST_F(GnuplotCommandExecutor_tests, execut_title) {
     executor.execute(ECommand::TITLE);
 }
 
-TEST_F(GnuplotCommandExecutor_tests, execut_title_empty) {
+TEST_F(GnuplotCommandExecutor_tests, execute_title_empty) {
     description.setTitle(std::string{});
     auto executor = GnuplotCommandExecutor{ipcMock, description};
 

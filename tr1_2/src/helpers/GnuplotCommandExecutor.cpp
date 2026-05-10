@@ -14,8 +14,13 @@ GnuplotCommandExecutor::GnuplotCommandExecutor(IIpc& ipc, const GnuplotDescripti
 
 void GnuplotCommandExecutor::execute(const ECommand cmd) const {
     switch (cmd) {
+        case ECommand::TERMINAL: execute_terminal(); break;
         case ECommand::TITLE: execute_title(); break;
     }
+}
+
+void GnuplotCommandExecutor::execute_terminal() const {
+    ipc.write(GnuplotCommander::terminal(description.getWidth(), description.getHeight()));
 }
 
 void GnuplotCommandExecutor::execute_title() const {

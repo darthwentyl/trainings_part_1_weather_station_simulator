@@ -18,6 +18,7 @@ public:
     void execute(const ECommand cmd) const;
 
 private:
+    void execute_terminal() const;
     void execute_title() const;
 
     ipc::IIpc& ipc;

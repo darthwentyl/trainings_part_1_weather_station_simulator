@@ -6,7 +6,7 @@ namespace mw { namespace helpers {
 
 namespace {
 
-static const char* axis_label[] {
+constexpr const char* axis_label[] {
     /*EGnuplotAxis::OX*/ "xlabel",
     /*EGnuplotAxis::OY*/ "ylabel"
 };
@@ -15,7 +15,12 @@ static const char* axis_label[] {
 
 std::string GnuplotCommander::terminal(const std::size_t width, const std::size_t height) {
     std::ostringstream oss;
-    oss << "set terminal wxt size " << width << "," << height << "\n";
+    if (width == 0 || height == 0) {
+        oss << "set terminal wxt\n";
+    } else {
+        oss << "set terminal wxt size " << width << "," << height << "\n";
+    }
+
     return oss.str();
 }
 

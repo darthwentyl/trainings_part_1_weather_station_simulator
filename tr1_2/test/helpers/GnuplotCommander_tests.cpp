@@ -17,6 +17,16 @@ TEST_F(GnuplotCommander_tests, terminal) {
     EXPECT_STREQ(GnuplotCommander::terminal(800, 600).c_str(), cmd);
 }
 
+TEST_F(GnuplotCommander_tests, terminal_width_0) {
+    const char* cmd = "set terminal wxt\n";
+    EXPECT_STREQ(GnuplotCommander::terminal(0, 1).c_str(), cmd);
+}
+
+TEST_F(GnuplotCommander_tests, terminal_height_0) {
+    const char* cmd  = "set terminal wxt\n";
+    EXPECT_STREQ(GnuplotCommander::terminal(1, 0).c_str(), cmd);
+}
+
 TEST_F(GnuplotCommander_tests, title) {
     const char* cmd = "set title 'my test title'\n";
     EXPECT_STREQ(GnuplotCommander::title("my test title").c_str(), cmd);

@@ -13,17 +13,17 @@ public:
 };
 
 TEST_F(GnuplotCommander_tests, terminal) {
-    const char* cmd = "set terminal wxt size 800,600\n";
+    const char* cmd = "set terminal qt size 800,600\n";
     EXPECT_STREQ(GnuplotCommander::terminal(800, 600).c_str(), cmd);
 }
 
 TEST_F(GnuplotCommander_tests, terminal_width_0) {
-    const char* cmd = "set terminal wxt\n";
+    const char* cmd = "set terminal qt\n";
     EXPECT_STREQ(GnuplotCommander::terminal(0, 1).c_str(), cmd);
 }
 
 TEST_F(GnuplotCommander_tests, terminal_height_0) {
-    const char* cmd  = "set terminal wxt\n";
+    const char* cmd  = "set terminal qt\n";
     EXPECT_STREQ(GnuplotCommander::terminal(1, 0).c_str(), cmd);
 }
 

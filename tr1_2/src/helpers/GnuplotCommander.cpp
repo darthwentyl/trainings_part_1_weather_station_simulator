@@ -16,9 +16,9 @@ constexpr const char* axis_label[] {
 std::string GnuplotCommander::terminal(const std::size_t width, const std::size_t height) {
     std::ostringstream oss;
     if (width == 0 || height == 0) {
-        oss << "set terminal wxt\n";
+        oss << "set terminal qt\n";
     } else {
-        oss << "set terminal wxt size " << width << "," << height << "\n";
+        oss << "set terminal qt size " << width << "," << height << "\n";
     }
 
     return oss.str();

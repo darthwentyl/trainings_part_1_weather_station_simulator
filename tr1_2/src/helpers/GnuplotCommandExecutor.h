@@ -18,8 +18,11 @@ public:
     void execute(const ECommand cmd) const;
 
 private:
-    void execute_terminal() const;
-    void execute_title() const;
+    void executeTerminal() const;
+    void executeTitle() const;
+    void executeAxisLabels() const;
+    void executeGrid() const;
+    void executePlotPoints() const;
 
     ipc::IIpc& ipc;
     GnuplotDescription description;

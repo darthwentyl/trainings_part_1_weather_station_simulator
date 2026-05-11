@@ -3,9 +3,12 @@
 #include <ipc/IIpc.h>
 #include <logger/Log.h>
 
+#include <filesystem>
+
 namespace mw { namespace helpers {
 
 using namespace mw::ipc;
+namespace fs = std::filesystem;
 
 GnuplotCommandExecutor::GnuplotCommandExecutor(IIpc& ipc, const GnuplotDescription& description) :
     ipc{ipc},
@@ -14,21 +17,48 @@ GnuplotCommandExecutor::GnuplotCommandExecutor(IIpc& ipc, const GnuplotDescripti
 
 void GnuplotCommandExecutor::execute(const ECommand cmd) const {
     switch (cmd) {
-        case ECommand::TERMINAL: execute_terminal(); break;
-        case ECommand::TITLE: execute_title(); break;
+        case ECommand::TERMINAL: executeTerminal(); break;
+        case ECommand::TITLE: executeTitle(); break;
+        case ECommand::AXIS_LABELS: executeAxisLabels(); break;
+        case ECommand::GRID: executeGrid(); break;
+        case ECommand::PLOT_POINTS: executePlotPoints(); break;
     }
 }
 
-void GnuplotCommandExecutor::execute_terminal() const {
+void GnuplotCommandExecutor::executeTerminal() const {
     ipc.write(GnuplotCommander::terminal(description.getWidth(), description.getHeight()));
 }
 
-void GnuplotCommandExecutor::execute_title() const {
+void GnuplotCommandExecutor::executeTitle() const {
     if (description.getTitle().empty()) {
         INFO("Title is empty. No execute");
         return;
     }
     ipc.write(GnuplotCommander::title(description.getTitle()));
+}
+
+void GnuplotCommandExecutor::executeAxisLabels() const {
+    std::string label = description.getAxisLabel(EGnuplotAxis::OX);
+    if (!label.empty()) {
+        ipc.write(GnuplotCommander::axisLabel(EGnuplotAxis::OX, label));
+    }
+    label = description.getAxisLabel(EGnuplotAxis::OY);
+    if (!label.empty()) {
+        ipc.write(GnuplotCommander::axisLabel(EGnuplotAxis::OY, label));
+    }
+}
+
+void GnuplotCommandExecutor::executeGrid() const {
+    ipc.write(GnuplotCommander::grid(description.getGrid()));
+}
+
+void GnuplotCommandExecutor::executePlotPoints() const {
+    const std::string dataFile = description.getDataFile();
+    if (dataFile.empty() || !fs::exists(dataFile)) {
+        INFO("No data to plot! File: " << dataFile);
+        return;
+    }
+    ipc.write(GnuplotCommander::plotPoints(dataFile, description.getLegend()));
 }
 
 } } // mw::helpers

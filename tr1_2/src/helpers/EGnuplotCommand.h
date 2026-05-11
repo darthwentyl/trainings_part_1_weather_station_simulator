@@ -2,7 +2,7 @@
 
 namespace mw { namespace helpers {
 
- enum class ECommand {
+ enum class EGnuplotCommand {
     TERMINAL,
     TITLE,
     AXIS_LABELS,

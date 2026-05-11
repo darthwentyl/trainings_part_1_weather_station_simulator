@@ -15,7 +15,7 @@ class GnuplotCommandExecutor {
 public:
     GnuplotCommandExecutor(ipc::IIpc& ipc, const GnuplotDescription& description);
 
-    void execute(const ECommand cmd) const;
+    void execute(const EGnuplotCommand cmd) const;
 
 private:
     void executeTerminal() const;

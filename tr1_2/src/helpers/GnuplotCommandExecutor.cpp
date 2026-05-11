@@ -15,13 +15,13 @@ GnuplotCommandExecutor::GnuplotCommandExecutor(IIpc& ipc, const GnuplotDescripti
     description{description}
 {}
 
-void GnuplotCommandExecutor::execute(const ECommand cmd) const {
+void GnuplotCommandExecutor::execute(const EGnuplotCommand cmd) const {
     switch (cmd) {
-        case ECommand::TERMINAL: executeTerminal(); break;
-        case ECommand::TITLE: executeTitle(); break;
-        case ECommand::AXIS_LABELS: executeAxisLabels(); break;
-        case ECommand::GRID: executeGrid(); break;
-        case ECommand::PLOT_POINTS: executePlotPoints(); break;
+        case EGnuplotCommand::TERMINAL: executeTerminal(); break;
+        case EGnuplotCommand::TITLE: executeTitle(); break;
+        case EGnuplotCommand::AXIS_LABELS: executeAxisLabels(); break;
+        case EGnuplotCommand::GRID: executeGrid(); break;
+        case EGnuplotCommand::PLOT_POINTS: executePlotPoints(); break;
     }
 }
 

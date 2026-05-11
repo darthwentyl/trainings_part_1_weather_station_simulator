@@ -60,7 +60,7 @@ TEST_F(GnuplotCommandExecutor_tests, executeTerminal) {
 
     EXPECT_CALL(ipcMock, write(StrEq(cmd))).WillOnce(Return(true));
 
-    executor.execute(ECommand::TERMINAL);
+    executor.execute(EGnuplotCommand::TERMINAL);
 }
 
 TEST_F(GnuplotCommandExecutor_tests, executeTitle) {
@@ -69,7 +69,7 @@ TEST_F(GnuplotCommandExecutor_tests, executeTitle) {
 
     EXPECT_CALL(ipcMock, write(StrEq(cmd))).WillOnce(Return(true));
 
-    executor.execute(ECommand::TITLE);
+    executor.execute(EGnuplotCommand::TITLE);
 }
 
 TEST_F(GnuplotCommandExecutor_tests, executeTitle_empty) {
@@ -78,7 +78,7 @@ TEST_F(GnuplotCommandExecutor_tests, executeTitle_empty) {
 
     EXPECT_CALL(ipcMock, write(_)).Times(0);
 
-    executor.execute(ECommand::TITLE);
+    executor.execute(EGnuplotCommand::TITLE);
 }
 
 TEST_F(GnuplotCommandExecutor_tests, executeAxisLabels) {
@@ -91,7 +91,7 @@ TEST_F(GnuplotCommandExecutor_tests, executeAxisLabels) {
     EXPECT_CALL(ipcMock, write(StrEq(cmdXLabel))).WillOnce(Return(true));
     EXPECT_CALL(ipcMock, write(StrEq(cmdYLabel))).WillOnce(Return(true));
 
-    executor.execute(ECommand::AXIS_LABELS);
+    executor.execute(EGnuplotCommand::AXIS_LABELS);
 }
 
 TEST_F(GnuplotCommandExecutor_tests, executeAxisLabels_x_label_empty) {
@@ -104,7 +104,7 @@ TEST_F(GnuplotCommandExecutor_tests, executeAxisLabels_x_label_empty) {
     EXPECT_CALL(ipcMock, write(_)).Times(0);
     EXPECT_CALL(ipcMock, write(StrEq(cmdYLabel))).WillOnce(Return(true));
 
-    executor.execute(ECommand::AXIS_LABELS);
+    executor.execute(EGnuplotCommand::AXIS_LABELS);
 }
 
 TEST_F(GnuplotCommandExecutor_tests, executeAxisLabels_y_label_empty) {
@@ -117,7 +117,7 @@ TEST_F(GnuplotCommandExecutor_tests, executeAxisLabels_y_label_empty) {
     EXPECT_CALL(ipcMock, write(_)).Times(0);
     EXPECT_CALL(ipcMock, write(StrEq(cmdXLabel))).WillOnce(Return(true));
 
-    executor.execute(ECommand::AXIS_LABELS);
+    executor.execute(EGnuplotCommand::AXIS_LABELS);
 }
 
 TEST_F(GnuplotCommandExecutor_tests, executeGrid) {
@@ -126,7 +126,7 @@ TEST_F(GnuplotCommandExecutor_tests, executeGrid) {
 
     EXPECT_CALL(ipcMock, write(StrEq(cmd))).WillOnce(Return(true));
 
-    executor.execute(ECommand::GRID);
+    executor.execute(EGnuplotCommand::GRID);
 }
 
 TEST_F(GnuplotCommandExecutor_tests, executePlotPoints) {
@@ -139,7 +139,7 @@ TEST_F(GnuplotCommandExecutor_tests, executePlotPoints) {
 
     EXPECT_CALL(ipcMock, write(StrEq(cmd))).WillOnce(Return(true));
 
-    executor.execute(ECommand::PLOT_POINTS);
+    executor.execute(EGnuplotCommand::PLOT_POINTS);
 }
 
 TEST_F(GnuplotCommandExecutor_tests, executePlotPoints_dataFile_empty) {
@@ -148,7 +148,7 @@ TEST_F(GnuplotCommandExecutor_tests, executePlotPoints_dataFile_empty) {
 
     EXPECT_CALL(ipcMock, write(_)).Times(0);
 
-    executor.execute(ECommand::PLOT_POINTS);
+    executor.execute(EGnuplotCommand::PLOT_POINTS);
 }
 
 TEST_F(GnuplotCommandExecutor_tests, executePlotPoints_dataFile_not_exists) {
@@ -157,7 +157,7 @@ TEST_F(GnuplotCommandExecutor_tests, executePlotPoints_dataFile_not_exists) {
 
     EXPECT_CALL(ipcMock, write(_)).Times(0);
 
-    executor.execute(ECommand::PLOT_POINTS);
+    executor.execute(EGnuplotCommand::PLOT_POINTS);
 }
 
 } // anonymous

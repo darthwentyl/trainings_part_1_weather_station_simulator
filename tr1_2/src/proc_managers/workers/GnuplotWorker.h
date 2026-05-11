@@ -1,6 +1,8 @@
 #pragma once
 
 #include <proc_managers/workers/Worker.h>
+#include <helpers/GnuplotDescription.h>
+#include <helpers/GnuplotCommandExecutor.h>
 
 namespace mw { namespace ipc {
 
@@ -12,7 +14,7 @@ namespace mw { namespace proc_managers { namespace workers {
 
 class GnuplotWorker : public Worker {
 public:
-    GnuplotWorker(ipc::IIpc& ipcMemory, ipc::IIpc& ipcPipe, const std::string& dataFileName);
+    GnuplotWorker(ipc::IIpc& ipcMemory, ipc::IIpc& ipcPipe, const helpers::GnuplotDescription& gnuplotDescription);
     ~GnuplotWorker() = default;
 
     GnuplotWorker(const GnuplotWorker&) = delete;
@@ -30,7 +32,8 @@ private:
 
     ipc::IIpc& ipcPipe;
     bool pipeWorking;
-    const std::string dataFileName;
+    helpers::GnuplotCommandExecutor executor;
+
 };
 
 } } } // mw::proc_managers::workers

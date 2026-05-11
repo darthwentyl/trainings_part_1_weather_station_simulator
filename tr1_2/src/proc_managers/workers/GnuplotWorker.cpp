@@ -9,11 +9,11 @@ namespace mw { namespace proc_managers { namespace workers {
 using namespace mw::ipc;
 using namespace mw::helpers;
 
-GnuplotWorker::GnuplotWorker(IIpc& ipcMemory, IIpc& ipcPipe, const std::string& dataFileName) :
+GnuplotWorker::GnuplotWorker(IIpc& ipcMemory, IIpc& ipcPipe, const GnuplotDescription& gnuplotDescription) :
     Worker{ipcMemory},
     ipcPipe{ipcPipe},
     pipeWorking{false},
-    dataFileName{dataFileName}
+    executor{ipcPipe, gnuplotDescription}
 {}
 
 void GnuplotWorker::startWorking() {
@@ -39,7 +39,7 @@ void GnuplotWorker::processData() {
         return stopWorking();
     }
 
-    ipcPipe.write(GnuplotCommander::plotPoints(dataFileName));
+    executor.execute(EGnuplotCommand::PLOT_POINTS);
 }
 
 void GnuplotWorker::stopWorking() {
@@ -58,11 +58,10 @@ bool GnuplotWorker::isWorking() const {
 }
 
 void GnuplotWorker::configureGnuplot() {
-    ipcPipe.write(GnuplotCommander::terminal(800, 600));
-    ipcPipe.write(GnuplotCommander::title("Temperature sensors measurement"));
-    ipcPipe.write(GnuplotCommander::axisLabel(EGnuplotAxis::OX, "n"));
-    ipcPipe.write(GnuplotCommander::axisLabel(EGnuplotAxis::OY, "T[C]"));
-    ipcPipe.write(GnuplotCommander::grid(true));
+    executor.execute(EGnuplotCommand::TERMINAL);
+    executor.execute(EGnuplotCommand::TITLE);
+    executor.execute(EGnuplotCommand::AXIS_LABELS);
+    executor.execute(EGnuplotCommand::GRID);
 }
 
 

@@ -12,6 +12,7 @@ using namespace mw::mocks;
 using namespace mw::proc_managers::workers;
 
 constexpr const std::size_t bufferSize = 2;
+constexpr const char* dataFile = "data_file.dat";
 
 class PressureWorker_tests : public Test {
 public:
@@ -27,13 +28,13 @@ protected:
 };
 
 TEST_F(PressureWorker_tests, nothing_done_yet) {
-    PressureWorker pressureWorker{ipcMock, bufferSize};
+    PressureWorker pressureWorker{ipcMock, dataFile, bufferSize};
     worker = &pressureWorker;
     EXPECT_FALSE(worker->isWorking());
 }
 
 TEST_F(PressureWorker_tests, startWorking_first_time) {
-    PressureWorker pressureWorker{ipcMock, bufferSize};
+    PressureWorker pressureWorker{ipcMock, dataFile, bufferSize};
     worker = &pressureWorker;
     EXPECT_CALL(ipcMock, open()).Times(1);
     worker->startWorking();
@@ -41,7 +42,7 @@ TEST_F(PressureWorker_tests, startWorking_first_time) {
 }
 
 TEST_F(PressureWorker_tests, startWorking_double_times) {
-    PressureWorker pressureWorker{ipcMock, bufferSize};
+    PressureWorker pressureWorker{ipcMock, dataFile, bufferSize};
     worker = &pressureWorker;
     EXPECT_CALL(ipcMock, open()).Times(1);
     worker->startWorking();
@@ -50,7 +51,7 @@ TEST_F(PressureWorker_tests, startWorking_double_times) {
 }
 
 TEST_F(PressureWorker_tests, processData_success) {
-    PressureWorker pressureWorker{ipcMock, bufferSize};
+    PressureWorker pressureWorker{ipcMock, dataFile, bufferSize};
     worker = &pressureWorker;
     WeatherData data;
 
@@ -65,7 +66,7 @@ TEST_F(PressureWorker_tests, processData_success) {
 }
 
 TEST_F(PressureWorker_tests, processData_not_started_yet) {
-    PressureWorker pressureWorker{ipcMock, bufferSize};
+    PressureWorker pressureWorker{ipcMock, dataFile, bufferSize};
     worker = &pressureWorker;
 
     EXPECT_CALL(ipcMock, read()).Times(0);
@@ -74,7 +75,7 @@ TEST_F(PressureWorker_tests, processData_not_started_yet) {
 }
 
 TEST_F(PressureWorker_tests, stopWorking_success) {
-    PressureWorker pressureWorker{ipcMock, bufferSize};
+    PressureWorker pressureWorker{ipcMock, dataFile, bufferSize};
     worker = &pressureWorker;
 
     EXPECT_CALL(ipcMock, open()).Times(1);
@@ -87,7 +88,7 @@ TEST_F(PressureWorker_tests, stopWorking_success) {
 }
 
 TEST_F(PressureWorker_tests, stopWorking_double_times) {
-    PressureWorker pressureWorker{ipcMock, bufferSize};
+    PressureWorker pressureWorker{ipcMock, dataFile, bufferSize};
     worker = &pressureWorker;
 
     EXPECT_CALL(ipcMock, open()).Times(1);
@@ -101,7 +102,7 @@ TEST_F(PressureWorker_tests, stopWorking_double_times) {
 }
 
 TEST_F(PressureWorker_tests, stopWorking_not_started_yet) {
-    PressureWorker pressureWorker{ipcMock, bufferSize};
+    PressureWorker pressureWorker{ipcMock, dataFile, bufferSize};
     worker = &pressureWorker;
 
     EXPECT_CALL(ipcMock, close()).Times(0);
@@ -111,7 +112,7 @@ TEST_F(PressureWorker_tests, stopWorking_not_started_yet) {
 }
 
 TEST_F(PressureWorker_tests, stopWorking_when_exit_received) {
-    PressureWorker pressureWorker{ipcMock, bufferSize};
+    PressureWorker pressureWorker{ipcMock, dataFile, bufferSize};
     worker = &pressureWorker;
 
     EXPECT_CALL(ipcMock, open()).Times(1);

@@ -6,13 +6,11 @@
 
 namespace mw { namespace proc_managers { namespace workers {
 
-constexpr const char* PRESSURE_FILE = "pressure.dat";
-
 using namespace mw::ipc;
 
-PressureWorker::PressureWorker(IIpc& ipcMemory, const std::size_t bufferSize) :
+PressureWorker::PressureWorker(IIpc& ipcMemory, const std::string& dataFile, const std::size_t bufferSize) :
     Worker{ipcMemory},
-    writer{PRESSURE_FILE, bufferSize}
+    writer{dataFile, bufferSize}
 {}
 
 void PressureWorker::processData() {

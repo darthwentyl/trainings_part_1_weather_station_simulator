@@ -12,6 +12,7 @@ using namespace mw::mocks;
 using namespace mw::proc_managers::workers;
 
 constexpr const std::size_t bufferSize = 2;
+constexpr const std::string dataFile = "data_file.dat";
 
 class TemperatureWorker_tests : public Test {
 public:
@@ -27,13 +28,13 @@ protected:
 };
 
 TEST_F(TemperatureWorker_tests, nothing_done_yet) {
-    TemperatureWorker temperatureWorker{ipcMock, bufferSize};
+    TemperatureWorker temperatureWorker{ipcMock, dataFile, bufferSize};
     worker = &temperatureWorker;
     EXPECT_FALSE(worker->isWorking());
 }
 
 TEST_F(TemperatureWorker_tests, startWorking_first_time) {
-    TemperatureWorker temperatureWorker{ipcMock, bufferSize};
+    TemperatureWorker temperatureWorker{ipcMock, dataFile, bufferSize};
     worker = &temperatureWorker;
     EXPECT_CALL(ipcMock, open()).Times(1);
     worker->startWorking();
@@ -41,7 +42,7 @@ TEST_F(TemperatureWorker_tests, startWorking_first_time) {
 }
 
 TEST_F(TemperatureWorker_tests, startWorking_double_times) {
-    TemperatureWorker temperatureWorker{ipcMock, bufferSize};
+    TemperatureWorker temperatureWorker{ipcMock, dataFile, bufferSize};
     worker = &temperatureWorker;
     EXPECT_CALL(ipcMock, open()).Times(1);
     worker->startWorking();
@@ -50,7 +51,7 @@ TEST_F(TemperatureWorker_tests, startWorking_double_times) {
 }
 
 TEST_F(TemperatureWorker_tests, processData_success) {
-    TemperatureWorker temperatureWorker{ipcMock, bufferSize};
+    TemperatureWorker temperatureWorker{ipcMock, dataFile, bufferSize};
     worker = &temperatureWorker;
     WeatherData data;
 
@@ -65,7 +66,7 @@ TEST_F(TemperatureWorker_tests, processData_success) {
 }
 
 TEST_F(TemperatureWorker_tests, processData_not_started_yet) {
-    TemperatureWorker temperatureWorker{ipcMock, bufferSize};
+    TemperatureWorker temperatureWorker{ipcMock, dataFile, bufferSize};
     worker = &temperatureWorker;
 
     EXPECT_CALL(ipcMock, read()).Times(0);
@@ -74,7 +75,7 @@ TEST_F(TemperatureWorker_tests, processData_not_started_yet) {
 }
 
 TEST_F(TemperatureWorker_tests, stopWorking_success) {
-    TemperatureWorker temperatureWorker{ipcMock, bufferSize};
+    TemperatureWorker temperatureWorker{ipcMock, dataFile, bufferSize};
     worker = &temperatureWorker;
 
     EXPECT_CALL(ipcMock, open()).Times(1);
@@ -87,7 +88,7 @@ TEST_F(TemperatureWorker_tests, stopWorking_success) {
 }
 
 TEST_F(TemperatureWorker_tests, stopWorking_double_times) {
-    TemperatureWorker temperatureWorker{ipcMock, bufferSize};
+    TemperatureWorker temperatureWorker{ipcMock, dataFile, bufferSize};
     worker = &temperatureWorker;
 
     EXPECT_CALL(ipcMock, open()).Times(1);
@@ -101,7 +102,7 @@ TEST_F(TemperatureWorker_tests, stopWorking_double_times) {
 }
 
 TEST_F(TemperatureWorker_tests, stopWorking_not_started_yet) {
-    TemperatureWorker temperatureWorker{ipcMock, bufferSize};
+    TemperatureWorker temperatureWorker{ipcMock, dataFile, bufferSize};
     worker = &temperatureWorker;
 
     EXPECT_CALL(ipcMock, close()).Times(0);
@@ -111,7 +112,7 @@ TEST_F(TemperatureWorker_tests, stopWorking_not_started_yet) {
 }
 
 TEST_F(TemperatureWorker_tests, stopWorking_when_exit_received) {
-    TemperatureWorker temperatureWorker{ipcMock, bufferSize};
+    TemperatureWorker temperatureWorker{ipcMock, dataFile, bufferSize};
     worker = &temperatureWorker;
 
     EXPECT_CALL(ipcMock, open()).Times(1);

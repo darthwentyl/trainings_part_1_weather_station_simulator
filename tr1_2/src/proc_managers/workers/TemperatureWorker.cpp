@@ -6,13 +6,11 @@
 
 namespace mw { namespace proc_managers { namespace workers {
 
-constexpr const char* TEMPERATURE_FILE = "temperature.dat";
-
 using namespace mw::ipc;
 
-TemperatureWorker::TemperatureWorker(IIpc& ipcMemory, const std::size_t bufferSize) :
+TemperatureWorker::TemperatureWorker(IIpc& ipcMemory,const std::string& dataFile, const std::size_t bufferSize) :
     Worker{ipcMemory},
-    writer{TEMPERATURE_FILE, bufferSize}
+    writer{dataFile, bufferSize}
 {}
 
 void TemperatureWorker::processData() {

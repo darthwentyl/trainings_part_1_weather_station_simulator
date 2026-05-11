@@ -58,4 +58,9 @@ TEST_F(GnuplotDescription_tests, set_getDataFile) {
     EXPECT_STREQ(gnuplotDescription.getDataFile().c_str(), DATA_FILE);
 }
 
+TEST_F(GnuplotDescription_tests, set_getGrid) {
+    gnuplotDescription.setGrid(true);
+    EXPECT_TRUE(gnuplotDescription.getGrid());
+}
+
 } // anonymous

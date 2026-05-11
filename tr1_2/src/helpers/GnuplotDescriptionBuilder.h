@@ -13,6 +13,7 @@ public:
     GnuplotDescriptionBuilder& yLabel(const std::string& yLabel);
     GnuplotDescriptionBuilder& legend(const std::string& legend);
     GnuplotDescriptionBuilder& dataFile(const std::string& dataFile);
+    GnuplotDescriptionBuilder& grid(const bool grid);
 
     GnuplotDescription build();
 private:

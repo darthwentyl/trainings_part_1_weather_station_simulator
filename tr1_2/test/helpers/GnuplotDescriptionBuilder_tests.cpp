@@ -114,6 +114,11 @@ TEST_F(GnuplotDescriptionBuilder_tests, data_file) {
     EXPECT_STREQ(description.getDataFile().c_str(), testDataFile.c_str());
 }
 
+TEST_F(GnuplotDescriptionBuilder_tests, grid) {
+    auto description = builder.grid(true).build();
+    EXPECT_TRUE(description.getGrid());
+}
+
 TEST_F(GnuplotDescriptionBuilder_tests, build_all) {
     const std::size_t testWidth = MAX_WIDTH;
     const std::size_t testHeight = MAX_HEIGHT;
@@ -131,6 +136,7 @@ TEST_F(GnuplotDescriptionBuilder_tests, build_all) {
         .yLabel(testYLabel)
         .legend(testLegend)
         .dataFile(testDataFile)
+        .grid(true)
         .build();
 
     EXPECT_EQ(description.getWidth(), testWidth);
@@ -140,6 +146,7 @@ TEST_F(GnuplotDescriptionBuilder_tests, build_all) {
     EXPECT_STREQ(description.getAxisLabel(EGnuplotAxis::OY).c_str(), testYLabel.c_str());
     EXPECT_STREQ(description.getLegend().c_str(), testLegend.c_str());
     EXPECT_STREQ(description.getDataFile().c_str(), testDataFile.c_str());
+    EXPECT_TRUE(description.getGrid());
 }
 
 } // anonymous

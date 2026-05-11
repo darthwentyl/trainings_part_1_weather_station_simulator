@@ -57,6 +57,11 @@ GnuplotDescriptionBuilder& GnuplotDescriptionBuilder::dataFile(const std::string
     return *this;
 }
 
+GnuplotDescriptionBuilder& GnuplotDescriptionBuilder::grid(const bool grid) {
+    gnuplotDescription.setGrid(grid);
+    return *this;
+}
+
 GnuplotDescription GnuplotDescriptionBuilder::build() {
     return gnuplotDescription;
 }

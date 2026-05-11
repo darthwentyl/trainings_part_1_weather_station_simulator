@@ -16,6 +16,7 @@ public:
     void setAxisLabel(const EGnuplotAxis axis, const std::string& label);
     void setLegend(const std::string& legend);
     void setDataFile(const std::string& dataFile);
+    void setGrid(const bool grid);
 
     const std::size_t& getWidth() const;
     const std::size_t& getHeight() const;
@@ -23,6 +24,7 @@ public:
     const std::string& getAxisLabel(const EGnuplotAxis axis) const;
     const std::string& getLegend() const;
     const std::string& getDataFile() const;
+    const bool& getGrid() const;
 
 private:
     std::size_t width;
@@ -32,6 +34,7 @@ private:
     std::string yLabel;
     std::string legend;
     std::string dataFile;
+    bool grid;
 };
 
 } } // mw::helpers

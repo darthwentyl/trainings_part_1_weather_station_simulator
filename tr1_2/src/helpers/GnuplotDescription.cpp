@@ -8,7 +8,8 @@ GnuplotDescription::GnuplotDescription() :
     title{},
     xLabel{},
     yLabel{},
-    legend{}
+    legend{},
+    grid{false}
 {}
 
 void GnuplotDescription::setWidth(const std::size_t width) {
@@ -41,6 +42,10 @@ void GnuplotDescription::setDataFile(const std::string& dataFile) {
     this->dataFile = dataFile;
 }
 
+void GnuplotDescription::setGrid(const bool grid) {
+    this->grid = grid;
+}
+
 const std::size_t& GnuplotDescription::getWidth() const {
     return width;
 }
@@ -55,7 +60,8 @@ const std::string& GnuplotDescription::getTitle() const {
 
 const std::string& GnuplotDescription::getAxisLabel(const EGnuplotAxis axis) const {
     switch (axis) {
-        case EGnuplotAxis::OY: return yLabel;
+        case EGnuplotAxis::OY:
+            return yLabel;
         case EGnuplotAxis::OX:
         default:
             return xLabel;
@@ -68,6 +74,10 @@ const std::string& GnuplotDescription::getLegend() const {
 
 const std::string& GnuplotDescription::getDataFile() const {
     return  dataFile;
+}
+
+const bool& GnuplotDescription::getGrid() const {
+    return grid;
 }
 
 } } // mw::helpers

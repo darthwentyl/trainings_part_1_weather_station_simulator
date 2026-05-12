@@ -1,5 +1,5 @@
 # Exercise
-Please add a new process to the implementation from exercise **tr1_1**. The process will read temperature and add measurement next points to chart in real time. X-axis will show time and Y-axis temperature in Fahrenheit. For drawing a graph, please use the gnuplot application. The communication between gnuplot and your process please use pipe stream solution.
+Please add new two processes to the implementation from exercise **tr1_1**. The first process will read temperature and add measurement next points to chart in real time. X-axis will nth-read and Y-axis temperature in Celcius. The second process will read pressure and add data point to next chart window in real time. X-axis will nth-read and Y-axis pressure in hPa. For drawing a graph, please use the gnuplot application. The communication between gnuplot and your process please use pipe stream solution.
 
 ## Implementation
 The application should support next feature

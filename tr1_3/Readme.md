@@ -1,15 +1,24 @@
 # Exercise
-Please add new two processes to the implementation from exercise **tr1_1**. The first process will read temperature and add measurement next points to chart in real time. X-axis will nth-read and Y-axis temperature in Celcius. The second process will read pressure and add data point to next chart window in real time. X-axis will nth-read and Y-axis pressure in hPa. For drawing a graph, please use the gnuplot application. The communication between gnuplot and your process please use pipe stream solution.
+Please add a new process to the implementation from exercise **tr1_2**. The process should open a socket to listening for external command and receive data which the user wants to take.
+
+Supporting command:
+* ```temperature``` - return last 10 temperature measurements
+* ```pressure``` - return last 10 pressure measurements
+* ```temperature <n>``` - return last n temperature measurements
+* ```pressure <n>``` - return last n pressure measurements
+* ```exit``` - close the application
+
 
 ## Implementation
 The application should support next feature
 * Multi-process logging system
 * Write message in format: temperature: 24.57[C], pressure: 996.57[hPa]
-* MEasurement precision to two digits
+* Measurement precision to two digits
 * Save in to file last 10 measurements into file. Temperature and pressure in separate files.
 * Own exceptions implementation
 * Support for pipe stream communication
 * Visualization by gnuplot
+* External user command listener used by socket
 
 ## Requirements
 * Modern C++

@@ -71,4 +71,20 @@ int fflush([[maybe_unused]] FILE* stream) {
     return 0;
 }
 
+int socket(int domain, int type, int protocol) {
+    return StdLibStaticMock::get().socket(domain, type, protocol);
+}
+
+int setsockopt(int sockfd, int level, int optname, const void* optval, socklen_t optlen) {
+    return StdLibStaticMock::get().setsockopt(sockfd, level, optname, optval, optlen);
+}
+
+int bind(int sockfd, const struct sockaddr* addr, socklen_t addrlen) {
+    return StdLibStaticMock::get().bind(sockfd, addr, addrlen);
+}
+
+int listen(int sockfd, int backlog) {
+    return StdLibStaticMock::get().listen(sockfd, backlog);
+}
+
 } // extern "C"

@@ -3,7 +3,7 @@
 #include <ipc/IIpc.h>
 
 #include <arpa/inet.h>
-#include <sys/socket.h>
+
 
 namespace mw { namespace ipc {
 
@@ -14,7 +14,7 @@ public:
     SocketIpc(SocketIpc&&) = delete;
     SocketIpc& operator = (SocketIpc&&) = delete;
 
-    SocketIpc();
+    SocketIpc(const int port);
     ~SocketIpc();
 
     void open() override;
@@ -25,6 +25,8 @@ public:
 private:
     int listenFd;
     int connectFd;
+    int port;
+    int opt;
     struct sockaddr_in addr;
 };
 

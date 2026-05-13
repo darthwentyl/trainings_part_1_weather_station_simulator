@@ -22,6 +22,6 @@ public:
 
 private:
     std::string message;
-}
+};
 
 } } // mw::exceptions

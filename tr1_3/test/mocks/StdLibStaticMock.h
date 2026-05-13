@@ -29,6 +29,10 @@ public:
     MOCK_METHOD(int, pclose, (FILE* stream), ());
     MOCK_METHOD(char*, fgets, (char s[], int size, FILE* stream), ());
     MOCK_METHOD(int, fputs, (const char* s, FILE* stream), ());
+    MOCK_METHOD(int, socket, (int domain, int type, int protocol), ());
+    MOCK_METHOD(int, setsockopt, (int sockfd, int level, int optname, const void* optval, socklen_t optlen), ());
+    MOCK_METHOD(int, bind, (int sockfd, const struct sockaddr* addr, socklen_t addrlen), ());
+    MOCK_METHOD(int, listen, (int sockfd, int backlog), ());
 
 private:
     friend class testing::StrictMock<StdLibStaticMock>;

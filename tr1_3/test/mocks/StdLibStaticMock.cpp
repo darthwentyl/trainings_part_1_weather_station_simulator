@@ -28,6 +28,10 @@ StdLibStaticMock::StdLibStaticMock() {
     ON_CALL(*this, pclose(_)).WillByDefault(Return(FAILURE));
     ON_CALL(*this, fgets(_, _, _)).WillByDefault(Return(nullptr));
     ON_CALL(*this, fputs(_, _)).WillByDefault(Return(EOF));
+    ON_CALL(*this, socket(_, _, _)).WillByDefault(Return(FAILURE));
+    ON_CALL(*this, setsockopt(_, _, _, _, _)).WillByDefault(Return(FAILURE));
+    ON_CALL(*this, bind(_, _, _)).WillByDefault(Return(FAILURE));
+    ON_CALL(*this, listen(_, _)).WillByDefault(Return(FAILURE));
 }
 
 } } // mw::mocks

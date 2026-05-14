@@ -23,6 +23,11 @@ public:
     bool write(const std::string& msg) const override;
 
 private:
+    void openSocket();
+    void acceptConnection();
+    bool isConnectionOpened() const;
+    bool isSocketOpened() const;
+
     int listenFd;
     int connectFd;
     int port;

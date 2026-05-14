@@ -25,14 +25,38 @@ public:
 TEST_F(SocketIpc_tests, open_success) {
     auto& stdLib = StdLibStaticMock::get();
     const int listenFd = 123;
+    const int connFd = 321;
 
     EXPECT_CALL(stdLib, socket(Eq(AF_INET), Eq(SOCK_STREAM), Eq(0))).WillOnce(Return(listenFd));
     EXPECT_CALL(stdLib, setsockopt(Eq(listenFd), Eq(SOL_SOCKET), Eq(SO_REUSEADDR), _, _)).WillOnce(Return(SUCCESS));
     EXPECT_CALL(stdLib, bind(Eq(listenFd), _, _)).WillOnce(Return(SUCCESS));
     EXPECT_CALL(stdLib, listen(Eq(listenFd), Eq(BACKLOG))).WillOnce(Return(SUCCESS));
+    EXPECT_CALL(stdLib, accept(Eq(listenFd), Eq(nullptr), Eq(nullptr))).WillOnce(Return(connFd));
 
     try {
         auto instance = SocketIpc{PORT};
+        instance.open();
+        EXPECT_TRUE(true);
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
+        EXPECT_FALSE(true);
+    }
+}
+
+TEST_F(SocketIpc_tests, open_has_already_opened) {
+    auto& stdLib = StdLibStaticMock::get();
+    const int listenFd = 123;
+    const int connFd = 321;
+
+    EXPECT_CALL(stdLib, socket(Eq(AF_INET), Eq(SOCK_STREAM), Eq(0))).WillOnce(Return(listenFd));
+    EXPECT_CALL(stdLib, setsockopt(Eq(listenFd), Eq(SOL_SOCKET), Eq(SO_REUSEADDR), _, _)).WillOnce(Return(SUCCESS));
+    EXPECT_CALL(stdLib, bind(Eq(listenFd), _, _)).WillOnce(Return(SUCCESS));
+    EXPECT_CALL(stdLib, listen(Eq(listenFd), Eq(BACKLOG))).WillOnce(Return(SUCCESS));
+    EXPECT_CALL(stdLib, accept(Eq(listenFd), Eq(nullptr), Eq(nullptr))).WillOnce(Return(connFd));
+
+    try {
+        auto instance = SocketIpc{PORT};
+        instance.open();
         instance.open();
         EXPECT_TRUE(true);
     } catch (const std::exception& e) {
@@ -108,6 +132,29 @@ TEST_F(SocketIpc_tests, open_listen_failure) {
     EXPECT_CALL(stdLib, setsockopt(Eq(listenFd), Eq(SOL_SOCKET), Eq(SO_REUSEADDR), _, _)).WillOnce(Return(SUCCESS));
     EXPECT_CALL(stdLib, bind(Eq(listenFd), _, _)).WillOnce(Return(SUCCESS));
     EXPECT_CALL(stdLib, listen(Eq(listenFd), Eq(BACKLOG))).WillOnce(Return(FAILURE));
+
+    try {
+        auto instance = SocketIpc{PORT};
+        instance.open();
+        EXPECT_FALSE(true);
+    } catch (const socket_error& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
+        EXPECT_TRUE(true);
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
+        EXPECT_FALSE(true);
+    }
+}
+
+TEST_F(SocketIpc_tests, open_accept_failure) {
+    auto& stdLib = StdLibStaticMock::get();
+    const int listenFd = 123;
+
+    EXPECT_CALL(stdLib, socket(Eq(AF_INET), Eq(SOCK_STREAM), Eq(0))).WillOnce(Return(listenFd));
+    EXPECT_CALL(stdLib, setsockopt(Eq(listenFd), Eq(SOL_SOCKET), Eq(SO_REUSEADDR), _, _)).WillOnce(Return(SUCCESS));
+    EXPECT_CALL(stdLib, bind(Eq(listenFd), _, _)).WillOnce(Return(SUCCESS));
+    EXPECT_CALL(stdLib, listen(Eq(listenFd), Eq(BACKLOG))).WillOnce(Return(SUCCESS));
+    EXPECT_CALL(stdLib, accept(Eq(listenFd), Eq(nullptr), Eq(nullptr))).WillOnce(Return(FAILURE));
 
     try {
         auto instance = SocketIpc{PORT};

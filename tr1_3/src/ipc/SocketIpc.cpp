@@ -29,11 +29,29 @@ SocketIpc::~SocketIpc() {
 }
 
 void SocketIpc::open() {
-    if (listenFd != NOT_CREATED) {
-        INFO("Socket endpoint has already opened");
-        return;
+    if (!isSocketOpened()) {
+        openSocket();
     }
 
+    if (!isConnectionOpened()) {
+        acceptConnection();
+    }
+}
+
+void SocketIpc::close() {
+
+}
+
+std::string SocketIpc::read() const {
+    return std::string{};
+}
+
+bool SocketIpc::write(const std::string& msg) const {
+    DEBUG(msg);
+    return false;
+}
+
+void SocketIpc::openSocket() {
     listenFd = socket(AF_INET, SOCK_STREAM, 0);
     if (listenFd == FAILURE) {
         throw socket_error{__FUNCTION__, __LINE__, "creation socket failed " + std::string{strerror(errno)}};
@@ -58,17 +76,19 @@ void SocketIpc::open() {
     INFO("Server listening on port " << port);
 }
 
-void SocketIpc::close() {
-
+void SocketIpc::acceptConnection() {
+    connectFd = accept(listenFd, nullptr, nullptr);
+    if (connectFd == FAILURE) {
+        throw socket_error{__FUNCTION__, __LINE__, "accept failed " + std::string{strerror(errno)}};
+    }
 }
 
-std::string SocketIpc::read() const {
-    return std::string{};
+bool SocketIpc::isConnectionOpened() const {
+    return connectFd != NOT_CREATED && connectFd != FAILURE;
 }
 
-bool SocketIpc::write(const std::string& msg) const {
-    DEBUG(msg);
-    return false;
+bool SocketIpc::isSocketOpened() const {
+    return listenFd != NOT_CREATED && listenFd != FAILURE;
 }
 
 } } // mw::ipc

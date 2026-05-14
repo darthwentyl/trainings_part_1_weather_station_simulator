@@ -32,6 +32,7 @@ StdLibStaticMock::StdLibStaticMock() {
     ON_CALL(*this, setsockopt(_, _, _, _, _)).WillByDefault(Return(FAILURE));
     ON_CALL(*this, bind(_, _, _)).WillByDefault(Return(FAILURE));
     ON_CALL(*this, listen(_, _)).WillByDefault(Return(FAILURE));
+    ON_CALL(*this, accept(_, _, _)).WillByDefault(Return(FAILURE));
 }
 
 } } // mw::mocks

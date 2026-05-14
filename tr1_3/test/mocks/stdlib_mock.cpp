@@ -1,11 +1,12 @@
 #include <fcntl.h>
-#include <sys/stat.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 #include <dlfcn.h>
 #include <semaphore.h>
+#include <sys/stat.h>
 #include <sys/shm.h>
+#include <sys/socket.h>
 
 #include <mocks/StdLibStaticMock.h>
 
@@ -85,6 +86,10 @@ int bind(int sockfd, const struct sockaddr* addr, socklen_t addrlen) {
 
 int listen(int sockfd, int backlog) {
     return StdLibStaticMock::get().listen(sockfd, backlog);
+}
+
+int accept(int sockfd, struct sockaddr* addr, socklen_t* addrlen) {
+    return StdLibStaticMock::get().accept(sockfd, addr, addrlen);
 }
 
 } // extern "C"

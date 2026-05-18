@@ -12,7 +12,7 @@ using namespace mw::mocks;
 using namespace mw::proc_managers::workers;
 
 constexpr const std::size_t bufferSize = 2;
-constexpr const std::string dataFile = "data_file.dat";
+constexpr const char* dataFile = "data_file.dat";
 
 class TemperatureWorker_tests : public Test {
 public:
@@ -59,7 +59,7 @@ TEST_F(TemperatureWorker_tests, processData_success) {
     data.setPressure(1008.1);
 
     EXPECT_CALL(ipcMock, open()).Times(1);
-    EXPECT_CALL(ipcMock, read()).WillOnce(Return(data.serialize()));
+    EXPECT_CALL(ipcMock, readData()).WillOnce(Return(data.serialize()));
 
     worker->startWorking();
     worker->processData();
@@ -69,7 +69,7 @@ TEST_F(TemperatureWorker_tests, processData_not_started_yet) {
     TemperatureWorker temperatureWorker{ipcMock, dataFile, bufferSize};
     worker = &temperatureWorker;
 
-    EXPECT_CALL(ipcMock, read()).Times(0);
+    EXPECT_CALL(ipcMock, readData()).Times(0);
 
     worker->processData();
 }
@@ -116,7 +116,7 @@ TEST_F(TemperatureWorker_tests, stopWorking_when_exit_received) {
     worker = &temperatureWorker;
 
     EXPECT_CALL(ipcMock, open()).Times(1);
-    EXPECT_CALL(ipcMock, read()).WillOnce(Return("exit"));
+    EXPECT_CALL(ipcMock, readData()).WillOnce(Return("exit"));
     EXPECT_CALL(ipcMock, close()).Times(1);
 
     worker->startWorking();

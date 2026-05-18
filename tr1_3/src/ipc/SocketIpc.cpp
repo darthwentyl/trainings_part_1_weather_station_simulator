@@ -6,6 +6,7 @@
 #include <cstring>
 
 #include <sys/socket.h>
+#include <unistd.h>
 
 namespace mw { namespace ipc {
 
@@ -14,6 +15,7 @@ using namespace mw::exceptions;
 constexpr const int FAILURE = -1;
 constexpr const int NOT_CREATED = -2;
 constexpr const int BACKLOG = 1;
+constexpr const std::size_t BUFF_SIZE = 128;
 
 SocketIpc::SocketIpc(const int port)
     : listenFd{NOT_CREATED}
@@ -42,12 +44,27 @@ void SocketIpc::close() {
 
 }
 
-std::string SocketIpc::read() const {
+std::string SocketIpc::readData() const {
+    if (!isConnectionOpened()) {
+        throw socket_error{__FUNCTION__, __LINE__, "connection has not accepted. You cannot read data."};
+    }
+
+    std::string msg;
+    char buff[BUFF_SIZE];
+    std::size_t n = 0;
+
+    while ((n = read(connectFd, buff, sizeof(buff))) > 0) {
+
+    }
+
     return std::string{};
 }
 
-bool SocketIpc::write(const std::string& msg) const {
-    DEBUG(msg);
+bool SocketIpc::writeData(const std::string& msg) const {
+    if (!isConnectionOpened()) {
+        throw socket_error{__FUNCTION__, __LINE__, "connection has not accepted. You cannot write data"};
+    }
+
     return false;
 }
 

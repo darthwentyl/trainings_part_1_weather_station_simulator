@@ -59,7 +59,7 @@ void PipeStreamIpc::close() {
     stream = nullptr;
 }
 
-std::string PipeStreamIpc::read() const {
+std::string PipeStreamIpc::readData() const {
     if (stream == nullptr) {
         throw pipe_error{__FUNCTION__, __LINE__, "Stream has not started, yet"};
     }
@@ -80,7 +80,7 @@ std::string PipeStreamIpc::read() const {
     return data;
 }
 
-bool PipeStreamIpc::write(const std::string& msg) const {
+bool PipeStreamIpc::writeData(const std::string& msg) const {
     if (stream == nullptr) {
         throw pipe_error{__FUNCTION__, __LINE__, "Stream has not started, yet"};
     }

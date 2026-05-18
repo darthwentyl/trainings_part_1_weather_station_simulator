@@ -53,8 +53,8 @@ TEST_F(ExitWorker_tests, processData_success) {
     worker = &exitWorker;
 
     EXPECT_CALL(ipcMock, open()).Times(1);
-    EXPECT_CALL(ipcMock, read()).WillOnce(Return(""));
-    EXPECT_CALL(ipcMock, write(exit_msg)).Times(1);
+    EXPECT_CALL(ipcMock, readData()).WillOnce(Return(""));
+    EXPECT_CALL(ipcMock, writeData(exit_msg)).Times(1);
 
     worker->startWorking();
     worker->processData();
@@ -64,8 +64,8 @@ TEST_F(ExitWorker_tests, processData_not_started_yet) {
     ExitWorker exitWorker{ipcMock};
     worker = &exitWorker;
 
-    EXPECT_CALL(ipcMock, read()).Times(0);
-    EXPECT_CALL(ipcMock, write(exit_msg)).Times(0);
+    EXPECT_CALL(ipcMock, readData()).Times(0);
+    EXPECT_CALL(ipcMock, writeData(exit_msg)).Times(0);
 
     worker->processData();
 }
@@ -112,7 +112,7 @@ TEST_F(ExitWorker_tests, stopWorking_when_exit_received) {
     worker = &exitWorker;
 
     EXPECT_CALL(ipcMock, open()).Times(1);
-    EXPECT_CALL(ipcMock, read()).WillOnce(Return(exit_msg));
+    EXPECT_CALL(ipcMock, readData()).WillOnce(Return(exit_msg));
     EXPECT_CALL(ipcMock, close()).Times(1);
 
     worker->startWorking();

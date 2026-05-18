@@ -17,11 +17,11 @@ void ExitWorker::processData() {
         return;
     }
 
-    if (ipcMem().read() == "exit") {
+    if (ipcMem().readData() == "exit") {
         return stopWorking();
     }
 
-    ipcMem().write("exit");
+    ipcMem().writeData("exit");
 }
 
 } } } // mw::proc_managers::workers

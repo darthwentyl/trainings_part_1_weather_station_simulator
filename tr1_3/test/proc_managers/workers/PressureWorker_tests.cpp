@@ -59,7 +59,7 @@ TEST_F(PressureWorker_tests, processData_success) {
     data.setPressure(1007.4);
 
     EXPECT_CALL(ipcMock, open()).Times(1);
-    EXPECT_CALL(ipcMock, read()).WillOnce(Return(data.serialize()));
+    EXPECT_CALL(ipcMock, readData()).WillOnce(Return(data.serialize()));
 
     worker->startWorking();
     worker->processData();
@@ -69,7 +69,7 @@ TEST_F(PressureWorker_tests, processData_not_started_yet) {
     PressureWorker pressureWorker{ipcMock, dataFile, bufferSize};
     worker = &pressureWorker;
 
-    EXPECT_CALL(ipcMock, read()).Times(0);
+    EXPECT_CALL(ipcMock, readData()).Times(0);
 
     worker->processData();
 }
@@ -116,7 +116,7 @@ TEST_F(PressureWorker_tests, stopWorking_when_exit_received) {
     worker = &pressureWorker;
 
     EXPECT_CALL(ipcMock, open()).Times(1);
-    EXPECT_CALL(ipcMock, read()).WillOnce(Return("exit"));
+    EXPECT_CALL(ipcMock, readData()).WillOnce(Return("exit"));
     EXPECT_CALL(ipcMock, close()).Times(1);
 
     worker->startWorking();

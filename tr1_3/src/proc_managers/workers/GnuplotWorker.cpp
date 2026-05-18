@@ -35,7 +35,7 @@ void GnuplotWorker::processData() {
         return;
     }
 
-    if (ipcMem().read() == "exit") {
+    if (ipcMem().readData() == "exit") {
         return stopWorking();
     }
 

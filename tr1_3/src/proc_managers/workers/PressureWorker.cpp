@@ -19,7 +19,7 @@ void PressureWorker::processData() {
         return;
     }
 
-    const std::string msg = ipcMem().read();
+    const std::string msg = ipcMem().readData();
     DEBUG("read: " << msg);
 
     if (msg == "exit") {

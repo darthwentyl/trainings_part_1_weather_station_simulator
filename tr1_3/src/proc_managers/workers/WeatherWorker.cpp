@@ -18,7 +18,7 @@ WeatherWorker::WeatherWorker(IIpc& ipcMemory) :
 
 
 void WeatherWorker::processData() {
-    if (ipcMem().readData() == "exit") {
+    if (ipcMem().read() == "exit") {
         return stopWorking();
     }
 
@@ -40,7 +40,7 @@ void WeatherWorker::processData() {
 
     const std::string msg = data.serialize();
     DEBUG(msg);
-    ipcMem().writeData(data.serialize());
+    ipcMem().write(data.serialize());
 }
 
 } } } // mw::proc_managers::workers

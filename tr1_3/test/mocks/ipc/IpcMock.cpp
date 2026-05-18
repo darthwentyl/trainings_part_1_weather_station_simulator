@@ -6,8 +6,7 @@ namespace mw { namespace mocks {
 using namespace testing;
 
 IpcMock::IpcMock() {
-    ON_CALL(*this, readData()).WillByDefault(Return(std::string{}));
-    ON_CALL(*this, writeData(_)).WillByDefault(Return(false));
+    ON_CALL(*this, read()).WillByDefault(Return(std::string{}));
 }
 
 } } // mw::mocks

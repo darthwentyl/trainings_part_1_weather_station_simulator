@@ -112,7 +112,7 @@ void SharedSegmentMemoryIpc::close() {
     setDefault();
 }
 
-std::string SharedSegmentMemoryIpc::readData() const {
+std::string SharedSegmentMemoryIpc::read() const {
     if (usage == EUsageShmSegment::CREATOR) {
         throw shm_error{__FUNCTION__, __LINE__, "cannot read data if you are CREATOR"};
     }
@@ -125,7 +125,7 @@ std::string SharedSegmentMemoryIpc::readData() const {
     return std::string{shmMem};
 }
 
-bool SharedSegmentMemoryIpc::writeData(const std::string& msg) const {
+bool SharedSegmentMemoryIpc::write(const std::string& msg) const {
     if (usage == EUsageShmSegment::CREATOR) {
         throw shm_error{__FUNCTION__, __LINE__, "cannot write data if you are CREATOR"};
     }

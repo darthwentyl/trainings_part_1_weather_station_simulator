@@ -19,7 +19,7 @@ void TemperatureWorker::processData() {
         return;
     }
 
-    const std::string msg = ipcMem().readData();
+    const std::string msg = ipcMem().read();
     DEBUG("read: " << msg);
 
     if (msg == "exit") {

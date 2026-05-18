@@ -17,8 +17,8 @@ public:
 
     void open() override;
     void close() override;
-    std::string readData() const override;
-    bool writeData(const std::string& msg) const override;
+    std::string read() const override;
+    bool write(const std::string& msg) const override;
 
 private:
     void setDefault();

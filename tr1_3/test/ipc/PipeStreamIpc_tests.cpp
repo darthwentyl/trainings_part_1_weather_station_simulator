@@ -197,7 +197,7 @@ TEST_F(PipeStreamIpc_tests, read_success) {
     try {
         auto instance = PipeStreamIpc{TEST_COMMAND, EPipeMode::READ};
         instance.open();
-        EXPECT_STREQ(buff.c_str(), instance.readData().c_str());
+        EXPECT_STREQ(buff.c_str(), instance.read().c_str());
     } catch (const std::exception& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
@@ -226,7 +226,7 @@ TEST_F(PipeStreamIpc_tests, read_success_buffer_read_2_times) {
         auto instance = PipeStreamIpc{TEST_COMMAND, EPipeMode::READ};
         instance.open();
         const std::string comparison = buff + buff;
-        EXPECT_STREQ(comparison.c_str(), instance.readData().c_str());
+        EXPECT_STREQ(comparison.c_str(), instance.read().c_str());
     } catch (const std::exception& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
@@ -243,7 +243,7 @@ TEST_F(PipeStreamIpc_tests, read_nullptr) {
     try {
         auto instance = PipeStreamIpc{TEST_COMMAND, EPipeMode::READ};
         instance.open();
-        EXPECT_STREQ(std::string{}.c_str(), instance.readData().c_str());
+        EXPECT_STREQ(std::string{}.c_str(), instance.read().c_str());
     } catch (const std::exception& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
@@ -253,7 +253,7 @@ TEST_F(PipeStreamIpc_tests, read_nullptr) {
 TEST_F(PipeStreamIpc_tests, read_not_started_yet) {
     try {
         auto instance = PipeStreamIpc{TEST_COMMAND, EPipeMode::READ};
-        instance.readData();
+        instance.read();
         EXPECT_FALSE(true);
     } catch (const pipe_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
@@ -273,7 +273,7 @@ TEST_F(PipeStreamIpc_tests, read_but_it_write_mode) {
     try {
         auto instance = PipeStreamIpc{TEST_COMMAND, EPipeMode::WRITE};
         instance.open();
-        instance.readData();
+        instance.read();
         EXPECT_FALSE(true);
     } catch (const pipe_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
@@ -295,7 +295,7 @@ TEST_F(PipeStreamIpc_tests, writer_success) {
     try{
         auto instance = PipeStreamIpc{TEST_COMMAND, EPipeMode::WRITE};
         instance.open();
-        EXPECT_TRUE(instance.writeData(msg));
+        EXPECT_TRUE(instance.write(msg));
     } catch  (const std::exception& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
@@ -307,7 +307,7 @@ TEST_F(PipeStreamIpc_tests, write_stream_nullptr) {
 
     try {
         auto instance = PipeStreamIpc{TEST_COMMAND, EPipeMode::WRITE};
-        EXPECT_FALSE(instance.writeData(msg));
+        EXPECT_FALSE(instance.write(msg));
     } catch (const pipe_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
@@ -328,7 +328,7 @@ TEST_F(PipeStreamIpc_tests, write_when_you_are_in_read_mode) {
     try {
         auto instance = PipeStreamIpc{TEST_COMMAND, EPipeMode::READ};
         instance.open();
-        EXPECT_FALSE(instance.writeData(msg));
+        EXPECT_FALSE(instance.write(msg));
     } catch (const pipe_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
@@ -350,7 +350,7 @@ TEST_F(PipeStreamIpc_tests, write_fputs_EOF) {
     try {
         auto instance = PipeStreamIpc{TEST_COMMAND, EPipeMode::WRITE};
         instance.open();
-        EXPECT_FALSE(instance.writeData(msg));
+        EXPECT_FALSE(instance.write(msg));
     } catch (const pipe_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
@@ -371,7 +371,7 @@ TEST_F(PipeStreamIpc_tests, write_empty_msg) {
     try {
         auto instance = PipeStreamIpc{TEST_COMMAND, EPipeMode::WRITE};
         instance.open();
-        EXPECT_FALSE(instance.writeData(std::string{}));
+        EXPECT_FALSE(instance.write(std::string{}));
     } catch (const pipe_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);

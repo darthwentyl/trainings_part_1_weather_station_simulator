@@ -330,7 +330,7 @@ TEST_F(SharedSegmentMemoryIpc_tests, client_close_shmdt_failure) {
 TEST_F(SharedSegmentMemoryIpc_tests, creator_read) {
     auto instance = SharedSegmentMemoryIpc{MEMORY_FILE, MEMORY_SIZE, EUsageShmSegment::CREATOR};
     try {
-        instance.readData();
+        instance.read();
         EXPECT_FALSE(true);
     } catch (const shm_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
@@ -341,7 +341,7 @@ TEST_F(SharedSegmentMemoryIpc_tests, creator_read) {
 TEST_F(SharedSegmentMemoryIpc_tests, creator_write) {
     auto instance = SharedSegmentMemoryIpc{MEMORY_FILE, MEMORY_SIZE, EUsageShmSegment::CREATOR};
     try {
-        instance.writeData(std::string{"abc"});
+        instance.write(std::string{"abc"});
         EXPECT_FALSE(true);
     } catch (const shm_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
@@ -368,7 +368,7 @@ TEST_F(SharedSegmentMemoryIpc_tests, client_write_success) {
     instance.open();
 
     try {
-        EXPECT_TRUE(instance.writeData(msg));
+        EXPECT_TRUE(instance.write(msg));
         EXPECT_STREQ(msg.data(), shmMem.data());
     } catch (const std::exception& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
@@ -391,7 +391,7 @@ TEST_F(SharedSegmentMemoryIpc_tests, client_write_shmMem_nullptr) {
     instance.open();
 
     try {
-        EXPECT_TRUE(instance.writeData(msg));
+        EXPECT_TRUE(instance.write(msg));
     } catch (const shm_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
@@ -418,7 +418,7 @@ TEST_F(SharedSegmentMemoryIpc_tests, client_write_message_too_big) {
     instance.open();
 
     try {
-        EXPECT_TRUE(instance.writeData(msg));
+        EXPECT_TRUE(instance.write(msg));
     } catch (const shm_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
@@ -444,7 +444,7 @@ TEST_F(SharedSegmentMemoryIpc_tests, client_write_message_equal_zero) {
     instance.open();
 
     try {
-        EXPECT_TRUE(instance.writeData(msg));
+        EXPECT_TRUE(instance.write(msg));
     } catch (const shm_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_TRUE(true);
@@ -469,7 +469,7 @@ TEST_F(SharedSegmentMemoryIpc_tests, client_read_success) {
     instance.open();
 
     try {
-        EXPECT_STREQ(instance.readData().c_str(), msg.c_str());
+        EXPECT_STREQ(instance.read().c_str(), msg.c_str());
     } catch (const std::exception& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
@@ -490,7 +490,7 @@ TEST_F(SharedSegmentMemoryIpc_tests, client_read_shmMem_nullptr) {
     instance.open();
 
     try {
-        instance.readData();
+        instance.read();
         EXPECT_FALSE(true);
     } catch (const shm_error& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;

@@ -26,7 +26,7 @@ void GnuplotCommandExecutor::execute(const EGnuplotCommand cmd) const {
 }
 
 void GnuplotCommandExecutor::executeTerminal() const {
-    ipc.writeData(GnuplotCommander::terminal(description.getWidth(), description.getHeight()));
+    ipc.write(GnuplotCommander::terminal(description.getWidth(), description.getHeight()));
 }
 
 void GnuplotCommandExecutor::executeTitle() const {
@@ -34,22 +34,22 @@ void GnuplotCommandExecutor::executeTitle() const {
         INFO("Title is empty. No execute");
         return;
     }
-    ipc.writeData(GnuplotCommander::title(description.getTitle()));
+    ipc.write(GnuplotCommander::title(description.getTitle()));
 }
 
 void GnuplotCommandExecutor::executeAxisLabels() const {
     std::string label = description.getAxisLabel(EGnuplotAxis::OX);
     if (!label.empty()) {
-        ipc.writeData(GnuplotCommander::axisLabel(EGnuplotAxis::OX, label));
+        ipc.write(GnuplotCommander::axisLabel(EGnuplotAxis::OX, label));
     }
     label = description.getAxisLabel(EGnuplotAxis::OY);
     if (!label.empty()) {
-        ipc.writeData(GnuplotCommander::axisLabel(EGnuplotAxis::OY, label));
+        ipc.write(GnuplotCommander::axisLabel(EGnuplotAxis::OY, label));
     }
 }
 
 void GnuplotCommandExecutor::executeGrid() const {
-    ipc.writeData(GnuplotCommander::grid(description.getGrid()));
+    ipc.write(GnuplotCommander::grid(description.getGrid()));
 }
 
 void GnuplotCommandExecutor::executePlotPoints() const {
@@ -58,7 +58,7 @@ void GnuplotCommandExecutor::executePlotPoints() const {
         INFO("No data to plot! File: " << dataFile);
         return;
     }
-    ipc.writeData(GnuplotCommander::plotPoints(dataFile, description.getLegend()));
+    ipc.write(GnuplotCommander::plotPoints(dataFile, description.getLegend()));
 }
 
 } } // mw::helpers

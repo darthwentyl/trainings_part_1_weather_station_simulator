@@ -44,7 +44,7 @@ protected:
             .grid(true)
             .build();
 
-        EXPECT_CALL(ipcPipeMock, writeData(_)).WillRepeatedly(Return(true));
+        EXPECT_CALL(ipcPipeMock, write(_)).WillRepeatedly(Return(true));
     }
 
     void TearDown() {
@@ -101,8 +101,8 @@ TEST_F(GnuplotWorker_tests, processData_success) {
 
     EXPECT_CALL(ipcMemMock, open()).Times(1);
     EXPECT_CALL(ipcPipeMock, open()).Times(1);
-    EXPECT_CALL(ipcMemMock, readData()).WillOnce(Return("test data"));
-    EXPECT_CALL(ipcPipeMock, writeData(cmd)).WillOnce(Return(true));
+    EXPECT_CALL(ipcMemMock, read()).WillOnce(Return("test data"));
+    EXPECT_CALL(ipcPipeMock, write(cmd)).WillOnce(Return(true));
 
     worker->startWorking();
     worker->processData();
@@ -114,8 +114,8 @@ TEST_F(GnuplotWorker_tests, processData_not_started_yet) {
     const std::string cmd =
         GnuplotCommander::plotPoints(description.getDataFile(), description.getLegend());
 
-    EXPECT_CALL(ipcMemMock, readData()).Times(0);
-    EXPECT_CALL(ipcPipeMock, writeData(cmd)).Times(0);
+    EXPECT_CALL(ipcMemMock, read()).Times(0);
+    EXPECT_CALL(ipcPipeMock, write(cmd)).Times(0);
 
     worker->processData();
 }
@@ -154,8 +154,8 @@ TEST_F(GnuplotWorker_tests, stopWorking_when_exit_received) {
 
     EXPECT_CALL(ipcMemMock, open()).Times(1);
     EXPECT_CALL(ipcPipeMock, open()).Times(1);
-    EXPECT_CALL(ipcMemMock, readData()).WillOnce(Return("exit"));
-    EXPECT_CALL(ipcPipeMock, writeData(cmd)).Times(0);
+    EXPECT_CALL(ipcMemMock, read()).WillOnce(Return("exit"));
+    EXPECT_CALL(ipcPipeMock, write(cmd)).Times(0);
     EXPECT_CALL(ipcMemMock, close()).Times(1);
     EXPECT_CALL(ipcPipeMock, close()).Times(1);
 

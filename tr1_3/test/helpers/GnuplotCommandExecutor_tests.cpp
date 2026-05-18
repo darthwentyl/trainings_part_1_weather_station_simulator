@@ -58,7 +58,7 @@ TEST_F(GnuplotCommandExecutor_tests, executeTerminal) {
     auto executor = GnuplotCommandExecutor{ipcMock, description};
     const std::string cmd  = GnuplotCommander::terminal(description.getWidth(), description.getHeight());
 
-    EXPECT_CALL(ipcMock, writeData(StrEq(cmd))).WillOnce(Return(true));
+    EXPECT_CALL(ipcMock, write(StrEq(cmd))).WillOnce(Return(true));
 
     executor.execute(EGnuplotCommand::TERMINAL);
 }
@@ -67,7 +67,7 @@ TEST_F(GnuplotCommandExecutor_tests, executeTitle) {
     auto executor = GnuplotCommandExecutor{ipcMock, description};
     const std::string cmd = GnuplotCommander::title(description.getTitle());
 
-    EXPECT_CALL(ipcMock, writeData(StrEq(cmd))).WillOnce(Return(true));
+    EXPECT_CALL(ipcMock, write(StrEq(cmd))).WillOnce(Return(true));
 
     executor.execute(EGnuplotCommand::TITLE);
 }
@@ -76,7 +76,7 @@ TEST_F(GnuplotCommandExecutor_tests, executeTitle_empty) {
     description.setTitle(std::string{});
     auto executor = GnuplotCommandExecutor{ipcMock, description};
 
-    EXPECT_CALL(ipcMock, writeData(_)).Times(0);
+    EXPECT_CALL(ipcMock, write(_)).Times(0);
 
     executor.execute(EGnuplotCommand::TITLE);
 }
@@ -88,8 +88,8 @@ TEST_F(GnuplotCommandExecutor_tests, executeAxisLabels) {
     const std::string cmdYLabel =
         GnuplotCommander::axisLabel(EGnuplotAxis::OY, description.getAxisLabel(EGnuplotAxis::OY));
 
-    EXPECT_CALL(ipcMock, writeData(StrEq(cmdXLabel))).WillOnce(Return(true));
-    EXPECT_CALL(ipcMock, writeData(StrEq(cmdYLabel))).WillOnce(Return(true));
+    EXPECT_CALL(ipcMock, write(StrEq(cmdXLabel))).WillOnce(Return(true));
+    EXPECT_CALL(ipcMock, write(StrEq(cmdYLabel))).WillOnce(Return(true));
 
     executor.execute(EGnuplotCommand::AXIS_LABELS);
 }
@@ -101,8 +101,8 @@ TEST_F(GnuplotCommandExecutor_tests, executeAxisLabels_x_label_empty) {
     const std::string cmdYLabel =
         GnuplotCommander::axisLabel(EGnuplotAxis::OY, description.getAxisLabel(EGnuplotAxis::OY));
 
-    EXPECT_CALL(ipcMock, writeData(_)).Times(0);
-    EXPECT_CALL(ipcMock, writeData(StrEq(cmdYLabel))).WillOnce(Return(true));
+    EXPECT_CALL(ipcMock, write(_)).Times(0);
+    EXPECT_CALL(ipcMock, write(StrEq(cmdYLabel))).WillOnce(Return(true));
 
     executor.execute(EGnuplotCommand::AXIS_LABELS);
 }
@@ -114,8 +114,8 @@ TEST_F(GnuplotCommandExecutor_tests, executeAxisLabels_y_label_empty) {
     const std::string cmdXLabel =
         GnuplotCommander::axisLabel(EGnuplotAxis::OX, description.getAxisLabel(EGnuplotAxis::OX));
 
-    EXPECT_CALL(ipcMock, writeData(_)).Times(0);
-    EXPECT_CALL(ipcMock, writeData(StrEq(cmdXLabel))).WillOnce(Return(true));
+    EXPECT_CALL(ipcMock, write(_)).Times(0);
+    EXPECT_CALL(ipcMock, write(StrEq(cmdXLabel))).WillOnce(Return(true));
 
     executor.execute(EGnuplotCommand::AXIS_LABELS);
 }
@@ -124,7 +124,7 @@ TEST_F(GnuplotCommandExecutor_tests, executeGrid) {
     auto executor = GnuplotCommandExecutor{ipcMock, description};
     const std::string cmd = GnuplotCommander::grid(description.getGrid());
 
-    EXPECT_CALL(ipcMock, writeData(StrEq(cmd))).WillOnce(Return(true));
+    EXPECT_CALL(ipcMock, write(StrEq(cmd))).WillOnce(Return(true));
 
     executor.execute(EGnuplotCommand::GRID);
 }
@@ -137,7 +137,7 @@ TEST_F(GnuplotCommandExecutor_tests, executePlotPoints) {
         std::ofstream dataFile(DATA_FILE);
     }
 
-    EXPECT_CALL(ipcMock, writeData(StrEq(cmd))).WillOnce(Return(true));
+    EXPECT_CALL(ipcMock, write(StrEq(cmd))).WillOnce(Return(true));
 
     executor.execute(EGnuplotCommand::PLOT_POINTS);
 }
@@ -146,7 +146,7 @@ TEST_F(GnuplotCommandExecutor_tests, executePlotPoints_dataFile_empty) {
     description.setDataFile(std::string{});
     auto executor = GnuplotCommandExecutor{ipcMock, description};
 
-    EXPECT_CALL(ipcMock, writeData(_)).Times(0);
+    EXPECT_CALL(ipcMock, write(_)).Times(0);
 
     executor.execute(EGnuplotCommand::PLOT_POINTS);
 }
@@ -155,7 +155,7 @@ TEST_F(GnuplotCommandExecutor_tests, executePlotPoints_dataFile_not_exists) {
     description.setDataFile(std::string{DATA_FILE} + std::string{".not_exists"});
     auto executor = GnuplotCommandExecutor{ipcMock, description};
 
-    EXPECT_CALL(ipcMock, writeData(_)).Times(0);
+    EXPECT_CALL(ipcMock, write(_)).Times(0);
 
     executor.execute(EGnuplotCommand::PLOT_POINTS);
 }

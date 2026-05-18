@@ -4,20 +4,30 @@
 #include <exceptions/socket_error.h>
 
 #include <cstring>
-
 #include <sys/socket.h>
+#include <unistd.h>
 
 namespace mw { namespace ipc {
 
 using namespace mw::exceptions;
+using namespace mw::helpers;
+
+namespace {
 
 constexpr const int FAILURE = -1;
 constexpr const int NOT_CREATED = -2;
 constexpr const int BACKLOG = 1;
 
+void closeSocket(int& listenFd) {
+    close(listenFd);
+}
+
+} // anonymous
+
+
+
 SocketIpc::SocketIpc(const int port)
     : listenFd{NOT_CREATED}
-    , connectFd{NOT_CREATED}
     , port{port}
     , opt{1}
 {
@@ -32,18 +42,27 @@ void SocketIpc::open() {
     if (!isSocketOpened()) {
         openSocket();
     }
-
-    if (!isConnectionOpened()) {
-        acceptConnection();
-    }
 }
 
 void SocketIpc::close() {
-
+    closeSocket(listenFd);
 }
 
 std::string SocketIpc::read() const {
-    return std::string{};
+    if (!isSocketOpened()) {
+        throw socket_error{__FUNCTION__, __LINE__, "socket has not opened. Cannot read data"};
+    }
+
+    if (!clientConn.isConnected()) {
+        clientConn.acceptConnection(listenFd);
+    }
+
+    std::string data = clientConn.readData();
+    if (data.size() == 0) {
+        clientConn.closeConnection();
+    }
+
+    return data;
 }
 
 bool SocketIpc::write(const std::string& msg) const {
@@ -74,17 +93,6 @@ void SocketIpc::openSocket() {
     }
 
     INFO("Server listening on port " << port);
-}
-
-void SocketIpc::acceptConnection() {
-    connectFd = accept(listenFd, nullptr, nullptr);
-    if (connectFd == FAILURE) {
-        throw socket_error{__FUNCTION__, __LINE__, "accept failed " + std::string{strerror(errno)}};
-    }
-}
-
-bool SocketIpc::isConnectionOpened() const {
-    return connectFd != NOT_CREATED && connectFd != FAILURE;
 }
 
 bool SocketIpc::isSocketOpened() const {

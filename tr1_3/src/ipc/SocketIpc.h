@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ipc/IIpc.h>
+#include <helpers/ConnectionSocketHelper.h>
 
 #include <arpa/inet.h>
 
@@ -24,15 +25,13 @@ public:
 
 private:
     void openSocket();
-    void acceptConnection();
-    bool isConnectionOpened() const;
     bool isSocketOpened() const;
 
     int listenFd;
-    int connectFd;
     int port;
     int opt;
     struct sockaddr_in addr;
+    mutable helpers::ConnectionSocketHelper clientConn;
 };
 
 } } // mw::ipc

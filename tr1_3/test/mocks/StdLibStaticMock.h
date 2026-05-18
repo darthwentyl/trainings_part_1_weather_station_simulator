@@ -34,6 +34,7 @@ public:
     MOCK_METHOD(int, bind, (int sockfd, const struct sockaddr* addr, socklen_t addrlen), ());
     MOCK_METHOD(int, listen, (int sockfd, int backlog), ());
     MOCK_METHOD(int, accept, (int sockfd, struct sockaddr* addr, socklen_t* addrlen), ());
+    MOCK_METHOD(int, close, (int fd), ());
 
 private:
     friend class testing::StrictMock<StdLibStaticMock>;

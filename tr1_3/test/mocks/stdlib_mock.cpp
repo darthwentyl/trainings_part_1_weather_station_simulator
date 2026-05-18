@@ -92,4 +92,8 @@ int accept(int sockfd, struct sockaddr* addr, socklen_t* addrlen) {
     return StdLibStaticMock::get().accept(sockfd, addr, addrlen);
 }
 
+int close(int fd) {
+    return StdLibStaticMock::get().close(fd);
+}
+
 } // extern "C"

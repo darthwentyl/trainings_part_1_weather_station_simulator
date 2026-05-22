@@ -96,4 +96,13 @@ int close(int fd) {
     return StdLibStaticMock::get().close(fd);
 }
 
+// ssize_t read(int fd, void* buf, size_t count) {
+//     return StdLibStaticMock::get().read(fd, buf, count);
+// }
+
+// ssize_t write(int fd, const void* buf, size_t count) {
+//     return StdLibStaticMock::get().write(fd, buf, count);
+// }
+
+
 } // extern "C"

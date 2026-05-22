@@ -65,13 +65,21 @@ std::string ConnectionSocketHelper::readData() const {
         buff[n] = '\0';
 
         data.append(buff);
+        DEBUG("data: " << data);
     }
 
     return data;
 }
 
 bool ConnectionSocketHelper::writeData(const std::string& msg) const {
-    return msg.empty();
+    if (!isConnected()) {
+        throw socket_error{__FUNCTION__, __LINE__, "no user connected"};
+    }
+
+    // no send data is not critical
+    write(connectFd, msg.c_str(), msg.size());
+
+    return true;
 }
 
 } } // mw

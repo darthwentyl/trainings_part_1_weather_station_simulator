@@ -70,6 +70,7 @@ std::string SocketIpc::read() const {
     std::string data = clientConn.readData();
     if (data.size() == 0) {
         clientConn.closeConnection();
+        return std::string{"Client disconnected"};
     }
 
     return data;

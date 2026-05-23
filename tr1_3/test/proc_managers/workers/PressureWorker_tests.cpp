@@ -1,6 +1,12 @@
 #include <gtest/gtest.h>
 
 #include <mocks/ipc/IpcMock.h>
+#include <mocks/StdLibStaticMock.h>
+
+#include <dlfcn.h>
+#include <unistd.h>
+#include <cstddef>
+#include <sys/types.h>
 
 #include <proc_managers/workers/PressureWorker.h>
 #include <proc_managers/workers/WeatherData.h>
@@ -19,12 +25,22 @@ public:
     ~PressureWorker_tests() = default;
 
 protected:
+    void SetUp() override {
+        os_read = (ssize_t(*)(int, void*, size_t))dlsym(RTLD_NEXT, "read");
+        os_write = (ssize_t(*)(int, const void*, size_t))dlsym(RTLD_NEXT, "write");
+        auto& stdLib = StdLibStaticMock::get();
+        EXPECT_CALL(stdLib, read(_, _, _)).WillRepeatedly(Invoke(os_read));
+        EXPECT_CALL(stdLib, write(_, _, _)).WillRepeatedly(Invoke(os_write));
+    }
+
     void TearDown() override {
         worker = nullptr;
     }
 
     StrictMock<IpcMock> ipcMock;
     IWorker* worker;
+    std::function<ssize_t(int, void*, size_t)> os_read;
+    std::function<ssize_t(int, const void*, size_t)> os_write;
 };
 
 TEST_F(PressureWorker_tests, nothing_done_yet) {

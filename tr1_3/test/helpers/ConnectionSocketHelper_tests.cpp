@@ -239,7 +239,7 @@ TEST_F(ConnectionSocketHelper_tests, writeData_success) {
     try {
         conn.acceptConnection(listenFd);
         EXPECT_TRUE(conn.writeData(msg));
-        // EXPECT_STREQ(msg.c_str(), receivedData.c_str());
+        EXPECT_STREQ(msg.c_str(), receivedData.c_str());
     } catch (const std::exception& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);

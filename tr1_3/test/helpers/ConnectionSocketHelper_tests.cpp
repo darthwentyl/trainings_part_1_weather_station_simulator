@@ -46,7 +46,6 @@ TEST_F(ConnectionSocketHelper_tests, acceptConnection_failed) {
 
     EXPECT_CALL(stdLib, accept(Eq(listenFd), Eq(nullptr), Eq(nullptr))).WillOnce(Return(FAILURE));
 
-
     try {
         conn.acceptConnection(listenFd);
         EXPECT_FALSE(true);
@@ -134,73 +133,73 @@ TEST_F(ConnectionSocketHelper_tests, closeSocket_failure) {
 }
 
 TEST_F(ConnectionSocketHelper_tests, readData_success) {
-    // auto& stdLib = StdLibStaticMock::get();
-    // ConnectionSocketHelper conn{};
-    // const int listenFd = 123;
-    // const int connectFd = 321;
+    auto& stdLib = StdLibStaticMock::get();
+    ConnectionSocketHelper conn{};
+    const int listenFd = 123;
+    const int connectFd = 321;
 
-    // const std::string msg = "message\n\r";
-    // const std::string empty = "\n\r";
+    const std::string msg = "message\n\r";
+    const std::string empty = "\n\r";
 
-    // EXPECT_CALL(stdLib, accept(_, _, _)).WillOnce(Return(connectFd));
-    // EXPECT_CALL(stdLib, read(Eq(connectFd), _, _))
-    // .WillOnce(
-    //     Invoke([=](int, void* buf, size_t) -> ssize_t {
-    //         strncpy(static_cast<char*>(buf), msg.c_str(), msg.size());
-    //         return msg.size();
-    //     }
-    // ))
-    // .WillOnce(
-    //     Invoke([=](int, void* buf, size_t) -> ssize_t {
-    //         strncpy(static_cast<char*>(buf), empty.c_str(), empty.size());
-    //         return empty.size();
-    //     }
-    // ));
-    // EXPECT_CALL(stdLib, close(_)).WillOnce(Return(SUCCESS));
+    EXPECT_CALL(stdLib, accept(_, _, _)).WillOnce(Return(connectFd));
+    EXPECT_CALL(stdLib, read(Eq(connectFd), _, _))
+    .WillOnce(
+        Invoke([=](int, void* buf, size_t) -> ssize_t {
+            strncpy(static_cast<char*>(buf), msg.c_str(), msg.size());
+            return msg.size();
+        }
+    ))
+    .WillOnce(
+        Invoke([=](int, void* buf, size_t) -> ssize_t {
+            strncpy(static_cast<char*>(buf), empty.c_str(), empty.size());
+            return empty.size();
+        }
+    ));
+    EXPECT_CALL(stdLib, close(_)).WillOnce(Return(SUCCESS));
 
-    // try {
-    //     conn.acceptConnection(listenFd);
-    //     EXPECT_STREQ(conn.readData().c_str(), "message");
-    // } catch (const std::exception& e) {
-    //     std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
-    //     EXPECT_FALSE(true);
-    // }
+    try {
+        conn.acceptConnection(listenFd);
+        EXPECT_STREQ(conn.readData().c_str(), "message");
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
+        EXPECT_FALSE(true);
+    }
 }
 
 TEST_F(ConnectionSocketHelper_tests, readData_big_buff) {
-    // auto& stdLib = StdLibStaticMock::get();
-    // ConnectionSocketHelper conn{};
-    // const int listenFd = 123;
-    // const int connectFd = 321;
+    auto& stdLib = StdLibStaticMock::get();
+    ConnectionSocketHelper conn{};
+    const int listenFd = 123;
+    const int connectFd = 321;
 
-    // const std::string msg(BUFF_SIZE, 'a');
-    // const std::string empty = "\n\r";
+    const std::string msg(BUFF_SIZE, 'a');
+    const std::string empty = "\n\r";
 
-    // auto read_msg = [msg](int, void* buf, size_t) -> ssize_t {
-    //     strncpy(static_cast<char*>(buf), msg.c_str(), msg.size());
-    //     return msg.size();
-    // };
+    auto read_msg = [msg](int, void* buf, size_t) -> ssize_t {
+        strncpy(static_cast<char*>(buf), msg.c_str(), msg.size());
+        return msg.size();
+    };
 
-    // EXPECT_CALL(stdLib, accept(_, _, _)).WillOnce(Return(connectFd));
-    // EXPECT_CALL(stdLib, read(Eq(connectFd), _, _))
-    // .WillOnce(Invoke(read_msg))
-    // .WillOnce(Invoke(read_msg))
-    // .WillOnce(
-    //     Invoke([=](int, void* buf, size_t) -> ssize_t {
-    //         strncpy(static_cast<char*>(buf), empty.c_str(), empty.size());
-    //         return empty.size();
-    //     }
-    // ));
-    // EXPECT_CALL(stdLib, close(_)).WillOnce(Return(SUCCESS));
+    EXPECT_CALL(stdLib, accept(_, _, _)).WillOnce(Return(connectFd));
+    EXPECT_CALL(stdLib, read(Eq(connectFd), _, _))
+    .WillOnce(Invoke(read_msg))
+    .WillOnce(Invoke(read_msg))
+    .WillOnce(
+        Invoke([=](int, void* buf, size_t) -> ssize_t {
+            strncpy(static_cast<char*>(buf), empty.c_str(), empty.size());
+            return empty.size();
+        }
+    ));
+    EXPECT_CALL(stdLib, close(_)).WillOnce(Return(SUCCESS));
 
-    // try {
-    //     conn.acceptConnection(listenFd);
-    //     std::string compMsg = msg + msg;
-    //     EXPECT_STREQ(conn.readData().c_str(), compMsg.c_str());
-    // } catch (const std::exception& e) {
-    //     std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
-    //     EXPECT_FALSE(true);
-    // }
+    try {
+        conn.acceptConnection(listenFd);
+        std::string compMsg = msg + msg;
+        EXPECT_STREQ(conn.readData().c_str(), compMsg.c_str());
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
+        EXPECT_FALSE(true);
+    }
 }
 
 TEST_F(ConnectionSocketHelper_tests, readData_not_connected) {
@@ -218,32 +217,33 @@ TEST_F(ConnectionSocketHelper_tests, readData_not_connected) {
 }
 
 TEST_F(ConnectionSocketHelper_tests, writeData_success) {
-    // auto& stdLib = StdLibStaticMock::get();
-    // ConnectionSocketHelper conn{};
-    // const int listenFd = 123;
-    // const int connectFd = 321;
+    auto& stdLib = StdLibStaticMock::get();
+    ConnectionSocketHelper conn{};
+    const int listenFd = 123;
+    const int connectFd = 321;
 
-    // const std::string msg = "abcd";
-    // std::string receivedData;
+    const std::string msg = "abcd";
+    std::string receivedData;
 
-    // EXPECT_CALL(stdLib, accept(_, _, _)).WillOnce(Return(connectFd));
-    // EXPECT_CALL(stdLib, write(Eq(connectFd), _, _))
-    // .WillOnce(
-    //     Invoke([&](int, const void* buf, size_t) -> ssize_t {
-    //         receivedData.append(static_cast<const char*>(buf));
-    //         return receivedData.size();
-    //     }
-    // ));
-    // EXPECT_CALL(stdLib, close(_)).WillOnce(Return(SUCCESS));
+    EXPECT_CALL(stdLib, accept(_, _, _)).WillOnce(Return(connectFd));
+    EXPECT_CALL(stdLib, write(Eq(connectFd), _, _))
+    .WillOnce(
+        Invoke([&](int, const void* buf, size_t) -> ssize_t {
+            std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": buf: " << (const char*)buf << std::endl;
+            receivedData.append(static_cast<const char*>(buf));
+            return receivedData.size();
+        }
+    ));
+    EXPECT_CALL(stdLib, close(_)).WillOnce(Return(SUCCESS));
 
-    // try {
-    //     conn.acceptConnection(listenFd);
-    //     EXPECT_TRUE(conn.writeData(msg));
-    //     // EXPECT_STREQ(msg.c_str(), receivedData.c_str());
-    // } catch (const std::exception& e) {
-    //     std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
-    //     EXPECT_FALSE(true);
-    // }
+    try {
+        conn.acceptConnection(listenFd);
+        EXPECT_TRUE(conn.writeData(msg));
+        // EXPECT_STREQ(msg.c_str(), receivedData.c_str());
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
+        EXPECT_FALSE(true);
+    }
 }
 
 TEST_F(ConnectionSocketHelper_tests, writeData_not_connected) {

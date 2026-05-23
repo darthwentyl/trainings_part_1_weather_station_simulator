@@ -19,7 +19,7 @@ public:
     ~PressureWorker_tests() = default;
 
 protected:
-    void TearDown() {
+    void TearDown() override {
         worker = nullptr;
     }
 

@@ -1,14 +1,21 @@
 #include <gtest/gtest.h>
+#include <mocks/StdLibStaticMock.h>
 
 #include <filesystem>
+#include <dlfcn.h>
+#include <unistd.h>
+#include <cstddef>
+#include <sys/types.h>
 
 #include <helpers/FixedLinesFileWriter.h>
+
 
 namespace {
 
 using namespace testing;
 using namespace mw::helpers;
 using namespace mw::exceptions;
+using namespace mw::mocks;
 
 namespace fs = std::filesystem;
 
@@ -21,19 +28,26 @@ public:
     ~FixedLinesFileWriter_tests() = default;
 
 protected:
-    void SetUp() {
+    void SetUp() override {
         for (size_t i = 0; i < NUMBER_OF_SAMPLES; ++i) {
             datas[i] = i;
         }
+        os_read = (ssize_t(*)(int, void*, size_t))dlsym(RTLD_NEXT, "read");
+        os_write = (ssize_t(*)(int, const void*, size_t))dlsym(RTLD_NEXT, "write");
+        auto& stdLib = StdLibStaticMock::get();
+        EXPECT_CALL(stdLib, read(_, _, _)).WillRepeatedly(Invoke(os_read));
+        EXPECT_CALL(stdLib, write(_, _, _)).WillRepeatedly(Invoke(os_write));
     }
 
-    void TearDown() {
+    void TearDown() override {
         if (fs::exists(TEST_FILE)) {
             fs::remove(TEST_FILE);
         }
     }
 
     std::array<std::size_t, NUMBER_OF_SAMPLES> datas;
+    std::function<ssize_t(int, void*, size_t)> os_read;
+    std::function<ssize_t(int, const void*, size_t)> os_write;
 };
 
 TEST_F(FixedLinesFileWriter_tests, empty_file_name) {
@@ -86,7 +100,6 @@ TEST_F(FixedLinesFileWriter_tests, write_elem) {
 
 TEST_F(FixedLinesFileWriter_tests, write_more_than_lines) {
     FixedLinesFileWriter writer{std::string{TEST_FILE}, MAX_NUMBER_OF_LINES};
-
     try {
         for (const auto& item : datas) {
             writer.write<std::size_t>(item);

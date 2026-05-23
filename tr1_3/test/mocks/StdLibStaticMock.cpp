@@ -1,10 +1,16 @@
 #include <mocks/StdLibStaticMock.h>
 #include <gtest/gtest.h>
+#include <dlfcn.h>
+#include <unistd.h>
+#include <cstddef>
+#include <sys/types.h>
 
 namespace mw { namespace mocks {
 
 namespace {
-    constexpr int FAILURE = -1;
+
+constexpr int FAILURE = -1;
+
 } // anonymous
 
 using namespace testing;
@@ -34,7 +40,7 @@ StdLibStaticMock::StdLibStaticMock() {
     ON_CALL(*this, listen(_, _)).WillByDefault(Return(FAILURE));
     ON_CALL(*this, accept(_, _, _)).WillByDefault(Return(FAILURE));
     ON_CALL(*this, close(_)).WillByDefault(Return(FAILURE));
-    ON_CALL(*this, read(_, _, _)).WillByDefault(Return(0));
+    ON_CALL(*this, read(_, _, _)).WillByDefault(Invoke(Return(0)));
     ON_CALL(*this, write(_, _, _)).WillByDefault(Return(0));
 }
 

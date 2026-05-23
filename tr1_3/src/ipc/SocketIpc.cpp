@@ -19,7 +19,11 @@ constexpr const int NOT_CREATED = -2;
 constexpr const int BACKLOG = 1;
 
 void closeSocket(int& listenFd) {
-    close(listenFd);
+    if (close(listenFd) == FAILURE) {
+        listenFd = FAILURE;
+        throw socket_error{__FUNCTION__, __LINE__, std::string{"close failed"} + std::string{strerror(errno)}};
+    }
+    listenFd = NOT_CREATED;
 }
 
 } // anonymous
@@ -35,7 +39,11 @@ SocketIpc::SocketIpc(const int port)
 }
 
 SocketIpc::~SocketIpc() {
-
+    try {
+        close();
+    } catch (const socket_error& e) {
+        ERROR(e.what());
+    }
 }
 
 void SocketIpc::open() {
@@ -45,7 +53,9 @@ void SocketIpc::open() {
 }
 
 void SocketIpc::close() {
-    closeSocket(listenFd);
+    if (isSocketOpened()) {
+        closeSocket(listenFd);
+    }
 }
 
 std::string SocketIpc::read() const {

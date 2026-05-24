@@ -58,12 +58,14 @@ std::string ConnectionSocketHelper::readData() const {
     std::string data{};
     char buff[BUFF_SIZE];
     std::size_t n = 0;
-
-    while ((n = read(connectFd, buff, sizeof(buff))) > TELNET_EMPTY_MSG_SIZE) {
+    bool readingFinish = false;
+    while (!readingFinish && (n = read(connectFd, buff, sizeof(buff))) > 0) {
         // strip \n\r
-        while (n > 0 && (buff[n-1] == '\n' || buff[n-1] == '\r')) n--;
+        while (n > 0 && (buff[n-1] == '\n' || buff[n-1] == '\r')) {
+            readingFinish = true;
+            n--;
+        }
         buff[n] = '\0';
-
         data.append(buff);
         DEBUG("data: " << data);
     }

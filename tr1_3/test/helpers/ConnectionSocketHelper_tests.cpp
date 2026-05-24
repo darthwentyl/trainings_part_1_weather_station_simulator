@@ -229,7 +229,6 @@ TEST_F(ConnectionSocketHelper_tests, writeData_success) {
     EXPECT_CALL(stdLib, write(Eq(connectFd), _, _))
     .WillOnce(
         Invoke([&](int, const void* buf, size_t) -> ssize_t {
-            std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": buf: " << (const char*)buf << std::endl;
             receivedData.append(static_cast<const char*>(buf));
             return receivedData.size();
         }

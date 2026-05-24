@@ -78,7 +78,15 @@ std::string SocketIpc::read() const {
 
 bool SocketIpc::write(const std::string& msg) const {
     DEBUG(msg);
-    return false;
+    if (!isSocketOpened()) {
+        throw socket_error{__FUNCTION__, __LINE__, "socket has not opened. Cannot write data"};
+    }
+
+    if (!clientConn.isConnected()) {
+        clientConn.acceptConnection(listenFd);
+    }
+
+    return clientConn.writeData(msg);
 }
 
 void SocketIpc::openSocket() {

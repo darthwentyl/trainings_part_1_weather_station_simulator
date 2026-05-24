@@ -139,7 +139,6 @@ TEST_F(ConnectionSocketHelper_tests, readData_success) {
     const int connectFd = 321;
 
     const std::string msg = "message\n\r";
-    const std::string empty = "\n\r";
 
     EXPECT_CALL(stdLib, accept(_, _, _)).WillOnce(Return(connectFd));
     EXPECT_CALL(stdLib, read(Eq(connectFd), _, _))
@@ -147,12 +146,6 @@ TEST_F(ConnectionSocketHelper_tests, readData_success) {
         Invoke([=](int, void* buf, size_t) -> ssize_t {
             strncpy(static_cast<char*>(buf), msg.c_str(), msg.size());
             return msg.size();
-        }
-    ))
-    .WillOnce(
-        Invoke([=](int, void* buf, size_t) -> ssize_t {
-            strncpy(static_cast<char*>(buf), empty.c_str(), empty.size());
-            return empty.size();
         }
     ));
     EXPECT_CALL(stdLib, close(_)).WillOnce(Return(SUCCESS));

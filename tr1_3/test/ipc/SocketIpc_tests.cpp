@@ -233,7 +233,6 @@ TEST_F(SocketIpc_tests, read_success) {
     const int listenFd = 123;
     const int connectFd = 321;
     const std::string msg = "message\n\r";
-    const std::string empty = "\n\r";
 
     setSuccessListening(listenFd);
     EXPECT_CALL(stdLib, accept(_, _, _)).WillOnce(Return(connectFd));
@@ -242,12 +241,6 @@ TEST_F(SocketIpc_tests, read_success) {
         Invoke([=](int, void* buf, size_t) -> ssize_t {
             strncpy(static_cast<char*>(buf), msg.c_str(), msg.size());
             return msg.size();
-        }
-    ))
-    .WillOnce(
-        Invoke([=](int, void* buf, size_t) -> ssize_t {
-            strncpy(static_cast<char*>(buf), empty.c_str(), empty.size());
-            return empty.size();
         }
     ));
     EXPECT_CALL(stdLib, close(_)).Times(2).WillRepeatedly(Return(SUCCESS));
@@ -281,24 +274,15 @@ TEST_F(SocketIpc_tests, read_success_two_times) {
     const int listenFd = 123;
     const int connectFd = 321;
     const std::string msg = "message\n\r";
-    const std::string empty = "\n\r";
 
     auto read_msg = [msg](int, void* buf, size_t) -> ssize_t {
         strncpy(static_cast<char*>(buf), msg.c_str(), msg.size());
         return msg.size();
     };
-    auto empty_msg = [empty](int, void* buf, size_t) -> ssize_t {
-        strncpy(static_cast<char*>(buf), empty.c_str(), empty.size());
-        return empty.size();
-    };
 
     setSuccessListening(listenFd);
     EXPECT_CALL(stdLib, accept(_, _, _)).WillOnce(Return(connectFd));
-    EXPECT_CALL(stdLib, read(Eq(connectFd), _, _))
-    .WillOnce(Invoke(read_msg))
-    .WillOnce(Invoke(empty_msg))
-    .WillOnce(Invoke(read_msg))
-    .WillOnce(Invoke(empty_msg));
+    EXPECT_CALL(stdLib, read(Eq(connectFd), _, _)).Times(2).WillRepeatedly(Invoke(read_msg));
     EXPECT_CALL(stdLib, close(_)).Times(2).WillRepeatedly(Return(SUCCESS));
 
     try {

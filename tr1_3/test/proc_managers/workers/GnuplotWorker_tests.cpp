@@ -32,7 +32,7 @@ public:
     ~GnuplotWorker_tests() = default;
 
 protected:
-    void SetUp() {
+    void SetUp() override {
         description = GnuplotDescriptionBuilder()
             .width(WIDTH)
             .height(HEIGHT)
@@ -47,7 +47,7 @@ protected:
         EXPECT_CALL(ipcPipeMock, write(_)).WillRepeatedly(Return(true));
     }
 
-    void TearDown() {
+    void TearDown() override {
         worker = nullptr;
         if (fs::exists(DATA_FILE)) {
             std::remove(DATA_FILE);

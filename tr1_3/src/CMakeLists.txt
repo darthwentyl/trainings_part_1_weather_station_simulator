@@ -6,6 +6,7 @@ file(GLOB SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/exceptions/*.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/proc_managers/*.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/proc_managers/workers/*.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/proc_managers/workers/handlers/*.cpp"
 )
 
 add_library(weather_lib ${SOURCES})

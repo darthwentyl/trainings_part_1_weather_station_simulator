@@ -12,7 +12,7 @@ public:
      * false - when the command inform about exit or disconnect user *
      * true - otherwise                                              *
      *****************************************************************/
-    virtual bool handle(const std::string& command) = 0;
+    virtual bool handle(const std::string& command) const = 0;
 };
 
 } } } } // mw::proc_managers::workers::handlers

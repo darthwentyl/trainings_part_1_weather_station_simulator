@@ -13,6 +13,7 @@ public:
 
     const std::vector<ITEM_T>& getItems() const;
     const ITEM_T& getItem(const std::size_t idx) const;
+    std::size_t getMaxNumItems() const;
 
 private:
     const std::size_t maxNumItems;
@@ -51,6 +52,11 @@ const ITEM_T& FixedDataContainer<ITEM_T>::getItem(const std::size_t idx) const {
         return items[idx];
     }
     return emptyItem;
+}
+
+template<typename ITEM_T>
+std::size_t FixedDataContainer<ITEM_T>::getMaxNumItems() const {
+    return maxNumItems;
 }
 
 } } // mw::helpers

@@ -4,7 +4,7 @@
 
 namespace mw { namespace proc_managers { namespace workers { namespace handlers {
 
-bool UserCmdExitHandler::handle(const std::string& command) {
+bool UserCmdExitHandler::handle(const std::string& command) const {
     if (command == "exit" || command.empty()) {
         return false; // false means stop listening
     }

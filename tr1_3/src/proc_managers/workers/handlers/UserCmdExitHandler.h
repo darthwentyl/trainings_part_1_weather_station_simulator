@@ -8,7 +8,7 @@ class UserCmdExitHandler : public IUserCmdHandler {
 public:
     ~UserCmdExitHandler() = default;
 
-    bool handle(const std::string& command) override;
+    bool handle(const std::string& command) const override;
 };
 
 } } } } // mw::proc_managers::workers::handlers

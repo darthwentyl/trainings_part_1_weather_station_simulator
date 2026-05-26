@@ -37,4 +37,10 @@ TEST_F(FixedDataContainer_tests, pushBack_out_of_scope) {
     EXPECT_EQ(items[1], 4);
 }
 
+TEST_F(FixedDataContainer_tests, getMaxNumItems) {
+    const std::size_t maxItems = 888;
+    FixedDataContainer<int> container{maxItems};
+    EXPECT_EQ(maxItems, container.getMaxNumItems());
+}
+
 } // anonymous

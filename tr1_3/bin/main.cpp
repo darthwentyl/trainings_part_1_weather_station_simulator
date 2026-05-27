@@ -12,6 +12,7 @@
 #include <ipc/PipeStreamIpc.h>
 #include <ipc/SharedSegmentMemoryIpc.h>
 #include <ipc/SharedSegmentSemaphoreIpc.h>
+#include <ipc/SocketIpc.h>
 
 #include <proc_managers/ReaderManager.h>
 #include <proc_managers/WriterManager.h>
@@ -20,6 +21,7 @@
 #include <proc_managers/workers/PressureWorker.h>
 #include <proc_managers/workers/ExitWorker.h>
 #include <proc_managers/workers/GnuplotWorker.h>
+#include <proc_managers/workers/UserCmdWorker.h>
 
 #include <helpers/GnuplotDescriptionBuilder.h>
 
@@ -33,7 +35,8 @@ namespace {
     constexpr const char* reader_sem_name = "reader.sem";
     constexpr const char* mem_name = "weather_data_memory";
     constexpr const std::size_t mem_size = 128;
-    constexpr const std::size_t reader_nums = 4;
+    constexpr const std::size_t reader_nums = 5;
+    constexpr const std::size_t writer_nums = 2;
     constexpr const std::size_t file_max_line_numbers = 10;
     constexpr const char* temperature_dat = "temperature.dat";
     constexpr const char* pressure_dat = "pressure.dat";
@@ -137,7 +140,7 @@ int main() {
         exit(0);
     }
 
-        pid_t pressure_gnuplot_pid = fork();
+    pid_t pressure_gnuplot_pid = fork();
     if (pressure_gnuplot_pid == 0) {
         try {
             DEBUG("Start pressure gnuplot...");
@@ -163,6 +166,26 @@ int main() {
             ERROR(e.what());
         }
         exit(0);
+
+    }
+
+    pid_t user_command_pid = fork();
+    if (user_command_pid == 0) {
+        try {
+            DEBUG("Start user command...");
+            SharedSegmentSemaphoreIpc data_sem{std::string{data_sem_name}, EUsageShmSegment::CLIENT};
+            SharedSegmentSemaphoreIpc reader_sem{std::string{reader_sem_name}, EUsageShmSegment::CLIENT};
+            SharedSegmentMemoryIpc mem{std::string{mem_name}, mem_size, EUsageShmSegment::CLIENT};
+            SocketIpc socket_telnet{12345};
+
+            UserCmdWorker user_cmd_worker{mem, socket_telnet, file_max_line_numbers};
+            ReaderManager manager{data_sem, reader_sem, user_cmd_worker};
+
+            manager.loop();
+        } catch(const std::exception& e) {
+            ERROR(e.what());
+        }
+        exit(0);
     }
 
     INFO("Press enter for exit...");
@@ -181,7 +204,7 @@ int main() {
         ERROR(e.what());
     }
 
-    for (size_t n = 0; n < 6; ++n) {
+    for (size_t n = 0; n < reader_nums + writer_nums; ++n) {
         wait(NULL);
     }
 

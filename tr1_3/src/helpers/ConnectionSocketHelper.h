@@ -1,12 +1,13 @@
 #pragma once
 
 #include <string>
+#include <atomic>
 
 namespace mw { namespace helpers {
 
 class ConnectionSocketHelper {
 public:
-    ConnectionSocketHelper();
+    ConnectionSocketHelper(const int port);
     ~ConnectionSocketHelper();
 
     void acceptConnection(const int listenFd);
@@ -15,9 +16,13 @@ public:
     std::string readData() const;
     bool writeData(const std::string& msg) const;
 
-
 private:
+    void cancelAccept();
+
     int connectFd;
+    int port;
+    std::atomic_bool shouldAcceptCancel;
+
 };
 
 } } // mw::helpers

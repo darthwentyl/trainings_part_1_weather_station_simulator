@@ -15,6 +15,7 @@ using namespace mw::exceptions;
 constexpr const int FAILURE = -1;
 constexpr const int SUCCESS = 0;
 constexpr const int BUFF_SIZE = 128;
+constexpr const int PORT = 11111;
 
 class ConnectionSocketHelper_tests : public Test {
 public:
@@ -23,7 +24,7 @@ public:
 
 TEST_F(ConnectionSocketHelper_tests, acceptConnection_success) {
     auto& stdLib = StdLibStaticMock::get();
-    ConnectionSocketHelper conn{};
+    ConnectionSocketHelper conn{PORT};
     const int listenFd = 123;
     const int connectFd = 321;
 
@@ -41,7 +42,7 @@ TEST_F(ConnectionSocketHelper_tests, acceptConnection_success) {
 
 TEST_F(ConnectionSocketHelper_tests, acceptConnection_failed) {
     auto& stdLib = StdLibStaticMock::get();
-    ConnectionSocketHelper conn{};
+    ConnectionSocketHelper conn{PORT};
     const int listenFd = 123;
 
     EXPECT_CALL(stdLib, accept(Eq(listenFd), Eq(nullptr), Eq(nullptr))).WillOnce(Return(FAILURE));
@@ -60,7 +61,7 @@ TEST_F(ConnectionSocketHelper_tests, acceptConnection_failed) {
 
 TEST_F(ConnectionSocketHelper_tests, closeSocket_destructor_success) {
     auto& stdLib = StdLibStaticMock::get();
-    ConnectionSocketHelper conn{};
+    ConnectionSocketHelper conn{PORT};
     const int listenFd = 123;
     const int connectFd = 321;
 
@@ -84,7 +85,7 @@ TEST_F(ConnectionSocketHelper_tests, closeSocket_destructor_failure) {
     EXPECT_CALL(stdLib, accept(_, _, _)).WillOnce(Return(connectFd));
     EXPECT_CALL(stdLib, close(Eq(connectFd))).WillOnce(Return(FAILURE));
     try {
-        ConnectionSocketHelper conn{};
+        ConnectionSocketHelper conn{PORT};
         conn.acceptConnection(listenFd);
         EXPECT_TRUE(conn.isConnected());
     } catch (const std::exception& e) {
@@ -95,7 +96,7 @@ TEST_F(ConnectionSocketHelper_tests, closeSocket_destructor_failure) {
 
 TEST_F(ConnectionSocketHelper_tests, closeSocket_success) {
     auto& stdLib = StdLibStaticMock::get();
-    ConnectionSocketHelper conn{};
+    ConnectionSocketHelper conn{PORT};
     const int listenFd = 123;
     const int connectFd = 321;
 
@@ -114,7 +115,7 @@ TEST_F(ConnectionSocketHelper_tests, closeSocket_success) {
 
 TEST_F(ConnectionSocketHelper_tests, closeSocket_failure) {
     auto& stdLib = StdLibStaticMock::get();
-    ConnectionSocketHelper conn{};
+    ConnectionSocketHelper conn{PORT};
     const int listenFd = 123;
     const int connectFd = 321;
 
@@ -134,7 +135,7 @@ TEST_F(ConnectionSocketHelper_tests, closeSocket_failure) {
 
 TEST_F(ConnectionSocketHelper_tests, readData_success) {
     auto& stdLib = StdLibStaticMock::get();
-    ConnectionSocketHelper conn{};
+    ConnectionSocketHelper conn{PORT};
     const int listenFd = 123;
     const int connectFd = 321;
 
@@ -161,7 +162,7 @@ TEST_F(ConnectionSocketHelper_tests, readData_success) {
 
 TEST_F(ConnectionSocketHelper_tests, readData_big_buff) {
     auto& stdLib = StdLibStaticMock::get();
-    ConnectionSocketHelper conn{};
+    ConnectionSocketHelper conn{PORT};
     const int listenFd = 123;
     const int connectFd = 321;
 
@@ -196,7 +197,7 @@ TEST_F(ConnectionSocketHelper_tests, readData_big_buff) {
 }
 
 TEST_F(ConnectionSocketHelper_tests, readData_not_connected) {
-    ConnectionSocketHelper conn{};
+    ConnectionSocketHelper conn{PORT};
     try {
         conn.readData();
         EXPECT_FALSE(true);
@@ -211,7 +212,7 @@ TEST_F(ConnectionSocketHelper_tests, readData_not_connected) {
 
 TEST_F(ConnectionSocketHelper_tests, writeData_success) {
     auto& stdLib = StdLibStaticMock::get();
-    ConnectionSocketHelper conn{};
+    ConnectionSocketHelper conn{PORT};
     const int listenFd = 123;
     const int connectFd = 321;
 
@@ -239,7 +240,7 @@ TEST_F(ConnectionSocketHelper_tests, writeData_success) {
 }
 
 TEST_F(ConnectionSocketHelper_tests, writeData_not_connected) {
-    ConnectionSocketHelper conn{};
+    ConnectionSocketHelper conn{PORT};
     try {
         EXPECT_FALSE(conn.writeData("abcd"));
     } catch (const socket_error& e) {

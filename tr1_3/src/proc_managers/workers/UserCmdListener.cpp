@@ -38,39 +38,47 @@ UserCmdListener::~UserCmdListener() {
 void UserCmdListener::listen(std::stop_token stopToken) {
     DEBUG("Listening started");
     std::string userCommand;
-    while(
-         handleCommand(ipc.read()) &&
-         !stopToken.stop_requested()
-    );
+    bool readFlag = false;
+    bool stopFlag = false;
+    ipc.open();
+    while(true) {
+        readFlag = handleCommand(ipc.read());
+        stopFlag = stopToken.stop_requested();
+
+        DEBUG("readFlag: " << std::boolalpha << readFlag << " stopFlag: " << std::boolalpha << stopFlag);
+        if (!readFlag && stopFlag) {
+            break;
+        }
+    }
     DEBUG("Listening stopped");
 }
 
 void UserCmdListener::startListening() {
     DEBUG("");
-
     if (listenThread.joinable()) {
         DEBUG("Listener has already started");
         return;
     }
-    ipc.open();
     listenThread = std::jthread{&UserCmdListener::listen, std::ref(*this)};
 }
 
 void UserCmdListener::addWeatherData(const WeatherData& data) {
-    DEBUG("");
     std::unique_lock<std::mutex> lock{dataMutex};
     weatherDatas.pushBack(data);
 }
 
 void UserCmdListener::stopListening() {
-    DEBUG("");
+    DEBUG("begin");
+    DEBUG("listenThread.joinable(): " << std::boolalpha << listenThread.joinable());
     if (!listenThread.joinable()) {
         DEBUG("Listener has already stopped");
         return;
     }
+
     listenThread.request_stop();
-    listenThread.join();
     ipc.close();
+    listenThread.join();
+    DEBUG("end");
 }
 
 bool UserCmdListener::isListening() const {

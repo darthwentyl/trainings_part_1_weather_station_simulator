@@ -6,6 +6,7 @@ Supporting command:
 * ```pressure``` - return last 10 pressure measurements
 * ```temperature <n>``` - return last n temperature measurements
 * ```pressure <n>``` - return last n pressure measurements
+* ```help``` - show available commands
 * ```exit``` - close the application
 
 

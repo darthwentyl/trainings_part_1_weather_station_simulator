@@ -309,7 +309,7 @@ TEST_F(SocketIpc_tests, read_client_disconnected) {
     try {
         auto instance = SocketIpc{PORT};
         instance.open();
-        EXPECT_STREQ(instance.read().c_str(), "Client disconnected");
+        EXPECT_STREQ(instance.read().c_str(), "exit");
     } catch (const std::exception& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);

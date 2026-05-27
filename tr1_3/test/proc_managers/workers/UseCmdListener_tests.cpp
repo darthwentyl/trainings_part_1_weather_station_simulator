@@ -29,11 +29,16 @@ protected:
 TEST_F(UserCmdListener_tests, start_stop_outside_listening) {
     UserCmdListener listener{ipcMock, BUFFER_SIZE};
 
+    std::size_t countRead = 0;
     EXPECT_CALL(ipcMock, open()).Times(1);
-    EXPECT_CALL(ipcMock, read()).Times(2).WillRepeatedly(
-        Invoke([]() -> std::string {
+    EXPECT_CALL(ipcMock, read()).Times(3).WillRepeatedly(
+        Invoke([&]() -> std::string {
             std::this_thread::sleep_for(25ms);
-            return std::string{UNKNOW_CMD}; // I don't want to finish by handleCommand
+            ++countRead;
+            if (countRead < 3)
+                return std::string{UNKNOW_CMD}; // I don't want to finish by handleCommand
+            else
+                return std::string{EXIT_CMD}; // Simulation exit by ConnectionSocketHelper::cancelAccept()
         }
     ));
     EXPECT_CALL(ipcMock, close()).Times(1);
@@ -46,11 +51,16 @@ TEST_F(UserCmdListener_tests, start_stop_outside_listening) {
 TEST_F(UserCmdListener_tests, start_2_times_stop_outside_listening) {
     UserCmdListener listener{ipcMock, BUFFER_SIZE};
 
+    std::size_t countRead = 0;
     EXPECT_CALL(ipcMock, open()).Times(1);
-    EXPECT_CALL(ipcMock, read()).Times(2).WillRepeatedly(
-        Invoke([]() -> std::string {
+    EXPECT_CALL(ipcMock, read()).Times(3).WillRepeatedly(
+        Invoke([&]() -> std::string {
             std::this_thread::sleep_for(25ms);
-            return std::string{UNKNOW_CMD}; // I don't want to finish by handleCommand
+            ++countRead;
+            if (countRead < 3)
+                return std::string{UNKNOW_CMD}; // I don't want to finish by handleCommand
+            else
+                return std::string{EXIT_CMD}; // Simulation exit by ConnectionSocketHelper::cancelAccept()
         }
     ));
     EXPECT_CALL(ipcMock, close()).Times(1);
@@ -64,11 +74,16 @@ TEST_F(UserCmdListener_tests, start_2_times_stop_outside_listening) {
 TEST_F(UserCmdListener_tests, start_stop_2_times_outside_listening) {
     UserCmdListener listener{ipcMock, BUFFER_SIZE};
 
+    std::size_t countRead = 0;
     EXPECT_CALL(ipcMock, open()).Times(1);
-    EXPECT_CALL(ipcMock, read()).Times(2).WillRepeatedly(
-        Invoke([]() -> std::string {
+    EXPECT_CALL(ipcMock, read()).Times(3).WillRepeatedly(
+        Invoke([&]() -> std::string {
             std::this_thread::sleep_for(25ms);
-            return std::string{UNKNOW_CMD}; // I don't want to finish by handleCommand
+            ++countRead;
+            if (countRead < 3)
+                return std::string{UNKNOW_CMD}; // I don't want to finish by handleCommand
+            else
+                return std::string{EXIT_CMD};
         }
     ));
     EXPECT_CALL(ipcMock, close()).Times(1);
@@ -89,8 +104,6 @@ TEST_F(UserCmdListener_tests, start_stop_by_disconnect_client) {
     EXPECT_CALL(ipcMock, close()).Times(1);
 
     listener.startListening();
-    // wait with destroying listener
-    std::this_thread::sleep_for(50ms);
 }
 
 TEST_F(UserCmdListener_tests, start_stop_by_exit_command) {
@@ -103,8 +116,6 @@ TEST_F(UserCmdListener_tests, start_stop_by_exit_command) {
     EXPECT_CALL(ipcMock, close()).Times(1);
 
     listener.startListening();
-    // wait with destroying listener
-    std::this_thread::sleep_for(50ms);
 }
 
 TEST_F(UserCmdListener_tests, temperature_all_measurements_command) {
@@ -130,8 +141,6 @@ TEST_F(UserCmdListener_tests, temperature_all_measurements_command) {
     EXPECT_CALL(ipcMock, write(StrEq(oss.str()))).WillOnce(Return(true));
 
     listener.startListening();
-    // wait with destroying listener
-    std::this_thread::sleep_for(50ms);
 }
 
 TEST_F(UserCmdListener_tests, temperature_1_measurement_command) {
@@ -156,8 +165,6 @@ TEST_F(UserCmdListener_tests, temperature_1_measurement_command) {
     EXPECT_CALL(ipcMock, write(StrEq(oss.str()))).WillOnce(Return(true));
 
     listener.startListening();
-    // wait with destroying listener
-    std::this_thread::sleep_for(50ms);
 }
 
 } // anonymous

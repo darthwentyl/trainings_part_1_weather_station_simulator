@@ -41,6 +41,7 @@ void UserCmdWorker::processData() {
 }
 
 void UserCmdWorker::stopWorking() {
+    DEBUG("");
     Worker::stopWorking();
 
     if (!userCmdListener.isListening()) {

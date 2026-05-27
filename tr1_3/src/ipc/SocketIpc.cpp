@@ -19,11 +19,13 @@ constexpr const int NOT_CREATED = -2;
 constexpr const int BACKLOG = 1;
 
 void closeSocket(int& listenFd) {
+    DEBUG("begin");
     if (close(listenFd) == FAILURE) {
         listenFd = FAILURE;
         throw socket_error{__FUNCTION__, __LINE__, std::string{"close failed"} + std::string{strerror(errno)}};
     }
     listenFd = NOT_CREATED;
+    DEBUG("end");
 }
 
 } // anonymous
@@ -34,6 +36,7 @@ SocketIpc::SocketIpc(const int port)
     : listenFd{NOT_CREATED}
     , port{port}
     , opt{1}
+    , clientConn{port}
 {
     std::memset(&addr, 0, sizeof(addr));
 }
@@ -54,6 +57,7 @@ void SocketIpc::open() {
 
 void SocketIpc::close() {
     if (isSocketOpened()) {
+        clientConn.closeConnection();
         closeSocket(listenFd);
     }
 }
@@ -68,9 +72,9 @@ std::string SocketIpc::read() const {
     }
 
     std::string data = clientConn.readData();
-    if (data.size() == 0) {
+    if (data.size() == 0 || data == "exit") {
         clientConn.closeConnection();
-        return std::string{"Client disconnected"};
+        return std::string{"exit"};
     }
 
     return data;
@@ -99,6 +103,7 @@ void SocketIpc::openSocket() {
         throw socket_error{__FUNCTION__, __LINE__, "setsockopt failed " + std::string{strerror(errno)}};
     }
 
+    memset(&addr, 0, sizeof(addr));
     addr.sin_family = AF_INET;
     addr.sin_addr.s_addr = INADDR_ANY;
     addr.sin_port = htons(port);

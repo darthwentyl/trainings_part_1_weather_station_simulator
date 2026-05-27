@@ -11,7 +11,6 @@ namespace {
 using namespace testing;
 using namespace mw::mocks;
 using namespace mw::proc_managers::workers;
-
 using namespace std::chrono_literals;
 
 constexpr const std::size_t BUFFER_SIZE = 2;

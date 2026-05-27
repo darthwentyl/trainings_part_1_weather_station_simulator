@@ -7,21 +7,19 @@ namespace mw { namespace proc_managers { namespace workers {
 
 using namespace mw::ipc;
 
-UserCmdWorker::UserCmdWorker(IIpc& ipcMemory, IIpc& ipcSocket) :
+UserCmdWorker::UserCmdWorker(IIpc& ipcMemory, IIpc& ipcSocket, const std::size_t bufferSize) :
     Worker{ipcMemory},
-    ipcSocket{ipcSocket},
-    socketWorking{false}
+    userCmdListener{ipcSocket, bufferSize}
 {}
 
 void UserCmdWorker::startWorking() {
     Worker::startWorking();
 
-    if (socketWorking) {
-        INFO("Socket has already started");
+    if (userCmdListener.isListening()) {
+        INFO("User command listener has already started");
         return;
     }
-    ipcSocket.open();
-    socketWorking = true;
+    userCmdListener.startListening();
 }
 
 void UserCmdWorker::processData() {
@@ -29,21 +27,27 @@ void UserCmdWorker::processData() {
         INFO("Worker has not started yet");
         return;
     }
+
+    std::string msg = ipcMem().read();
+    DEBUG("read: " << msg);
+
+    if (msg == "exit") {
+        stopWorking();
+    } else {
+        WeatherData data;
+        data.deserialize(msg);
+        userCmdListener.addWeatherData(data);
+    }
 }
 
 void UserCmdWorker::stopWorking() {
     Worker::stopWorking();
 
-    if (!socketWorking) {
-        INFO("Socket has already stopped");
+    if (!userCmdListener.isListening()) {
+        INFO("User command listener has already stopped");
         return;
     }
-    ipcSocket.close();
-    socketWorking = false;
-}
-
-bool UserCmdWorker::isWorking() const {
-    return Worker::isWorking() && socketWorking;
+    userCmdListener.stopListening();
 }
 
 } } } // mw::proc_managers::worker

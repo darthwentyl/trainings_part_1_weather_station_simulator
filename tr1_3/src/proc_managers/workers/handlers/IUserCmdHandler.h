@@ -6,7 +6,7 @@ namespace mw { namespace proc_managers { namespace workers { namespace handlers 
 
 class IUserCmdHandler {
 public:
-    ~IUserCmdHandler() = default;
+    virtual ~IUserCmdHandler() = default;
 
     /*****************************************************************
      * false - when the command inform about exit or disconnect user *

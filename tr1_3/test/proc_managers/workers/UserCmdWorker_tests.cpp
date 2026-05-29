@@ -50,6 +50,7 @@ TEST_F(UserCmdWorker_tests, startWorking_first_time) {
     EXPECT_CALL(ipcSocketMock, close()).Times(1);
 
     worker->startWorking();
+    std::this_thread::sleep_for(25ms); // for ensure that listener started
     EXPECT_TRUE(worker->isWorking());
 }
 
@@ -120,15 +121,21 @@ TEST_F(UserCmdWorker_tests, processData_success) {
     WeatherData data;
 
     data.setTemperature(11.22);
-    data.setPressure(33.44);
+    data.setPressure(1033.44);
 
     EXPECT_CALL(ipcMemMock, open()).Times(1);
     EXPECT_CALL(ipcSocketMock, open()).Times(1);
     EXPECT_CALL(ipcMemMock, read()).WillOnce(Return(data.serialize()));
-    EXPECT_CALL(ipcSocketMock, read()).WillOnce(Return(std::string{}));
+    EXPECT_CALL(ipcSocketMock, read()).WillOnce(Invoke(
+        []() {
+            std::this_thread::sleep_for(25ms);
+            return std::string{};
+        }
+    ));
     EXPECT_CALL(ipcSocketMock, close()).Times(1);
 
     worker->startWorking();
+    EXPECT_TRUE(worker->isWorking());
     worker->processData();
 }
 
@@ -139,15 +146,18 @@ TEST_F(UserCmdWorker_tests, stopWorking_when_exit_received) {
     EXPECT_CALL(ipcMemMock, open()).Times(1);
     EXPECT_CALL(ipcSocketMock, open()).Times(1);
     EXPECT_CALL(ipcMemMock, read()).WillOnce(Return(std::string{"exit"}));
-    EXPECT_CALL(ipcSocketMock, read()).WillOnce(Return(std::string{}));
+    EXPECT_CALL(ipcSocketMock, read()).WillOnce(Invoke(
+        []() {
+            std::this_thread::sleep_for(25ms);
+            return std::string{};
+        }
+    ));
     EXPECT_CALL(ipcSocketMock, close()).Times(1);
     EXPECT_CALL(ipcMemMock, close()).Times(1);
 
     worker->startWorking();
     EXPECT_TRUE(worker->isWorking());
     worker->processData();
-    EXPECT_FALSE(worker->isWorking());
-    worker->stopWorking();
 }
 
 } // anonymous

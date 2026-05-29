@@ -104,5 +104,12 @@ ssize_t write(int fd, const void* buf, size_t count) {
     return StdLibStaticMock::get().write(fd, buf, count);
 }
 
+int connect(int sockfd, const struct sockaddr* addr, socklen_t addrlen) {
+    return StdLibStaticMock::get().connect(sockfd, addr, addrlen);
+}
+
+ssize_t send(int sockfd, const void* buf, size_t len, int flags) {
+    return StdLibStaticMock::get().send(sockfd, buf, len, flags);
+}
 
 } // extern "C"

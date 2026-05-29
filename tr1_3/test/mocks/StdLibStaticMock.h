@@ -37,6 +37,8 @@ public:
     MOCK_METHOD(int, close, (int fd), ());
     MOCK_METHOD(ssize_t, read, (int fd, void* buf, size_t count), ());
     MOCK_METHOD(ssize_t, write, (int fd, const void* buf, size_t count), ());
+    MOCK_METHOD(int, connect, (int sockfd, const struct sockaddr* addr, socklen_t addrlen), ());
+    MOCK_METHOD(ssize_t, send, (int sockfd, const void* buf, size_t len, int flags), ());
 
 private:
     friend class testing::StrictMock<StdLibStaticMock>;

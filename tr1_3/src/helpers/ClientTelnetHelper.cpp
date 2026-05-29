@@ -1,4 +1,4 @@
-#include <helpers/ConnectionSocketHelper.h>
+#include <helpers/ClientTelnetHelper.h>
 #include <logger/Log.h>
 #include <exceptions/socket_error.h>
 
@@ -17,13 +17,13 @@ constexpr const int NOT_CONNECTED = -2;
 constexpr const std::size_t BUFF_SIZE = 128;
 constexpr const std::size_t TELNET_EMPTY_MSG_SIZE = 2;
 
-ConnectionSocketHelper::ConnectionSocketHelper(const int port)
+ClientTelnetHelper::ClientTelnetHelper(const int port)
     : connectFd{NOT_CONNECTED}
     , port{port}
     , shouldAcceptCancel{false}
 {}
 
-ConnectionSocketHelper::~ConnectionSocketHelper() {
+ClientTelnetHelper::~ClientTelnetHelper() {
     try {
         closeConnection();
     } catch (const socket_error& e) {
@@ -31,7 +31,7 @@ ConnectionSocketHelper::~ConnectionSocketHelper() {
     }
 }
 
-void ConnectionSocketHelper::acceptConnection(const int listenFd) {
+void ClientTelnetHelper::acceptConnection(const int listenFd) {
     shouldAcceptCancel = true;
     connectFd = accept(listenFd, nullptr, nullptr);
     if (connectFd == FAILURE) {
@@ -41,7 +41,7 @@ void ConnectionSocketHelper::acceptConnection(const int listenFd) {
     shouldAcceptCancel = false;
 }
 
-void ConnectionSocketHelper::closeConnection() {
+void ClientTelnetHelper::closeConnection() {
     DEBUG("isConnected(): " << std::boolalpha << isConnected());
     if (isConnected()) {
         if (shutdown(connectFd, SHUT_RDWR) == FAILURE) {
@@ -61,11 +61,11 @@ void ConnectionSocketHelper::closeConnection() {
     }
 }
 
-bool ConnectionSocketHelper::isConnected() const {
+bool ClientTelnetHelper::isConnected() const {
     return connectFd != NOT_CONNECTED && connectFd != FAILURE;
 }
 
-std::string ConnectionSocketHelper::readData() const {
+std::string ClientTelnetHelper::readData() const {
     if (!isConnected()) {
         throw socket_error{__FUNCTION__, __LINE__, "no user connected"};
     }
@@ -87,7 +87,7 @@ std::string ConnectionSocketHelper::readData() const {
     return data;
 }
 
-bool ConnectionSocketHelper::writeData(const std::string& msg) const {
+bool ClientTelnetHelper::writeData(const std::string& msg) const {
     if (!isConnected()) {
         throw socket_error{__FUNCTION__, __LINE__, "no user connected"};
     }
@@ -98,7 +98,7 @@ bool ConnectionSocketHelper::writeData(const std::string& msg) const {
     return true;
 }
 
-void ConnectionSocketHelper::cancelAccept() {
+void ClientTelnetHelper::cancelAccept() {
     int clientFd = socket(AF_INET, SOCK_STREAM, 0);
     if (clientFd == FAILURE) {
         ERROR("socket(AF_INET, SOCK_STREAM, 0) failed: " << strerror(errno));

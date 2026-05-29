@@ -12,7 +12,7 @@
 #include <ipc/PipeStreamIpc.h>
 #include <ipc/SharedSegmentMemoryIpc.h>
 #include <ipc/SharedSegmentSemaphoreIpc.h>
-#include <ipc/SocketIpc.h>
+#include <ipc/TelnetIpc.h>
 
 #include <proc_managers/ReaderManager.h>
 #include <proc_managers/WriterManager.h>
@@ -176,7 +176,7 @@ int main() {
             SharedSegmentSemaphoreIpc data_sem{std::string{data_sem_name}, EUsageShmSegment::CLIENT};
             SharedSegmentSemaphoreIpc reader_sem{std::string{reader_sem_name}, EUsageShmSegment::CLIENT};
             SharedSegmentMemoryIpc mem{std::string{mem_name}, mem_size, EUsageShmSegment::CLIENT};
-            SocketIpc socket_telnet{12345};
+            TelnetIpc socket_telnet{12345};
 
             UserCmdWorker user_cmd_worker{mem, socket_telnet, file_max_line_numbers};
             ReaderManager manager{data_sem, reader_sem, user_cmd_worker};

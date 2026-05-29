@@ -1,22 +1,22 @@
 #pragma once
 
 #include <ipc/IIpc.h>
-#include <helpers/ConnectionSocketHelper.h>
+#include <helpers/ClientTelnetHelper.h>
 
 #include <arpa/inet.h>
 
 
 namespace mw { namespace ipc {
 
-class SocketIpc : public IIpc {
+class TelnetIpc : public IIpc {
 public:
-    SocketIpc(const SocketIpc&) = delete;
-    SocketIpc& operator = (const SocketIpc&) = delete;
-    SocketIpc(SocketIpc&&) = delete;
-    SocketIpc& operator = (SocketIpc&&) = delete;
+    TelnetIpc(const TelnetIpc&) = delete;
+    TelnetIpc& operator = (const TelnetIpc&) = delete;
+    TelnetIpc(TelnetIpc&&) = delete;
+    TelnetIpc& operator = (TelnetIpc&&) = delete;
 
-    SocketIpc(const int port);
-    ~SocketIpc();
+    TelnetIpc(const int port);
+    ~TelnetIpc();
 
     void open() override;
     void close() override;
@@ -31,7 +31,7 @@ private:
     int port;
     int opt;
     struct sockaddr_in addr;
-    mutable helpers::ConnectionSocketHelper clientConn;
+    mutable helpers::ClientTelnetHelper clientConn;
 };
 
 } } // mw::ipc

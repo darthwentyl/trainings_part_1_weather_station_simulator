@@ -38,7 +38,7 @@ TEST_F(UserCmdListener_tests, start_stop_outside_listening) {
             if (countRead < 3)
                 return std::string{UNKNOW_CMD}; // I don't want to finish by handleCommand
             else
-                return std::string{EXIT_CMD}; // Simulation exit by ConnectionSocketHelper::cancelAccept()
+                return std::string{EXIT_CMD}; // Simulation exit by ClientTelnetHelper::cancelAccept()
         }
     ));
     EXPECT_CALL(ipcMock, close()).Times(1);
@@ -60,7 +60,7 @@ TEST_F(UserCmdListener_tests, start_2_times_stop_outside_listening) {
             if (countRead < 3)
                 return std::string{UNKNOW_CMD}; // I don't want to finish by handleCommand
             else
-                return std::string{EXIT_CMD}; // Simulation exit by ConnectionSocketHelper::cancelAccept()
+                return std::string{EXIT_CMD}; // Simulation exit by ClientTelnetHelper::cancelAccept()
         }
     ));
     EXPECT_CALL(ipcMock, close()).Times(1);

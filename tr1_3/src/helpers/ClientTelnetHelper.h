@@ -5,10 +5,10 @@
 
 namespace mw { namespace helpers {
 
-class ConnectionSocketHelper {
+class ClientTelnetHelper {
 public:
-    ConnectionSocketHelper(const int port);
-    ~ConnectionSocketHelper();
+    ClientTelnetHelper(const int port);
+    ~ClientTelnetHelper();
 
     void acceptConnection(const int listenFd);
     void closeConnection();
@@ -22,7 +22,6 @@ private:
     int connectFd;
     int port;
     std::atomic_bool shouldAcceptCancel;
-
 };
 
 } } // mw::helpers

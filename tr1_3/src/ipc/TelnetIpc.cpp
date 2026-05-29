@@ -1,4 +1,4 @@
-#include <ipc/SocketIpc.h>
+#include <ipc/TelnetIpc.h>
 #include <logger/Log.h>
 
 #include <exceptions/socket_error.h>
@@ -32,7 +32,7 @@ void closeSocket(int& listenFd) {
 
 
 
-SocketIpc::SocketIpc(const int port)
+TelnetIpc::TelnetIpc(const int port)
     : listenFd{NOT_CREATED}
     , port{port}
     , opt{1}
@@ -41,7 +41,7 @@ SocketIpc::SocketIpc(const int port)
     std::memset(&addr, 0, sizeof(addr));
 }
 
-SocketIpc::~SocketIpc() {
+TelnetIpc::~TelnetIpc() {
     try {
         close();
     } catch (const socket_error& e) {
@@ -49,20 +49,20 @@ SocketIpc::~SocketIpc() {
     }
 }
 
-void SocketIpc::open() {
+void TelnetIpc::open() {
     if (!isSocketOpened()) {
         openSocket();
     }
 }
 
-void SocketIpc::close() {
+void TelnetIpc::close() {
     if (isSocketOpened()) {
         clientConn.closeConnection();
         closeSocket(listenFd);
     }
 }
 
-std::string SocketIpc::read() const {
+std::string TelnetIpc::read() const {
     if (!isSocketOpened()) {
         throw socket_error{__FUNCTION__, __LINE__, "socket has not opened. Cannot read data"};
     }
@@ -80,7 +80,7 @@ std::string SocketIpc::read() const {
     return data;
 }
 
-bool SocketIpc::write(const std::string& msg) const {
+bool TelnetIpc::write(const std::string& msg) const {
     DEBUG(msg);
     if (!isSocketOpened()) {
         throw socket_error{__FUNCTION__, __LINE__, "socket has not opened. Cannot write data"};
@@ -93,7 +93,7 @@ bool SocketIpc::write(const std::string& msg) const {
     return clientConn.writeData(msg);
 }
 
-void SocketIpc::openSocket() {
+void TelnetIpc::openSocket() {
     listenFd = socket(AF_INET, SOCK_STREAM, 0);
     if (listenFd == FAILURE) {
         throw socket_error{__FUNCTION__, __LINE__, "creation socket failed " + std::string{strerror(errno)}};
@@ -119,7 +119,7 @@ void SocketIpc::openSocket() {
     INFO("Server listening on port " << port);
 }
 
-bool SocketIpc::isSocketOpened() const {
+bool TelnetIpc::isSocketOpened() const {
     return listenFd != NOT_CREATED && listenFd != FAILURE;
 }
 

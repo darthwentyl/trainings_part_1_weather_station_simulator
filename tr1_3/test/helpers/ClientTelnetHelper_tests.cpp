@@ -2,7 +2,7 @@
 
 #include <mocks/StdLibStaticMock.h>
 
-#include <helpers/ConnectionSocketHelper.h>
+#include <helpers/ClientTelnetHelper.h>
 #include <exceptions/socket_error.h>
 
 namespace {
@@ -18,14 +18,14 @@ constexpr const int SUCCESS = 0;
 constexpr const int BUFF_SIZE = 128;
 constexpr const int PORT = 11111;
 
-class ConnectionSocketHelper_tests : public Test {
+class ClientTelnetHelper_tests : public Test {
 public:
-    ~ConnectionSocketHelper_tests() = default;
+    ~ClientTelnetHelper_tests() = default;
 };
 
-TEST_F(ConnectionSocketHelper_tests, acceptConnection_success) {
+TEST_F(ClientTelnetHelper_tests, acceptConnection_success) {
     auto& stdLib = StdLibStaticMock::get();
-    ConnectionSocketHelper conn{PORT};
+    ClientTelnetHelper conn{PORT};
     const int listenFd = 123;
     const int connectFd = 321;
 
@@ -41,9 +41,9 @@ TEST_F(ConnectionSocketHelper_tests, acceptConnection_success) {
     }
 }
 
-TEST_F(ConnectionSocketHelper_tests, acceptConnection_failed) {
+TEST_F(ClientTelnetHelper_tests, acceptConnection_failed) {
     auto& stdLib = StdLibStaticMock::get();
-    ConnectionSocketHelper conn{PORT};
+    ClientTelnetHelper conn{PORT};
     const int listenFd = 123;
 
     EXPECT_CALL(stdLib, accept(Eq(listenFd), Eq(nullptr), Eq(nullptr))).WillOnce(Return(FAILURE));
@@ -60,9 +60,9 @@ TEST_F(ConnectionSocketHelper_tests, acceptConnection_failed) {
     }
 }
 
-TEST_F(ConnectionSocketHelper_tests, closeSocket_destructor_success) {
+TEST_F(ClientTelnetHelper_tests, closeSocket_destructor_success) {
     auto& stdLib = StdLibStaticMock::get();
-    ConnectionSocketHelper conn{PORT};
+    ClientTelnetHelper conn{PORT};
     const int listenFd = 123;
     const int connectFd = 321;
 
@@ -78,7 +78,7 @@ TEST_F(ConnectionSocketHelper_tests, closeSocket_destructor_success) {
     }
 }
 
-TEST_F(ConnectionSocketHelper_tests, closeSocket_destructor_failure) {
+TEST_F(ClientTelnetHelper_tests, closeSocket_destructor_failure) {
     auto& stdLib = StdLibStaticMock::get();
     const int listenFd = 123;
     const int connectFd = 321;
@@ -86,7 +86,7 @@ TEST_F(ConnectionSocketHelper_tests, closeSocket_destructor_failure) {
     EXPECT_CALL(stdLib, accept(_, _, _)).WillOnce(Return(connectFd));
     EXPECT_CALL(stdLib, close(Eq(connectFd))).WillOnce(Return(FAILURE));
     try {
-        ConnectionSocketHelper conn{PORT};
+        ClientTelnetHelper conn{PORT};
         conn.acceptConnection(listenFd);
         EXPECT_TRUE(conn.isConnected());
     } catch (const std::exception& e) {
@@ -95,9 +95,9 @@ TEST_F(ConnectionSocketHelper_tests, closeSocket_destructor_failure) {
     }
 }
 
-TEST_F(ConnectionSocketHelper_tests, closeSocket_success) {
+TEST_F(ClientTelnetHelper_tests, closeSocket_success) {
     auto& stdLib = StdLibStaticMock::get();
-    ConnectionSocketHelper conn{PORT};
+    ClientTelnetHelper conn{PORT};
     const int listenFd = 123;
     const int connectFd = 321;
 
@@ -114,9 +114,9 @@ TEST_F(ConnectionSocketHelper_tests, closeSocket_success) {
     }
 }
 
-TEST_F(ConnectionSocketHelper_tests, closeSocket_failure) {
+TEST_F(ClientTelnetHelper_tests, closeSocket_failure) {
     auto& stdLib = StdLibStaticMock::get();
-    ConnectionSocketHelper conn{PORT};
+    ClientTelnetHelper conn{PORT};
     const int listenFd = 123;
     const int connectFd = 321;
 
@@ -134,9 +134,9 @@ TEST_F(ConnectionSocketHelper_tests, closeSocket_failure) {
     }
 }
 
-TEST_F(ConnectionSocketHelper_tests, readData_success) {
+TEST_F(ClientTelnetHelper_tests, readData_success) {
     auto& stdLib = StdLibStaticMock::get();
-    ConnectionSocketHelper conn{PORT};
+    ClientTelnetHelper conn{PORT};
     const int listenFd = 123;
     const int connectFd = 321;
 
@@ -161,9 +161,9 @@ TEST_F(ConnectionSocketHelper_tests, readData_success) {
     }
 }
 
-TEST_F(ConnectionSocketHelper_tests, readData_big_buff) {
+TEST_F(ClientTelnetHelper_tests, readData_big_buff) {
     auto& stdLib = StdLibStaticMock::get();
-    ConnectionSocketHelper conn{PORT};
+    ClientTelnetHelper conn{PORT};
     const int listenFd = 123;
     const int connectFd = 321;
 
@@ -197,8 +197,8 @@ TEST_F(ConnectionSocketHelper_tests, readData_big_buff) {
     }
 }
 
-TEST_F(ConnectionSocketHelper_tests, readData_not_connected) {
-    ConnectionSocketHelper conn{PORT};
+TEST_F(ClientTelnetHelper_tests, readData_not_connected) {
+    ClientTelnetHelper conn{PORT};
     try {
         conn.readData();
         EXPECT_FALSE(true);
@@ -211,9 +211,9 @@ TEST_F(ConnectionSocketHelper_tests, readData_not_connected) {
     }
 }
 
-TEST_F(ConnectionSocketHelper_tests, writeData_success) {
+TEST_F(ClientTelnetHelper_tests, writeData_success) {
     auto& stdLib = StdLibStaticMock::get();
-    ConnectionSocketHelper conn{PORT};
+    ClientTelnetHelper conn{PORT};
     const int listenFd = 123;
     const int connectFd = 321;
 
@@ -240,8 +240,8 @@ TEST_F(ConnectionSocketHelper_tests, writeData_success) {
     }
 }
 
-TEST_F(ConnectionSocketHelper_tests, writeData_not_connected) {
-    ConnectionSocketHelper conn{PORT};
+TEST_F(ClientTelnetHelper_tests, writeData_not_connected) {
+    ClientTelnetHelper conn{PORT};
     try {
         EXPECT_FALSE(conn.writeData("abcd"));
     } catch (const socket_error& e) {
@@ -253,9 +253,9 @@ TEST_F(ConnectionSocketHelper_tests, writeData_not_connected) {
     }
 }
 
-TEST_F(ConnectionSocketHelper_tests, cancelAccept_success) {
+TEST_F(ClientTelnetHelper_tests, cancelAccept_success) {
     auto& stdLib = StdLibStaticMock::get();
-    ConnectionSocketHelper conn{PORT};
+    ClientTelnetHelper conn{PORT};
     const int listenFd = 111;
     const int clientFd = 222;
 
@@ -288,15 +288,15 @@ TEST_F(ConnectionSocketHelper_tests, cancelAccept_success) {
             }
         ));
 
-    acceptThread = std::thread{&ConnectionSocketHelper::acceptConnection, std::ref(conn), listenFd};
-    closeThread = std::thread{&ConnectionSocketHelper::closeConnection, std::ref(conn)};
+    acceptThread = std::thread{&ClientTelnetHelper::acceptConnection, std::ref(conn), listenFd};
+    closeThread = std::thread{&ClientTelnetHelper::closeConnection, std::ref(conn)};
     acceptThread.join();
     closeThread.join();
 }
 
-TEST_F(ConnectionSocketHelper_tests, cancelAccept_socket_failed) {
+TEST_F(ClientTelnetHelper_tests, cancelAccept_socket_failed) {
     auto& stdLib = StdLibStaticMock::get();
-    ConnectionSocketHelper conn{PORT};
+    ClientTelnetHelper conn{PORT};
     const int listenFd = 111;
 
     std::mutex mtx;
@@ -325,15 +325,15 @@ TEST_F(ConnectionSocketHelper_tests, cancelAccept_socket_failed) {
             }
         ));
 
-    acceptThread = std::thread{&ConnectionSocketHelper::acceptConnection, std::ref(conn), listenFd};
-    closeThread = std::thread{&ConnectionSocketHelper::closeConnection, std::ref(conn)};
+    acceptThread = std::thread{&ClientTelnetHelper::acceptConnection, std::ref(conn), listenFd};
+    closeThread = std::thread{&ClientTelnetHelper::closeConnection, std::ref(conn)};
     acceptThread.join();
     closeThread.join();
 }
 
-TEST_F(ConnectionSocketHelper_tests, cancelAccept_connect_failed) {
+TEST_F(ClientTelnetHelper_tests, cancelAccept_connect_failed) {
     auto& stdLib = StdLibStaticMock::get();
-    ConnectionSocketHelper conn{PORT};
+    ClientTelnetHelper conn{PORT};
     const int listenFd = 111;
     const int clientFd = 222;
 
@@ -364,8 +364,8 @@ TEST_F(ConnectionSocketHelper_tests, cancelAccept_connect_failed) {
         ));
     EXPECT_CALL(stdLib, close(Eq(clientFd))).WillOnce(Return(SUCCESS));
 
-    acceptThread = std::thread{&ConnectionSocketHelper::acceptConnection, std::ref(conn), listenFd};
-    closeThread = std::thread{&ConnectionSocketHelper::closeConnection, std::ref(conn)};
+    acceptThread = std::thread{&ClientTelnetHelper::acceptConnection, std::ref(conn), listenFd};
+    closeThread = std::thread{&ClientTelnetHelper::closeConnection, std::ref(conn)};
     acceptThread.join();
     closeThread.join();
 }

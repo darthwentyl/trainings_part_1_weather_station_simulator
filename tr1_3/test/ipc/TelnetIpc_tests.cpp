@@ -2,7 +2,7 @@
 
 #include <mocks/StdLibStaticMock.h>
 
-#include <ipc/SocketIpc.h>
+#include <ipc/TelnetIpc.h>
 #include <exceptions/socket_error.h>
 
 namespace {
@@ -17,9 +17,9 @@ constexpr const int SUCCESS = 1;
 constexpr const int BACKLOG = 1;
 constexpr const int PORT = 12345;
 
-class SocketIpc_tests : public Test {
+class TelnetIpc_tests : public Test {
 public:
-    ~SocketIpc_tests() = default;
+    ~TelnetIpc_tests() = default;
 
 protected:
     void setSuccessListening(const int listenFd) {
@@ -31,7 +31,7 @@ protected:
     }
 };
 
-TEST_F(SocketIpc_tests, open_success) {
+TEST_F(TelnetIpc_tests, open_success) {
     auto& stdLib = StdLibStaticMock::get();
     const int listenFd = 123;
 
@@ -42,7 +42,7 @@ TEST_F(SocketIpc_tests, open_success) {
     EXPECT_CALL(stdLib, close(Eq(listenFd))).WillOnce(Return(SUCCESS));
 
     try {
-        auto instance = SocketIpc{PORT};
+        auto instance = TelnetIpc{PORT};
         instance.open();
         EXPECT_TRUE(true);
     } catch (const std::exception& e) {
@@ -51,7 +51,7 @@ TEST_F(SocketIpc_tests, open_success) {
     }
 }
 
-TEST_F(SocketIpc_tests, open_has_already_opened) {
+TEST_F(TelnetIpc_tests, open_has_already_opened) {
     auto& stdLib = StdLibStaticMock::get();
     const int listenFd = 123;
 
@@ -62,7 +62,7 @@ TEST_F(SocketIpc_tests, open_has_already_opened) {
     EXPECT_CALL(stdLib, close(Eq(listenFd))).WillOnce(Return(SUCCESS));
 
     try {
-        auto instance = SocketIpc{PORT};
+        auto instance = TelnetIpc{PORT};
         instance.open();
         instance.open();
         EXPECT_TRUE(true);
@@ -72,13 +72,13 @@ TEST_F(SocketIpc_tests, open_has_already_opened) {
     }
 }
 
-TEST_F(SocketIpc_tests, open_socket_failure) {
+TEST_F(TelnetIpc_tests, open_socket_failure) {
     auto& stdLib = StdLibStaticMock::get();
 
     EXPECT_CALL(stdLib, socket(Eq(AF_INET), Eq(SOCK_STREAM), Eq(0))).WillOnce(Return(FAILURE));
 
     try {
-        auto instance = SocketIpc{PORT};
+        auto instance = TelnetIpc{PORT};
         instance.open();
         EXPECT_FALSE(true);
     } catch (const socket_error& e) {
@@ -90,7 +90,7 @@ TEST_F(SocketIpc_tests, open_socket_failure) {
     }
 }
 
-TEST_F(SocketIpc_tests, open_setsockopt_failure) {
+TEST_F(TelnetIpc_tests, open_setsockopt_failure) {
     auto& stdLib = StdLibStaticMock::get();
     const int listenFd = 123;
 
@@ -99,7 +99,7 @@ TEST_F(SocketIpc_tests, open_setsockopt_failure) {
     EXPECT_CALL(stdLib, close(Eq(listenFd))).WillOnce(Return(SUCCESS));
 
     try {
-        auto instance = SocketIpc{PORT};
+        auto instance = TelnetIpc{PORT};
         instance.open();
         EXPECT_FALSE(true);
     } catch (const socket_error& e) {
@@ -111,7 +111,7 @@ TEST_F(SocketIpc_tests, open_setsockopt_failure) {
     }
 }
 
-TEST_F(SocketIpc_tests, open_bind_failure) {
+TEST_F(TelnetIpc_tests, open_bind_failure) {
     auto& stdLib = StdLibStaticMock::get();
     const int listenFd = 123;
 
@@ -121,7 +121,7 @@ TEST_F(SocketIpc_tests, open_bind_failure) {
     EXPECT_CALL(stdLib, close(Eq(listenFd))).WillOnce(Return(SUCCESS));
 
     try {
-        auto instance = SocketIpc{PORT};
+        auto instance = TelnetIpc{PORT};
         instance.open();
         EXPECT_FALSE(true);
     } catch (const socket_error& e) {
@@ -133,7 +133,7 @@ TEST_F(SocketIpc_tests, open_bind_failure) {
     }
 }
 
-TEST_F(SocketIpc_tests, open_listen_failure) {
+TEST_F(TelnetIpc_tests, open_listen_failure) {
     auto& stdLib = StdLibStaticMock::get();
     const int listenFd = 123;
 
@@ -144,7 +144,7 @@ TEST_F(SocketIpc_tests, open_listen_failure) {
     EXPECT_CALL(stdLib, close(Eq(listenFd))).WillOnce(Return(SUCCESS));
 
     try {
-        auto instance = SocketIpc{PORT};
+        auto instance = TelnetIpc{PORT};
         instance.open();
         EXPECT_FALSE(true);
     } catch (const socket_error& e) {
@@ -156,7 +156,7 @@ TEST_F(SocketIpc_tests, open_listen_failure) {
     }
 }
 
-TEST_F(SocketIpc_tests, close_success) {
+TEST_F(TelnetIpc_tests, close_success) {
     auto& stdLib = StdLibStaticMock::get();
     const int listenFd = 123;
 
@@ -164,7 +164,7 @@ TEST_F(SocketIpc_tests, close_success) {
     EXPECT_CALL(stdLib, close(Eq(listenFd))).WillOnce(Return(SUCCESS));
 
     try {
-        auto instance = SocketIpc{PORT};
+        auto instance = TelnetIpc{PORT};
         instance.open();
         instance.close();
         EXPECT_TRUE(true);
@@ -174,7 +174,7 @@ TEST_F(SocketIpc_tests, close_success) {
     }
 }
 
-TEST_F(SocketIpc_tests, close_failed) {
+TEST_F(TelnetIpc_tests, close_failed) {
     auto& stdLib = StdLibStaticMock::get();
     const int listenFd = 123;
 
@@ -182,7 +182,7 @@ TEST_F(SocketIpc_tests, close_failed) {
     EXPECT_CALL(stdLib, close(Eq(listenFd))).WillOnce(Return(FAILURE));
 
     try {
-        auto instance = SocketIpc{PORT};
+        auto instance = TelnetIpc{PORT};
         instance.open();
         instance.close();
         EXPECT_FALSE(true);
@@ -195,14 +195,14 @@ TEST_F(SocketIpc_tests, close_failed) {
     }
 }
 
-TEST_F(SocketIpc_tests, close_when_it_is_not_connected) {
+TEST_F(TelnetIpc_tests, close_when_it_is_not_connected) {
     auto& stdLib = StdLibStaticMock::get();
     const int listenFd = 123;
 
     EXPECT_CALL(stdLib, close(Eq(listenFd))).Times(0);
 
     try {
-        auto instance = SocketIpc{PORT};
+        auto instance = TelnetIpc{PORT};
         instance.close();
         EXPECT_TRUE(true);
     } catch (const std::exception& e) {
@@ -211,7 +211,7 @@ TEST_F(SocketIpc_tests, close_when_it_is_not_connected) {
     }
 }
 
-TEST_F(SocketIpc_tests, close_destructor_catch_error) {
+TEST_F(TelnetIpc_tests, close_destructor_catch_error) {
     auto& stdLib = StdLibStaticMock::get();
     const int listenFd = 123;
 
@@ -219,7 +219,7 @@ TEST_F(SocketIpc_tests, close_destructor_catch_error) {
     EXPECT_CALL(stdLib, close(Eq(listenFd))).WillOnce(Return(FAILURE));
 
     try {
-        auto instance = SocketIpc{PORT};
+        auto instance = TelnetIpc{PORT};
         instance.open();
         EXPECT_TRUE(true);
     } catch (const std::exception& e) {
@@ -228,7 +228,7 @@ TEST_F(SocketIpc_tests, close_destructor_catch_error) {
     }
 }
 
-TEST_F(SocketIpc_tests, read_success) {
+TEST_F(TelnetIpc_tests, read_success) {
     auto& stdLib = StdLibStaticMock::get();
     const int listenFd = 123;
     const int connectFd = 321;
@@ -246,7 +246,7 @@ TEST_F(SocketIpc_tests, read_success) {
     EXPECT_CALL(stdLib, close(_)).Times(2).WillRepeatedly(Return(SUCCESS));
 
     try {
-        auto instance = SocketIpc{PORT};
+        auto instance = TelnetIpc{PORT};
         instance.open();
         EXPECT_STREQ(instance.read().c_str(), "message");
     } catch (const std::exception& e) {
@@ -255,9 +255,9 @@ TEST_F(SocketIpc_tests, read_success) {
     }
 }
 
-TEST_F(SocketIpc_tests, read_socket_is_not_opened) {
+TEST_F(TelnetIpc_tests, read_socket_is_not_opened) {
     try {
-        auto instance = SocketIpc{PORT};
+        auto instance = TelnetIpc{PORT};
         instance.read();
         EXPECT_FALSE(true);
     } catch (const socket_error& e) {
@@ -269,7 +269,7 @@ TEST_F(SocketIpc_tests, read_socket_is_not_opened) {
     }
 }
 
-TEST_F(SocketIpc_tests, read_success_two_times) {
+TEST_F(TelnetIpc_tests, read_success_two_times) {
     auto& stdLib = StdLibStaticMock::get();
     const int listenFd = 123;
     const int connectFd = 321;
@@ -286,7 +286,7 @@ TEST_F(SocketIpc_tests, read_success_two_times) {
     EXPECT_CALL(stdLib, close(_)).Times(2).WillRepeatedly(Return(SUCCESS));
 
     try {
-        auto instance = SocketIpc{PORT};
+        auto instance = TelnetIpc{PORT};
         instance.open();
         EXPECT_STREQ(instance.read().c_str(), "message");
         EXPECT_STREQ(instance.read().c_str(), "message");
@@ -296,7 +296,7 @@ TEST_F(SocketIpc_tests, read_success_two_times) {
     }
 }
 
-TEST_F(SocketIpc_tests, read_client_disconnected) {
+TEST_F(TelnetIpc_tests, read_client_disconnected) {
     auto& stdLib = StdLibStaticMock::get();
     const int listenFd = 123;
     const int connectFd = 321;
@@ -307,7 +307,7 @@ TEST_F(SocketIpc_tests, read_client_disconnected) {
     EXPECT_CALL(stdLib, close(_)).Times(2).WillRepeatedly(Return(SUCCESS));
 
     try {
-        auto instance = SocketIpc{PORT};
+        auto instance = TelnetIpc{PORT};
         instance.open();
         EXPECT_STREQ(instance.read().c_str(), "exit");
     } catch (const std::exception& e) {
@@ -316,7 +316,7 @@ TEST_F(SocketIpc_tests, read_client_disconnected) {
     }
 }
 
-TEST_F(SocketIpc_tests, write_success) {
+TEST_F(TelnetIpc_tests, write_success) {
     auto& stdLib = StdLibStaticMock::get();
     const int listenFd = 123;
     const int connectFd = 321;
@@ -335,7 +335,7 @@ TEST_F(SocketIpc_tests, write_success) {
     EXPECT_CALL(stdLib, close(_)).Times(2).WillRepeatedly(Return(SUCCESS));
 
     try {
-        auto instance = SocketIpc{PORT};
+        auto instance = TelnetIpc{PORT};
         instance.open();
         EXPECT_TRUE(instance.write(msg));
         EXPECT_STREQ(msg.c_str(), receivedData.c_str());
@@ -345,9 +345,9 @@ TEST_F(SocketIpc_tests, write_success) {
     }
 }
 
-TEST_F(SocketIpc_tests, write_socket_is_not_opened) {
+TEST_F(TelnetIpc_tests, write_socket_is_not_opened) {
     try {
-        auto instance = SocketIpc{PORT};
+        auto instance = TelnetIpc{PORT};
         instance.write("message");
         EXPECT_FALSE(true);
     } catch (const socket_error& e) {

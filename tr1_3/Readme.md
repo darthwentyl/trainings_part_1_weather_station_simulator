@@ -7,13 +7,13 @@ Supporting command:
 * ```temperature <n>``` - return last n temperature measurements
 * ```pressure <n>``` - return last n pressure measurements
 * ```help``` - show available commands
-* ```exit``` - close the application
+* ```exit``` - disconnect
 
 
 ## Implementation
 The application should support next feature
 * Multi-process logging system
-* Write message in format: temperature: 24.57[C], pressure: 996.57[hPa]
+* Write message in format: temperature: _24.57[C], pressure: 996.57[hPa]_
 * Measurement precision to two digits
 * Save in to file last 10 measurements into file. Temperature and pressure in separate files.
 * Own exceptions implementation

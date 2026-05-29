@@ -5,12 +5,16 @@
 #include <helpers/ClientTelnetHelper.h>
 #include <exceptions/socket_error.h>
 
+#include <chrono>
+
 namespace {
 
 using namespace testing;
 using namespace mw::mocks;
 using namespace mw::helpers;
 using namespace mw::exceptions;
+
+using namespace std::chrono_literals;
 
 constexpr const int FAILURE = -1;
 constexpr const int NOT_CONNECTED = -2;
@@ -289,6 +293,7 @@ TEST_F(ClientTelnetHelper_tests, cancelAccept_success) {
         ));
 
     acceptThread = std::thread{&ClientTelnetHelper::acceptConnection, std::ref(conn), listenFd};
+    std::this_thread::sleep_for(50ms); // to ensure that acceptThread started;
     closeThread = std::thread{&ClientTelnetHelper::closeConnection, std::ref(conn)};
     acceptThread.join();
     closeThread.join();
@@ -326,6 +331,7 @@ TEST_F(ClientTelnetHelper_tests, cancelAccept_socket_failed) {
         ));
 
     acceptThread = std::thread{&ClientTelnetHelper::acceptConnection, std::ref(conn), listenFd};
+    std::this_thread::sleep_for(50ms); // to ensure that acceptThread started;
     closeThread = std::thread{&ClientTelnetHelper::closeConnection, std::ref(conn)};
     acceptThread.join();
     closeThread.join();
@@ -365,6 +371,7 @@ TEST_F(ClientTelnetHelper_tests, cancelAccept_connect_failed) {
     EXPECT_CALL(stdLib, close(Eq(clientFd))).WillOnce(Return(SUCCESS));
 
     acceptThread = std::thread{&ClientTelnetHelper::acceptConnection, std::ref(conn), listenFd};
+    std::this_thread::sleep_for(50ms); // to ensure that acceptThread started;
     closeThread = std::thread{&ClientTelnetHelper::closeConnection, std::ref(conn)};
     acceptThread.join();
     closeThread.join();

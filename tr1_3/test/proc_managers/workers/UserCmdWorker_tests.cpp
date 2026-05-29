@@ -147,6 +147,7 @@ TEST_F(UserCmdWorker_tests, stopWorking_when_exit_received) {
     EXPECT_TRUE(worker->isWorking());
     worker->processData();
     EXPECT_FALSE(worker->isWorking());
+    worker->stopWorking();
 }
 
 } // anonymous

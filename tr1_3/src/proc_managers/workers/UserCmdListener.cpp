@@ -63,7 +63,7 @@ void UserCmdListener::startListening() {
 }
 
 void UserCmdListener::addWeatherData(const WeatherData& data) {
-    std::unique_lock<std::mutex> lock{dataMutex};
+    std::unique_lock lock{dataMutex};
     weatherDatas.pushBack(data);
 }
 
@@ -86,7 +86,7 @@ bool UserCmdListener::isListening() const {
 }
 
 bool UserCmdListener::handleCommand(const std::string& command) {
-    std::unique_lock<std::mutex> lock{dataMutex};
+    std::unique_lock lock{dataMutex};
     DEBUG("command: " << command);
     if (command.empty() || command == EXIT_CMD) {
         return handlers.at(EHandlerId::EXIT)->handle(command);

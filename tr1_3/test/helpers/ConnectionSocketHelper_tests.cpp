@@ -13,6 +13,7 @@ using namespace mw::helpers;
 using namespace mw::exceptions;
 
 constexpr const int FAILURE = -1;
+constexpr const int NOT_CONNECTED = -2;
 constexpr const int SUCCESS = 0;
 constexpr const int BUFF_SIZE = 128;
 constexpr const int PORT = 11111;
@@ -250,6 +251,123 @@ TEST_F(ConnectionSocketHelper_tests, writeData_not_connected) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);
     }
+}
+
+TEST_F(ConnectionSocketHelper_tests, cancelAccept_success) {
+    auto& stdLib = StdLibStaticMock::get();
+    ConnectionSocketHelper conn{PORT};
+    const int listenFd = 111;
+    const int clientFd = 222;
+
+    std::mutex mtx;
+    std::condition_variable cv;
+    std::thread acceptThread;
+    std::thread closeThread;
+    bool ready = false;
+
+    EXPECT_CALL(stdLib, accept(_, _, _)).WillOnce(
+        Invoke(
+            [&](int, struct sockaddr*, socklen_t*) {
+                std::unique_lock lock{mtx};
+                cv.wait(lock, [&] { return ready; } );
+                return NOT_CONNECTED;
+            }
+        ));
+
+    EXPECT_CALL(stdLib, socket(_, _, _)).WillOnce(Return(clientFd));
+    EXPECT_CALL(stdLib, connect(Eq(clientFd), _, _)).WillOnce(Return(SUCCESS));
+    EXPECT_CALL(stdLib, send(Eq(clientFd), _, Eq(0), _)).WillOnce(Return(0));
+    EXPECT_CALL(stdLib, close(Eq(clientFd))).WillOnce(
+        Invoke(
+            [&](int){
+                std::unique_lock lock{mtx};
+                ready = true;
+                lock.unlock();
+                cv.notify_all();
+                return SUCCESS;
+            }
+        ));
+
+    acceptThread = std::thread{&ConnectionSocketHelper::acceptConnection, std::ref(conn), listenFd};
+    closeThread = std::thread{&ConnectionSocketHelper::closeConnection, std::ref(conn)};
+    acceptThread.join();
+    closeThread.join();
+}
+
+TEST_F(ConnectionSocketHelper_tests, cancelAccept_socket_failed) {
+    auto& stdLib = StdLibStaticMock::get();
+    ConnectionSocketHelper conn{PORT};
+    const int listenFd = 111;
+
+    std::mutex mtx;
+    std::condition_variable cv;
+    std::thread acceptThread;
+    std::thread closeThread;
+    bool ready = false;
+
+    EXPECT_CALL(stdLib, accept(_, _, _)).WillOnce(
+        Invoke(
+            [&](int, struct sockaddr*, socklen_t*) {
+                std::unique_lock lock{mtx};
+                cv.wait(lock, [&] {return ready; });
+                return NOT_CONNECTED;
+            }
+        ));
+
+    EXPECT_CALL(stdLib, socket(_, _, _)).WillOnce(
+        Invoke(
+            [&](int, int, int) {
+                std::unique_lock lock{mtx};
+                ready = true;
+                lock.unlock();
+                cv.notify_all();
+                return FAILURE;
+            }
+        ));
+
+    acceptThread = std::thread{&ConnectionSocketHelper::acceptConnection, std::ref(conn), listenFd};
+    closeThread = std::thread{&ConnectionSocketHelper::closeConnection, std::ref(conn)};
+    acceptThread.join();
+    closeThread.join();
+}
+
+TEST_F(ConnectionSocketHelper_tests, cancelAccept_connect_failed) {
+    auto& stdLib = StdLibStaticMock::get();
+    ConnectionSocketHelper conn{PORT};
+    const int listenFd = 111;
+    const int clientFd = 222;
+
+    std::mutex mtx;
+    std::condition_variable cv;
+    std::thread acceptThread;
+    std::thread closeThread;
+    bool ready = false;
+
+    EXPECT_CALL(stdLib, accept(_, _, _)).WillOnce(
+        Invoke(
+            [&](int, struct sockaddr*, socklen_t*) {
+                std::unique_lock lock{mtx};
+                cv.wait(lock, [&] { return ready; } );
+                return NOT_CONNECTED;
+            }
+        ));
+    EXPECT_CALL(stdLib, socket(_, _, _)).WillOnce(Return(clientFd));
+    EXPECT_CALL(stdLib, connect(Eq(clientFd), _, _)).WillOnce(
+        Invoke(
+            [&](int, const struct sockaddr*, socklen_t) {
+                std::unique_lock lock{mtx};
+                ready = true;
+                lock.unlock();
+                cv.notify_all();
+                return FAILURE;
+            }
+        ));
+    EXPECT_CALL(stdLib, close(Eq(clientFd))).WillOnce(Return(SUCCESS));
+
+    acceptThread = std::thread{&ConnectionSocketHelper::acceptConnection, std::ref(conn), listenFd};
+    closeThread = std::thread{&ConnectionSocketHelper::closeConnection, std::ref(conn)};
+    acceptThread.join();
+    closeThread.join();
 }
 
 } // anonymous

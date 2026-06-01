@@ -105,7 +105,7 @@ TEST_F(UserCmdListener_tests, start_stop_by_disconnect_client) {
     EXPECT_CALL(ipcMock, open()).Times(1);
     EXPECT_CALL(ipcMock, read())
         .WillOnce(Return(std::string{UNKNOW_CMD}))
-        .WillOnce(Return(std::string{}));
+        .WillRepeatedly(Return(std::string{}));
     EXPECT_CALL(ipcMock, write(_)).WillOnce(Return(true));
     EXPECT_CALL(ipcMock, close()).Times(1);
 
@@ -119,7 +119,7 @@ TEST_F(UserCmdListener_tests, start_stop_by_exit_command) {
     EXPECT_CALL(ipcMock, open()).Times(1);
     EXPECT_CALL(ipcMock, read())
         .WillOnce(Return(std::string{UNKNOW_CMD}))
-        .WillOnce(Return(std::string{EXIT_CMD}));
+        .WillRepeatedly(Return(std::string{EXIT_CMD}));
     EXPECT_CALL(ipcMock, write(_)).WillOnce(Return(true));
     EXPECT_CALL(ipcMock, close()).Times(1);
 
@@ -132,7 +132,7 @@ TEST_F(UserCmdListener_tests, temperature_all_measurements_command) {
     EXPECT_CALL(ipcMock, open()).Times(1);
     EXPECT_CALL(ipcMock, read())
         .WillOnce(Return(std::string{TEMPERATURE_CMD}))
-        .WillOnce(Return(std::string{}));
+        .WillRepeatedly(Return(std::string{}));
     EXPECT_CALL(ipcMock, close()).Times(1);
 
     WeatherData item;
@@ -157,7 +157,7 @@ TEST_F(UserCmdListener_tests, temperature_1_measurement_command) {
     EXPECT_CALL(ipcMock, open()).Times(1);
     EXPECT_CALL(ipcMock, read())
         .WillOnce(Return(std::string{TEMPERATURE_CMD} + std::string{" 1"}))
-        .WillOnce(Return(std::string{EXIT_CMD}));
+        .WillRepeatedly(Return(std::string{EXIT_CMD}));
     EXPECT_CALL(ipcMock, close()).Times(1);
 
     WeatherData item;
@@ -181,7 +181,7 @@ TEST_F(UserCmdListener_tests, pressure_all_measurements_command) {
     EXPECT_CALL(ipcMock, open()).Times(1);
     EXPECT_CALL(ipcMock, read())
         .WillOnce(Return(std::string{PRESSURE_CMD}))
-        .WillOnce(Return(std::string{EXIT_CMD}));
+        .WillRepeatedly(Return(std::string{EXIT_CMD}));
     EXPECT_CALL(ipcMock, close()).Times(1);
 
     WeatherData item;
@@ -206,7 +206,7 @@ TEST_F(UserCmdListener_tests, pressure_1_measurement_command) {
     EXPECT_CALL(ipcMock, open()).Times(1);
     EXPECT_CALL(ipcMock, read())
         .WillOnce(Return(std::string{PRESSURE_CMD} + std::string{" 1"}))
-        .WillOnce(Return(std::string{}));
+        .WillRepeatedly(Return(std::string{}));
     EXPECT_CALL(ipcMock, close()).Times(1);
 
     WeatherData item;
@@ -230,7 +230,7 @@ TEST_F(UserCmdListener_tests, help_command) {
     EXPECT_CALL(ipcMock, open()).Times(1);
     EXPECT_CALL(ipcMock, read())
         .WillOnce(Return(std::string{HELP_CMD}))
-        .WillOnce(Return(std::string{EXIT_CMD}));
+        .WillRepeatedly(Return(std::string{EXIT_CMD}));
     EXPECT_CALL(ipcMock, close()).Times(1);
 
     std::ostringstream oss;
@@ -253,7 +253,7 @@ TEST_F(UserCmdListener_tests, help_by_unknown_command) {
     EXPECT_CALL(ipcMock, open()).Times(1);
     EXPECT_CALL(ipcMock, read())
         .WillOnce(Return(std::string{UNKNOW_CMD}))
-        .WillOnce(Return(std::string{}));
+        .WillRepeatedly(Return(std::string{}));
     EXPECT_CALL(ipcMock, close()).Times(1);
 
     std::ostringstream oss;

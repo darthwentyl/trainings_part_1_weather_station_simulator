@@ -4,6 +4,8 @@
 
 #include <proc_managers/workers/handlers/UserCmdPressureHandler.h>
 
+#include <format>
+
 namespace {
 
 using namespace testing;
@@ -47,9 +49,7 @@ TEST_F(UserCmdPressureHandler_tests, get_more_data_than_in_container) {
     const std::string cmd{"pressure 2"};
     std::ostringstream oss;
     oss << "Pressure:" << std::endl
-        << "\t" << 1 << ".\t"
-        << datas.getItem(0).getPressure()
-        << "[hPa]" << std::endl;
+        << std::format("{:3}. {:.>10.2f} [C]\n", 1, datas.getItem(0).getPressure());
 
     EXPECT_CALL(ipcMock, write(StrEq(oss.str()))).WillOnce(Return(true));
 
@@ -61,9 +61,9 @@ TEST_F(UserCmdPressureHandler_tests, get_data_with_out_of_scope_elem) {
     UserCmdPressureHandler handler{ipcMock, datas};
 
     WeatherData item{};
-    item.setPressure(1000.11);
+    item.setPressure(989.11);
     datas.pushBack(item);
-    item.setPressure(1000.22);
+    item.setPressure(1000.2);
     datas.pushBack(item);
     item.setPressure(1000.33);
     datas.pushBack(item);
@@ -72,7 +72,7 @@ TEST_F(UserCmdPressureHandler_tests, get_data_with_out_of_scope_elem) {
     std::ostringstream oss;
     oss << "Pressure:" << std::endl;
     for (std::size_t i = datas.getItems().size(); i > 0; --i) {
-        oss << "\t" << i << ".\t" << datas.getItem(i - 1).getPressure() << "[hPa]" << std::endl;
+        oss << std::format("{:3}. {:.>10.2f} [C]\n", i, datas.getItem(i - 1).getPressure());
     }
 
     EXPECT_CALL(ipcMock, write(StrEq(oss.str()))).WillOnce(Return(true));
@@ -85,9 +85,9 @@ TEST_F(UserCmdPressureHandler_tests, get_last_2_items_when_buff_is_full) {
     UserCmdPressureHandler handler{ipcMock, datas};
 
     WeatherData item{};
-    item.setPressure(1000.11);
+    item.setPressure(989.11);
     datas.pushBack(item);
-    item.setPressure(1000.22);
+    item.setPressure(1000.2);
     datas.pushBack(item);
     item.setPressure(1000.33);
     datas.pushBack(item);
@@ -98,7 +98,7 @@ TEST_F(UserCmdPressureHandler_tests, get_last_2_items_when_buff_is_full) {
     std::ostringstream oss;
     oss << "Pressure:" << std::endl;
     for (std::size_t i = size; i > (size - 2); --i) {
-        oss << "\t" << i << ".\t" << datas.getItem(i - 1).getPressure() << "[hPa]" << std::endl;
+        oss << std::format("{:3}. {:.>10.2f} [C]\n", i, datas.getItem(i - 1).getPressure());
     }
 
     EXPECT_CALL(ipcMock, write(StrEq(oss.str()))).WillOnce(Return(true));

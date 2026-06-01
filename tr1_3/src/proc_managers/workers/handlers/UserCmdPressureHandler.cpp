@@ -3,6 +3,7 @@
 #include <logger/Log.h>
 
 #include <sstream>
+#include <format>
 
 namespace mw { namespace proc_managers { namespace workers { namespace handlers {
 
@@ -27,7 +28,7 @@ bool UserCmdPressureHandler::handle(const std::string& command) const {
     } else {
         oss << "Pressure:" << std::endl;
         for (std::size_t i = size; i > (size - n); --i) {
-            oss << "\t" << i << ".\t" << weatherDatas.getItem(i - 1).getPressure() << "[hPa]" << std::endl;
+            oss << std::format("{:3}. {:.>10.2f} [C]\n", i, weatherDatas.getItem(i - 1).getPressure());
         }
     }
 

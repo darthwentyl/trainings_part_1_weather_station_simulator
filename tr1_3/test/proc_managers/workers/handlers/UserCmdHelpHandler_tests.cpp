@@ -27,6 +27,8 @@ TEST_F(UserCmdHelpHandler_tests, show_help_by_user_request) {
     oss << "Available command: " << std::endl
         << "\ttemperature    \t- return last 10 temperature measurements" << std::endl
         << "\ttemperature <n>\t- return last n temperature measurements" << std::endl
+        << "\tpressure       \t- return last 10 pressure measurements" << std::endl
+        << "\tpressure    <n>\t- return last n pressure measurements" << std::endl
         << "\texit           \t- disconnect from application - enter also disconnect" << std::endl
         << "\thelp           \t- show this help" << std::endl;
 
@@ -44,6 +46,8 @@ TEST_F(UserCmdHelpHandler_tests, show_help_by_user_mistake) {
         << "Available command: " << std::endl
         << "\ttemperature    \t- return last 10 temperature measurements" << std::endl
         << "\ttemperature <n>\t- return last n temperature measurements" << std::endl
+        << "\tpressure       \t- return last 10 pressure measurements" << std::endl
+        << "\tpressure    <n>\t- return last n pressure measurements" << std::endl
         << "\texit           \t- disconnect from application - enter also disconnect" << std::endl
         << "\thelp           \t- show this help" << std::endl;
 

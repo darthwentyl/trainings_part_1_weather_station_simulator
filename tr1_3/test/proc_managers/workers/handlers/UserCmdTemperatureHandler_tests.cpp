@@ -4,6 +4,8 @@
 
 #include <proc_managers/workers/handlers/UserCmdTemperatureHandler.h>
 
+#include <format>
+
 namespace {
 
 using namespace testing;
@@ -47,9 +49,7 @@ TEST_F(UserCmdTemperatureHandler_tests, get_more_data_than_in_container) {
     const std::string cmd{"temperature 2"};
     std::ostringstream oss;
     oss << "Temperature:" << std::endl
-        << "\t" << 1 << ".\t"
-        << datas.getItem(0).getTemperature()
-        << "[C]" << std::endl;
+        << std::format("{:3}. {:.>10.2f} [C]\n", 1, datas.getItem(0).getTemperature());
 
     EXPECT_CALL(ipcMock, write(StrEq(oss.str()))).WillOnce(Return(true));
 
@@ -63,16 +63,16 @@ TEST_F(UserCmdTemperatureHandler_tests, get_data_with_out_of_scope_elem) {
     WeatherData item{};
     item.setTemperature(1.11);
     datas.pushBack(item);
-    item.setTemperature(2.22);
+    item.setTemperature(-22.22);
     datas.pushBack(item);
-    item.setTemperature(3.33);
+    item.setTemperature(33.3);
     datas.pushBack(item);
 
     const std::string cmd{"temperature 10"};
     std::ostringstream oss;
     oss << "Temperature:" << std::endl;
     for (std::size_t i = datas.getItems().size(); i > 0; --i) {
-        oss << "\t" << i << ".\t" << datas.getItem(i - 1).getTemperature() << "[C]" << std::endl;
+        oss << std::format("{:3}. {:.>10.2f} [C]\n", i, datas.getItem(i - 1).getTemperature());
     }
 
     EXPECT_CALL(ipcMock, write(StrEq(oss.str()))).WillOnce(Return(true));
@@ -85,11 +85,11 @@ TEST_F(UserCmdTemperatureHandler_tests, get_last_2_items_when_buff_is_full) {
     UserCmdTemperatureHandler handler{ipcMock, datas};
 
     WeatherData item{};
-    item.setTemperature(1.11);
+    item.setTemperature(-1.11);
     datas.pushBack(item);
-    item.setTemperature(2.22);
+    item.setTemperature(22.22);
     datas.pushBack(item);
-    item.setTemperature(3.33);
+    item.setTemperature(-33.3);
     datas.pushBack(item);
 
     const std::string cmd{"temperature 2"};
@@ -98,7 +98,7 @@ TEST_F(UserCmdTemperatureHandler_tests, get_last_2_items_when_buff_is_full) {
     std::ostringstream oss;
     oss << "Temperature:" << std::endl;
     for (std::size_t i = size; i > (size - 2); --i) {
-        oss << "\t" << i << ".\t" << datas.getItem(i - 1).getTemperature() << "[C]" << std::endl;
+        oss << std::format("{:3}. {:.>10.2f} [C]\n", i, datas.getItem(i - 1).getTemperature());
     }
 
     EXPECT_CALL(ipcMock, write(StrEq(oss.str()))).WillOnce(Return(true));

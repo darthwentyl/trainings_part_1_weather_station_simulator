@@ -49,7 +49,7 @@ TEST_F(UserCmdPressureHandler_tests, get_more_data_than_in_container) {
     const std::string cmd{"pressure 2"};
     std::ostringstream oss;
     oss << "Pressure:" << std::endl
-        << std::format("{:3}. {:.>10.2f} [C]\n", 1, datas.getItem(0).getPressure());
+        << std::format("{:3}. {:.>10.2f} [hPa]\n", 1, datas.getItem(0).getPressure());
 
     EXPECT_CALL(ipcMock, write(StrEq(oss.str()))).WillOnce(Return(true));
 
@@ -72,7 +72,7 @@ TEST_F(UserCmdPressureHandler_tests, get_data_with_out_of_scope_elem) {
     std::ostringstream oss;
     oss << "Pressure:" << std::endl;
     for (std::size_t i = datas.getItems().size(); i > 0; --i) {
-        oss << std::format("{:3}. {:.>10.2f} [C]\n", i, datas.getItem(i - 1).getPressure());
+        oss << std::format("{:3}. {:.>10.2f} [hPa]\n", i, datas.getItem(i - 1).getPressure());
     }
 
     EXPECT_CALL(ipcMock, write(StrEq(oss.str()))).WillOnce(Return(true));
@@ -98,7 +98,7 @@ TEST_F(UserCmdPressureHandler_tests, get_last_2_items_when_buff_is_full) {
     std::ostringstream oss;
     oss << "Pressure:" << std::endl;
     for (std::size_t i = size; i > (size - 2); --i) {
-        oss << std::format("{:3}. {:.>10.2f} [C]\n", i, datas.getItem(i - 1).getPressure());
+        oss << std::format("{:3}. {:.>10.2f} [hPa]\n", i, datas.getItem(i - 1).getPressure());
     }
 
     EXPECT_CALL(ipcMock, write(StrEq(oss.str()))).WillOnce(Return(true));

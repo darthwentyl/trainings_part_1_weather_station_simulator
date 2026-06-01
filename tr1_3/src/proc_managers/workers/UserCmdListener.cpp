@@ -1,6 +1,8 @@
 #include <proc_managers/workers/UserCmdListener.h>
 #include <proc_managers/workers/handlers/UserCmdExitHandler.h>
 #include <proc_managers/workers/handlers/UserCmdTemperatureHandler.h>
+#include <proc_managers/workers/handlers/UserCmdPressureHandler.h>
+#include <proc_managers/workers/handlers/UserCmdHelpHandler.h>
 #include <ipc/IIpc.h>
 #include <logger/Log.h>
 
@@ -26,7 +28,9 @@ UserCmdListener::UserCmdListener(IIpc& ipc, const std::size_t bufferSize) noexce
     weatherDatas{bufferSize},
     handlers{
         { EHandlerId::EXIT, std::make_shared<UserCmdExitHandler>() },
-        { EHandlerId::TEMPERATURE, std::make_shared<UserCmdTemperatureHandler>(ipc, weatherDatas) }
+        { EHandlerId::TEMPERATURE, std::make_shared<UserCmdTemperatureHandler>(ipc, weatherDatas) },
+        { EHandlerId::PRESSURE, std::make_shared<UserCmdPressureHandler>(ipc, weatherDatas)},
+        { EHandlerId::HELP, std::make_shared<UserCmdHelpHandler>(ipc) }
     }
 {}
 
@@ -92,8 +96,10 @@ bool UserCmdListener::handleCommand(const std::string& command) {
         return handlers.at(EHandlerId::EXIT)->handle(command);
     } else if (command.starts_with(TEMPERATURE_CMD)) {
         return handlers.at(EHandlerId::TEMPERATURE)->handle(command);
+    } else if (command.starts_with(PRESSURE_CMD)) {
+        return handlers.at(EHandlerId::PRESSURE)->handle(command);
     } else {
-        return true;
+        return handlers.at(EHandlerId::HELP)->handle(command);
     }
 }
 

@@ -28,7 +28,7 @@ bool UserCmdPressureHandler::handle(const std::string& command) const {
     } else {
         oss << "Pressure:" << std::endl;
         for (std::size_t i = size; i > (size - n); --i) {
-            oss << std::format("{:3}. {:.>10.2f} [C]\n", i, weatherDatas.getItem(i - 1).getPressure());
+            oss << std::format("{:3}. {:.>10.2f} [hPa]\n", i, weatherDatas.getItem(i - 1).getPressure());
         }
     }
 

@@ -38,7 +38,9 @@ public:
 private:
     enum class EHandlerId {
         EXIT,
-        TEMPERATURE
+        TEMPERATURE,
+        PRESSURE,
+        HELP
     };
 
     /***************************************************

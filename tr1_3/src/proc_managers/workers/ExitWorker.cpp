@@ -12,6 +12,7 @@ ExitWorker::ExitWorker(IIpc& ipcMemory) :
 {}
 
 void ExitWorker::processData() {
+    DEBUG("begin");
     if (!isWorking()) {
         INFO("Worker has not started yet");
         return;
@@ -22,6 +23,7 @@ void ExitWorker::processData() {
     }
 
     ipcMem().write("exit");
+    DEBUG("end");
 }
 
 } } } // mw::proc_managers::workers

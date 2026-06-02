@@ -112,4 +112,8 @@ ssize_t send(int sockfd, const void* buf, size_t len, int flags) {
     return StdLibStaticMock::get().send(sockfd, buf, len, flags);
 }
 
+int kill(pid_t pid, int sig) {
+    return StdLibStaticMock::get().kill(pid, sig);
+}
+
 } // extern "C"

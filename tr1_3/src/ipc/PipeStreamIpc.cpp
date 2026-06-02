@@ -42,7 +42,19 @@ void PipeStreamIpc::open() {
 
     if (stream == nullptr) {
         throw pipe_error{__FUNCTION__, __LINE__, "Cannot open pipe stream for command: " + command};
+    } else {
+        int status = pclose(stream);
+        stream = nullptr;
+        DEBUG("status: " << status);
+        if (status != 0 && WIFEXITED(status)) {
+            int code = WEXITSTATUS(status);
+            DEBUG("code: " << code);
+            throw pipe_error{__FUNCTION__, __LINE__, "Cannot open pipe stream for " + std::string{command + " code: " + std::to_string(code)}};
+        }
+        stream = popen(command.c_str(), getMode().c_str());
     }
+
+
     DEBUG("Command " << command << " has already opened");
 }
 
@@ -93,9 +105,11 @@ bool PipeStreamIpc::write(const std::string& msg) const {
         throw pipe_error{__FUNCTION__, __LINE__, "Msg is empty"};
     }
 
+    DEBUG("fputs begin");
     if (fputs(msg.c_str(), stream) == EOF) {
         throw pipe_error{__FUNCTION__, __LINE__, "Write msg to " + command + " failed"};
     }
+    DEBUG("fputs end");
 
     fflush(stream);
 

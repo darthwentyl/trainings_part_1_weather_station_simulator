@@ -50,7 +50,6 @@ TEST_F(UserCmdWorker_tests, startWorking_first_time) {
     EXPECT_CALL(ipcSocketMock, close()).Times(1);
 
     worker->startWorking();
-    std::this_thread::sleep_for(25ms); // for ensure that listener started
     EXPECT_TRUE(worker->isWorking());
 }
 

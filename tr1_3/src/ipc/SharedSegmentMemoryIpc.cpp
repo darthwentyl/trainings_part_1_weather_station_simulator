@@ -140,8 +140,13 @@ bool SharedSegmentMemoryIpc::write(const std::string& msg) const {
     }
 
     DEBUG("msg: " << msg);
+    DEBUG("sharedMsg.deserialize(" << shmMem << ")");
+    sharedMsg.deserialize(shmMem);
+    sharedMsg.deserialize(msg.c_str());
+    std::string dataToSend = sharedMsg.serialize();
+    DEBUG("dataToSend: " << dataToSend);
     std::fill(shmMem, shmMem + size, 0);
-    std::copy(msg.cbegin(), msg.cend(), shmMem);
+    std::copy(dataToSend.cbegin(), dataToSend.cend(), shmMem);
 
     return true;
 }

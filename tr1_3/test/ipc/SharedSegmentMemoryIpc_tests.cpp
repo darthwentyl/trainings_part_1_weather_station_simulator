@@ -369,7 +369,7 @@ TEST_F(SharedSegmentMemoryIpc_tests, client_write_success) {
 
     try {
         EXPECT_TRUE(instance.write(msg));
-        EXPECT_STREQ(msg.data(), shmMem.data());
+        EXPECT_STREQ(std::string{msg + std::string{" isExit: 0"}}.c_str(), shmMem.data());
     } catch (const std::exception& e) {
         std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
         EXPECT_FALSE(true);

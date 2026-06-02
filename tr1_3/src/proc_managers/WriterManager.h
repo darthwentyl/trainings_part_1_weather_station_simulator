@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <unistd.h>
 
 #include <proc_managers/IProcManager.h>
 
@@ -21,7 +22,7 @@ namespace mw { namespace proc_managers {
 
 class WriterManager : public IProcManager {
 public:
-    WriterManager(const std::size_t readersNum,
+    WriterManager(const pid_t parentPid, const std::size_t readersNum,
         ipc::ISemaphoreIpc& dataLocker,
         ipc::ISemaphoreIpc& readerLocker,
         workers::IWorker& worker
@@ -37,12 +38,13 @@ public:
 
 private:
     void start();
-    void error_stop();
 
+    const pid_t parentPid;
     const size_t readersNum;
     ipc::ISemaphoreIpc& dataLocker;
     ipc::ISemaphoreIpc& readerLocker;
     workers::IWorker& worker;
+
 };
 
 } } // mw::proc_managers

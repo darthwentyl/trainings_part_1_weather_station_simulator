@@ -2,6 +2,9 @@
 
 #include <ipc/IIpc.h>
 #include <ipc/EUsageShmSegment.h>
+#include <ipc/SharedSegmentMessage.h>
+
+#include <sstream>
 
 namespace mw { namespace ipc {
 
@@ -21,6 +24,7 @@ public:
     bool write(const std::string& msg) const override;
 
 private:
+
     void setDefault();
 
     std::string name;
@@ -28,6 +32,7 @@ private:
     EUsageShmSegment usage;
     int shmId;
     char* shmMem;
+    mutable SharedSegmentMessage sharedMsg;
 };
 
 } } // mw::ipc

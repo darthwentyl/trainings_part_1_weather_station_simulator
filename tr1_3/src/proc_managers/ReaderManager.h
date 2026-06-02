@@ -2,6 +2,8 @@
 
 #include <proc_managers/IProcManager.h>
 
+#include <unistd.h>
+
 namespace mw { namespace ipc {
 
     class ISemaphoreIpc;
@@ -19,7 +21,7 @@ namespace mw { namespace proc_managers {
 
 class ReaderManager : public IProcManager {
 public:
-    ReaderManager(ipc::ISemaphoreIpc& dataLocker,
+    ReaderManager(const pid_t parentPid, ipc::ISemaphoreIpc& dataLocker,
         ipc::ISemaphoreIpc& readerLocker,
         workers::IWorker& worker
     );
@@ -34,8 +36,8 @@ public:
 
 private:
     void start();
-    void error_stop();
 
+    const pid_t parentPid;
     ipc::ISemaphoreIpc& dataLocker;
     ipc::ISemaphoreIpc& readerLocker;
     workers::IWorker& worker;

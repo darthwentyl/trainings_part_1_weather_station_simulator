@@ -6,15 +6,18 @@
 #include <ipc/IIpc.h>
 #include <ipc/ISemaphoreIpc.h>
 
+#include <signal.h>
+
 namespace mw { namespace proc_managers {
 
 using namespace mw::ipc;
 using namespace mw::proc_managers::workers;
 
-ReaderManager::ReaderManager(ISemaphoreIpc& dataLocker,
+ReaderManager::ReaderManager(const pid_t parentPid, ISemaphoreIpc& dataLocker,
     ISemaphoreIpc& readerLocker,
     IWorker& worker
 ) :
+    parentPid{parentPid},
     dataLocker{dataLocker},
     readerLocker{readerLocker},
     worker{worker}
@@ -31,7 +34,7 @@ void ReaderManager::loop() {
         }
     } catch (const std::exception& e) {
         ERROR(e.what());
-        error_stop();
+        kill(parentPid, SIGINT);
     }
 }
 
@@ -39,12 +42,6 @@ void ReaderManager::start() {
     readerLocker.open();
     dataLocker.open();
     worker.startWorking();
-}
-
-void ReaderManager::error_stop() {
-    worker.stopWorking();
-    readerLocker.close();
-    dataLocker.close();
 }
 
 } } // mw::proc_managers

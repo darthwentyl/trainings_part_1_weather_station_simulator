@@ -437,4 +437,47 @@ TEST_F(PipeStreamIpc_tests, write_empty_msg) {
     }
 }
 
+TEST_F(PipeStreamIpc_tests, destructor_catch_exception) {
+    auto& stdLib = StdLibStaticMock::get();
+    FILE file;
+
+    EXPECT_CALL(stdLib, popen(_, _))
+        .Times(2)
+        .WillRepeatedly(Return(&file));
+    EXPECT_CALL(stdLib, pclose(_))
+        .WillOnce(Return(SUCCESS))
+        .WillOnce(Throw(std::runtime_error{"test exception"}));
+
+    try {
+        {
+            auto instance = PipeStreamIpc{TEST_COMMAND, EPipeMode::WRITE};
+            instance.open();
+        }
+        EXPECT_TRUE(true);
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
+        EXPECT_FALSE(true);
+    }
+}
+
+TEST_F(PipeStreamIpc_tests, open_pclose_detect_issue_with_opened_process) {
+    auto& stdLib = StdLibStaticMock::get();
+    FILE file;
+
+    EXPECT_CALL(stdLib, popen(_, _)).WillOnce(Return(&file));
+    EXPECT_CALL(stdLib, pclose(_)).WillOnce(Return(32512)); // The value took from log
+
+    try {
+        auto instance = PipeStreamIpc{TEST_COMMAND, EPipeMode::WRITE};
+        instance.open();
+        EXPECT_FALSE(true);
+    } catch (const pipe_error& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
+        EXPECT_TRUE(true);
+    } catch (const std::exception& e) {
+        std::cout << __PRETTY_FUNCTION__ << ":" << __LINE__ << ": " << e.what() << std::endl;
+        EXPECT_FALSE(true);
+    }
+}
+
 } // anonymous

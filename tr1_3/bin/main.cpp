@@ -46,7 +46,7 @@ namespace {
     static pid_t parent_pid = 0;
 } // anonymous
 
-void critical_exit(int sig) {
+void critical_exit([[maybe_unused]] int sig) {
     DEBUG("Signal received: " << sig << " isCriticalExited: " << std::boolalpha << isCriticalExited);
     if (!isCriticalExited) {
         SharedSegmentSemaphoreIpc data_sem{std::string{data_sem_name}, EUsageShmSegment::CLIENT};
